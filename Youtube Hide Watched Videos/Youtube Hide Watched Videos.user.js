@@ -9,9 +9,8 @@
 // @require      https://raw.githubusercontent.com/carhartl/jquery-cookie/v1.4.1/jquery.cookie.js
 // @grant        GM_addStyle
 // @run-at       document-start
-// @updateURL    https://github.com/GentlePuppet/Youtube-Hide-Watched-Videos-Userscript/raw/main/Hide-Watched-Videos.user.js
-// @downloadURL  https://github.com/GentlePuppet/Youtube-Hide-Watched-Videos-Userscript/raw/main/Hide-Watched-Videos.user.js
-// @homepage     https://github.com/GentlePuppet/Youtube-Hide-Watched-Videos-Userscript
+// @updateURL    https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Youtube%20Hide%20Watched%20Videos/Youtube%20Hide%20Watched%20Videos.user.js
+// @downloadURL  https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Youtube%20Hide%20Watched%20Videos/Youtube%20Hide%20Watched%20Videos.user.js
 // ==/UserScript==
 // Watched Video Show/Hide Button Stylings and Dim Watched Videos
 GM_addStyle(`
