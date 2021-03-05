@@ -7,15 +7,15 @@ This is a userscript that tweaks and adds a few things to Youtube.
 
 ![Preview Image](Better%20CSS.png)
 
-It makes the https://www.youtube.com/feed/subscriptions page wider to hold more videos.
-It adds a little progress bar under videos to let you know how far you watched a video.
-It slightly fades out watched videos in playlists.
-It makes the playlist container taller to match the size of yer window.
-It adds a countdown timer to let you know how much of a video is left (next to the uploaded date under the video title.)
-It lets you hover over user avatars to make them bigger.
-It makes the grab handels for videos in playlists wider to make it easier to move videos around.
-It adds the upload date to videos on playlist pages.
-It converts the kbps to KB/s in the stat's for nerds box.
+* It makes the https://www.youtube.com/feed/subscriptions page wider to hold more videos.
+* It adds a little progress bar under videos to let you know how far you watched a video.
+* It slightly fades out watched videos in playlists.
+* It makes the playlist container taller to match the size of yer window.
+* It adds a countdown timer to let you know how much of a video is left (next to the uploaded date under the video title.)
+* It lets you hover over user avatars to make them bigger.
+* It makes the grab handels for videos in playlists wider to make it easier to move videos around.
+* It adds the upload date to videos on playlist pages.
+* It converts the kbps to KB/s in the stat's for nerds box.
 
 
 As long as you have a userscript extension like Tampermonkey or Greasemonkey then clicking the link below will install the script for you.
