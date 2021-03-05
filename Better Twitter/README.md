@@ -3,7 +3,7 @@
 # Gentle's Tweaked Twitter UserScript
 
 ## Credits:
-[Modified CSS](https://github.com/GentlePuppet/Gentle-s-Tweaked-Twitter-Script-) |
+Modified CSS & Toggle Media Only Tweets |
 [Gentle Puppet](https://github.com/GentlePuppet)
 
 [Hide Promoted Tweets](https://greasyfork.org/en/scripts/396474-ad-free-twitter/code) |
@@ -31,6 +31,8 @@ It removes "Promoted" Tweets and the "Whats Happening" on the right side bar.
 It makes images uncropped and always shows hidden content.
 
 It also makes posts wider.
+
+It adds a toggle button to only show tweets that contain an Image or a Video. (Click the little M in the Top Bar after the
 
 As long as you have a userscript extension like Tampermonkey or Greasemonkey then clicking the link below will install the script for you.
 * [Install Tweaked Twitter](https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Better%20Twitter/Better%20Twitter.user.js)
