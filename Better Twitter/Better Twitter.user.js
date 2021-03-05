@@ -20,9 +20,8 @@
 // @require        https://greasyfork.org/scripts/396752-hx-lib/code/hx-lib.js
 // @resource HxLib https://greasyfork.org/scripts/396752-hx-lib/code/hx-lib.js
 //
-// @updateURL      https://github.com/GentlePuppet/Gentle-s-Tweaked-Twitter-Script-/raw/master/Better%20Twitter.user.js
-// @downloadURL    https://github.com/GentlePuppet/Gentle-s-Tweaked-Twitter-Script-/raw/master/Better%20Twitter.user.js
-// @homepage       https://github.com/GentlePuppet/Gentle-s-Tweaked-Twitter-Script-
+// @updateURL      https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Better%20Twitter/Better%20Twitter.user.js
+// @downloadURL    https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Better%20Twitter/Better%20Twitter.user.js
 // @version        0.5
 // ==/UserScript==
 
