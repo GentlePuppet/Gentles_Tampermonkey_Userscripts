@@ -6,9 +6,8 @@
 // @include      https://www.google.com/*
 // @icon         https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png
 // @run-at       document-start
-// @updateURL    https://github.com/GentlePuppet/GoogleNightThemeUserscript/blob/master/Google%20Nightmode.user.js
-// @downloadURL  https://github.com/GentlePuppet/GoogleNightThemeUserscript/blob/master/Google%20Nightmode.user.js
-// @homepage     https://github.com/GentlePuppet/GoogleNightThemeUserscript
+// @updateURL    https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Google%20Darkmode/Google%20Nightmode.user.js
+// @downloadURL  https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Google%20Darkmode/Google%20Nightmode.user.js
 // @grant        GM_addStyle
 // ==/UserScript==
 GM_addStyle(`
