@@ -17,12 +17,14 @@
 // @grant          GM_info
 // @grant          GM_addStyle
 // @require        https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js
+// @require        https://gist.github.com/raw/2625891/waitForKeyElements.js
+// @require        https://raw.githubusercontent.com/carhartl/jquery-cookie/v1.4.1/jquery.cookie.js
 // @require        https://greasyfork.org/scripts/396752-hx-lib/code/hx-lib.js
 // @resource HxLib https://greasyfork.org/scripts/396752-hx-lib/code/hx-lib.js
 //
 // @updateURL      https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Better%20Twitter/Better%20Twitter.user.js
 // @downloadURL    https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Better%20Twitter/Better%20Twitter.user.js
-// @version        0.5
+// @version        0.6
 // ==/UserScript==
 
 /////////////////////////////////////////////////
@@ -84,11 +86,18 @@ GM_addStyle('.r-18bvks7 {border-color: transparent; border-radius: 0px !importan
 GM_addStyle('.u-hidden {display:inherit !important;}');
 GM_addStyle('.Tombstone {display:none;}');
 
-
+// Toggle Hide Tweets with No Image or Video
+if($.cookie('TwitterImageOnly') == undefined) {$.cookie('TwitterImageOnly', "0", { domain: '.twitter.com', expires: 128000, path: '/' });}
+if($.cookie('TwitterImageOnly') == 0) {$.cookie('TwitterImageOnly', "0", { domain: '.twitter.com', expires: 128000, path: '/' });}
+if($.cookie('TwitterImageOnly') == 1) {waitForKeyElements ('article[role="article"]', HideNoImage, 0);function HideNoImage (jnode) {var PostWithVideo = jnode.find('div[aria-label="Embedded video"]');var PostWithImage = jnode.find('div[aria-label="Image"]');if(PostWithVideo.length | PostWithImage.length) {} else {jnode.parent().parent().parent().hide();};};$.cookie('TwitterImageOnly', "1", { domain: '.twitter.com', expires: 128000, path: '/' });}
+waitForKeyElements ('header > div > div > div > div:nth-child(2)', CreateToggleBlacklistButton, 0);
+function CreateToggleBlacklistButton(jnode) {var b2 = $('<input/>').attr({ type: "button", id: "ToggleMediaButton", value: "M"});$(b2).insertAfter(jnode);document.getElementById("ToggleMediaButton").addEventListener("click", ToggleMedia, false);}
+function ToggleMedia() {if($.cookie('TwitterImageOnly') == 0) {waitForKeyElements ('article[role="article"]', HideNoImage, 0);function HideNoImage (jnode) {var PostWithVideo = jnode.find('div[aria-label="Embedded video"]');var PostWithImage = jnode.find('div[aria-label="Image"]');if(PostWithVideo.length | PostWithImage.length) {} else {jnode.parent().parent().parent().hide();};};$.cookie('TwitterImageOnly', "1", { domain: '.twitter.com', expires: 128000, path: '/' });return}if($.cookie('TwitterImageOnly') == 1) {$.cookie('TwitterImageOnly', "0", { domain: '.twitter.com', expires: 128000, path: '/' });location.reload();return}}
+GM_addStyle('#ToggleMediaButton {background-color:transparent;height:40px;width:40px;position:absolute;border:none!important;left:320px;color:white;font-size:20px;padding-top:5px;}#ToggleMediaButton:hover {background-color:rgba(121, 75, 196, 0.1);color:rgb(121, 75, 196);}');
 
 /////////////////////////////////////////////////
-// Stuff Created by Others
-
+//           Stuff Created by Others           //
+/////////////////////////////////////////////////
 
 /////////////////////////////////////////////////
 // Hide Promoted Tweets
@@ -534,4 +543,3 @@ function guidGenerator() {
     };
     return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
 }
-
