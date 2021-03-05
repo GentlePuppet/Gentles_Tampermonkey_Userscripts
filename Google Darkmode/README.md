@@ -10,5 +10,10 @@ Something's are unchanged because google uses !important on a few elements disal
 
 ![Preview of Theme](https://i.imgur.com/MAmOPXH.png)
 
+
 As long as you have a userscript extension like Tampermonkey or Greasemonkey then clicking the link below will install the script for you.
-* [Install Tweaked Twitter](https://github.com/GentlePuppet/Gentle-s-Tweaked-Twitter-Script-/raw/master/Better%20Twitter.user.js)
+* [Install Darkmode Google](https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Google%20Darkmode/Google%20Nightmode.user.js)
+
+### Don't have a userscript extension?
+* [Get Tampermonkey for Chrome](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=en)
+* [Get Tampermonkey for Firefox](https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/)
