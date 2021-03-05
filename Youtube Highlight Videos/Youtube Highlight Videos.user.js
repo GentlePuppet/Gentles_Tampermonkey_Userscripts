@@ -9,9 +9,8 @@
 // @require      https://raw.githubusercontent.com/carhartl/jquery-cookie/v1.4.1/jquery.cookie.js
 // @grant        GM_addStyle
 // @run-at       document-start
-// @updateURL    https://github.com/GentlePuppet/Youtube-Highlight-Favorite-Videos-Userscript/raw/main/Highlight-Favorite-Videos.user.js
-// @downloadURL  https://github.com/GentlePuppet/Youtube-Highlight-Favorite-Videos-Userscript/raw/main/Highlight-Favorite-Videos.user.js
-// @homepage     https://github.com/GentlePuppet/Youtube-Highlight-Favorite-Videos-Userscript
+// @updateURL    https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Youtube%20Highlight%20Videos/Youtube%20Highlight%20Videos.user.js
+// @downloadURL  https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Youtube%20Highlight%20Videos/Youtube%20Highlight%20Videos.user.js
 // ==/UserScript==
 // Blocking Specific Types of Videos
 GM_addStyle(`
