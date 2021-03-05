@@ -5,7 +5,7 @@
 ## Description:
 This is a userscript that tweaks and adds a few things to Youtube.
 
-[Preview Image](https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/blob/main/Youtube%20Better%20CSS%20Tweaks/Better%20CSS.png)
+![Preview Image](https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/blob/main/Youtube%20Better%20CSS%20Tweaks/Better%20CSS.png)
 
 It makes the https://www.youtube.com/feed/subscriptions page wider to hold more videos.
 It adds a little progress bar under videos to let you know how far you watched a video.
