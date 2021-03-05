@@ -32,7 +32,7 @@ It makes images uncropped and always shows hidden content.
 
 It also makes posts wider.
 
-It adds a toggle button to only show tweets that contain an Image or a Video. (Click the little M in the Top Bar after the
+It adds a toggle button to only show tweets that contain an Image or a Video. (Click the little M in the Top Bar after the Settings Button.
 
 As long as you have a userscript extension like Tampermonkey or Greasemonkey then clicking the link below will install the script for you.
 * [Install Tweaked Twitter](https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Better%20Twitter/Better%20Twitter.user.js)
