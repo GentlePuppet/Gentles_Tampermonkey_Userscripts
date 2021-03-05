@@ -15,9 +15,6 @@
 [Twitter Improvements](https://greasyfork.org/en/scripts/387641-new-twitter-improvements/code) |
 [Mikhaildyd](https://greasyfork.org/en/users/318922-mikhaildyd)
 
-[Auto-Switch to Lastest Tweets (Currently Disabled)](https://greasyfork.org/en/scripts/396701-twitter-auto-latest-tweet) |
-[partment](https://greasyfork.org/en/users/310437-partment)
-
 [Download Twitter Videos](https://greasyfork.org/en/scripts/390723-twitter-download-gif-video) |
 [trixile](https://greasyfork.org/en/users/33102-trixile)
 
