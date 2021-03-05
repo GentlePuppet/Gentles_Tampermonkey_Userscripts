@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         Twitter Remove Self-Retweets
-// @namespace    http://tampermonkey.net/
-// @version      1.0
 // @author       GentlePuppet
+// @version      1.0
 // @include      https://twitter.com/*
+// @run-at       document-start
 // @require      https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js
 // @require      https://gist.github.com/raw/2625891/waitForKeyElements.js
 // ==/UserScript==
