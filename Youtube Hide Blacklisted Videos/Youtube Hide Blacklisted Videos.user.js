@@ -10,9 +10,8 @@
 // @require      https://github.com/pieroxy/lz-string/raw/master/libs/lz-string.min.js
 // @grant        GM_addStyle
 // @run-at       document-start
-// @updateURL    https://github.com/GentlePuppet/Youtube-Hide-Blacklisted-Videos-Userscript/raw/main/Hide-Blacklisted-Videos.user.js
-// @downloadURL  https://github.com/GentlePuppet/Youtube-Hide-Blacklisted-Videos-Userscript/raw/main/Hide-Blacklisted-Videos.user.js
-// @homepage     https://github.com/GentlePuppet/Youtube-Hide-Blacklisted-Videos-Userscript
+// @updateURL    https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Youtube%20Hide%20Blacklisted%20Videos/Youtube%20Hide%20Blacklisted%20Videos.user.js
+// @downloadURL  https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Youtube%20Hide%20Blacklisted%20Videos/Youtube%20Hide%20Blacklisted%20Videos.user.js
 // ==/UserScript==
 // Blacklisted Toggle Button Stlye
 GM_addStyle(`
