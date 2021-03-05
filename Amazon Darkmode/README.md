@@ -5,6 +5,7 @@
 ## Description:
 This is a simple Userscript that makes amazon darkmoded. It can be a bit buggy here and there but I try to updaate it when needed. It works for the most part.
 
+[Preview Image](https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/blob/main/Amazon%20Darkmode/Darkmode.png)
 
 As long as you have a userscript extension like Tampermonkey or Greasemonkey then clicking the link below will install the script for you.
 * [Install Darkmode Amazon](https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Amazon%20Darkmode/Amazon%20Darkmode.user.js)
