@@ -24,8 +24,7 @@ GM_addStyle('ytd-comment-renderer:not([comment-style=backstage-comment])[is-repl
 waitForKeyElements ('yt-img-shadow > img[src*="no-rj-mo"]', Avatar, 0);
 function Avatar (jNode) {
     var oldSrc = jNode.attr ("src");
-    let newSrc = oldSrc.replace ("=s48", "=s24");
-    // let newSrc = oldSrc.replace (/=s.*-no-rj-mo/gi, "");
+    let newSrc = oldSrc.replace (/=s.*-no-rj-mo/gi, "");
     jNode.attr ("src", newSrc);
     //console.log("Avatar Replaced With Low-Res")
 };
@@ -34,8 +33,7 @@ function Avatar (jNode) {
 waitForKeyElements ('ytd-thumbnail #thumbnail.ytd-thumbnail yt-img-shadow.ytd-thumbnail > img[src*="hqdefault.jpg"]', Thumbnail, 0);
 function Thumbnail (jNode) {
     var oldSrc2 = jNode.attr ("src");
-    let newSrc2 = oldSrc2.replace ("hqdefault.jpg", "default.jpg");
-    // let newSrc2 = oldSrc2.replace ("hqdefault.jpg", "maxresdefault.jpg");
+    let newSrc2 = oldSrc2.replace ("hqdefault.jpg", "maxresdefault.jpg");
     jNode.attr ("src", newSrc2);
     //console.log("Thumbnail Replaced With Low-Res")
 };
