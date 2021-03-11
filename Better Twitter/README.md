@@ -20,7 +20,7 @@ Modified CSS - Toggle Media Only Tweets - Highlight Liked Tweets - Toggle Hide L
 
 ## Description:
 Click this Image for an Outdated Video Preview
-[![Version 0.3.1](https://cdn.discordapp.com/attachments/739669044289863732/819420351250432030/unknown.png)](https://www.youtube.com/watch?v=AOusmx7Y5-8)
+[![Video from Version 0.3.1](https://cdn.discordapp.com/attachments/739669044289863732/819420622551646228/unknown.png)](https://www.youtube.com/watch?v=AOusmx7Y5-8)
 
 This is a Userscript to tweak Twitter to be less sucky.
 
