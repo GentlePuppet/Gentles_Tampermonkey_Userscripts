@@ -34,6 +34,10 @@ It also makes posts wider.
 
 It adds a toggle button to only show tweets that contain an Image or a Video. (Click the little M in the Top Bar after the Settings Button.
 
+It highlights tweets you have liked.
+
+It adds a toggle button to hide liked tweets. (Click the little L in the Top Bar after the M Button.
+
 As long as you have a userscript extension like Tampermonkey or Greasemonkey then clicking the link below will install the script for you.
 * [Install Tweaked Twitter](https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Better%20Twitter/Better%20Twitter.user.js)
 
