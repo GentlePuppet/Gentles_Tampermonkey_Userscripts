@@ -1,14 +1,14 @@
 // ==UserScript==
 // @name         Youtube HD Avatars & Thumbnails
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.1
 // @author       GentlePuppet
 // @match        https://www.youtube.com/*
 // @icon         https://www.youtube.com/s/desktop/1eca3218/img/favicon_144.png
 // @require      https://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js
 // @require      https://gist.github.com/raw/2625891/waitForKeyElements.js
-// @grant        GM.getValue
-// @run-at       document-body
+// @grant        GM_addStyle
+// @run-at       document-start
 // ==/UserScript==
 
 // Hover for Bigger Avatar | Description
@@ -25,8 +25,8 @@ waitForKeyElements ('yt-img-shadow > img[src*="no-rj-mo"]', Avatar, 0);
 function Avatar (jNode) {
     var oldSrc = jNode.attr ("src");
     let newSrc = oldSrc.replace (/=s.*-no-rj-mo/gi, "");
+    if (newSrc.width == 0) {return;}
     jNode.attr ("src", newSrc);
-    //console.log("Avatar Replaced With Low-Res")
 };
 
 // Video Thumbnails
@@ -34,12 +34,6 @@ waitForKeyElements ('ytd-thumbnail #thumbnail.ytd-thumbnail yt-img-shadow.ytd-th
 function Thumbnail (jNode) {
     var oldSrc2 = jNode.attr ("src");
     let newSrc2 = oldSrc2.replace ("hqdefault.jpg", "maxresdefault.jpg");
+    if (newSrc2.width == 0) {return;}
     jNode.attr ("src", newSrc2);
-    //console.log("Thumbnail Replaced With Low-Res")
 };
-
-
-
-
-
-
