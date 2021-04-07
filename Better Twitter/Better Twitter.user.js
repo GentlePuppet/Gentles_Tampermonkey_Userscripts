@@ -24,7 +24,7 @@
 //
 // @updateURL      https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Better%20Twitter/Better%20Twitter.user.js
 // @downloadURL    https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Better%20Twitter/Better%20Twitter.user.js
-// @version        0.7.1
+// @version        0.8
 // ==/UserScript==
 
 /////////////////////////////////////////////////
@@ -91,7 +91,7 @@ if($.cookie('TwitterImageOnly') == undefined) {$.cookie('TwitterImageOnly', "0",
 if($.cookie('TwitterImageOnly') == 0) {$.cookie('TwitterImageOnly', "0", { domain: '.twitter.com', expires: 128000, path: '/' });}
 if($.cookie('TwitterImageOnly') == 1) {waitForKeyElements ('article[role="article"]', HideNoImage, 0);function HideNoImage (jnode) {var PostWithVideo = jnode.find('div[aria-label="Embedded video"]');var PostWithImage = jnode.find('div[aria-label="Image"]');if(PostWithVideo.length | PostWithImage.length) {} else {jnode.parent().parent().parent().hide();};};$.cookie('TwitterImageOnly', "1", { domain: '.twitter.com', expires: 128000, path: '/' });}
 waitForKeyElements ('header > div > div > div > div:nth-child(2)', CreateToggleBlacklistButton, 0);
-function CreateToggleBlacklistButton(jnode) {var b2 = $('<input/>').attr({ type: "button", id: "ToggleMediaButton", value: "M"});$(b2).insertAfter(jnode);document.getElementById("ToggleMediaButton").addEventListener("click", ToggleMedia, false);if($.cookie('TwitterImageOnly') == 1) {$('#ToggleMediaButton').attr('style', 'background-color: rgb(60 178 197 / 10%);color: rgb(88 196 75);');}}
+function CreateToggleBlacklistButton(jnode) {var b1 = $('<input/>').attr({ type: "button", id: "ToggleMediaButton", value: "M"});$(b1).insertAfter(jnode);document.getElementById("ToggleMediaButton").addEventListener("click", ToggleMedia, false);if($.cookie('TwitterImageOnly') == 1) {$('#ToggleMediaButton').attr('style', 'background-color: rgb(60 178 197 / 10%);color: rgb(88 196 75);');}}
 function ToggleMedia() {if($.cookie('TwitterImageOnly') == 0) {$('#ToggleMediaButton').attr('style', 'background-color: rgb(60 178 197 / 10%);color: rgb(88 196 75);');}if($.cookie('TwitterImageOnly') == 0) {waitForKeyElements ('article[role="article"]', HideNoImage, 0);function HideNoImage (jnode) {var PostWithVideo = jnode.find('div[aria-label="Embedded video"]');var PostWithImage = jnode.find('div[aria-label="Image"]');if(PostWithVideo.length | PostWithImage.length) {} else {jnode.parent().parent().parent().hide();};};$.cookie('TwitterImageOnly', "1", { domain: '.twitter.com', expires: 128000, path: '/' });return}if($.cookie('TwitterImageOnly') == 1) {$.cookie('TwitterImageOnly', "0", { domain: '.twitter.com', expires: 128000, path: '/' });location.reload();return}}
 GM_addStyle('#ToggleMediaButton {background-color:transparent;height:40px;width:40px;position:absolute;border:none!important;left:320px;color:white;font-size:20px;padding-top:5px;}#ToggleMediaButton:hover {background-color:rgba(121, 75, 196, 0.1)!important;color:rgb(121, 75, 196)!important;cursor: pointer;}');
 
@@ -110,6 +110,17 @@ function CreateToggleLikedButton(jnode) {var b2 = $('<input/>').attr({ type: "bu
 function ToggleLiked() {if($.cookie('TwitterHideLiked') == 0) {$('#ToggleLikeButton').attr('style', 'background-color: rgb(60 178 197 / 10%);color: rgb(88 196 75);');}if($.cookie('TwitterHideLiked') == 0) {waitForKeyElements (`div[aria-label*="Liked"]`, HideLiked, 0);$.cookie('TwitterHideLiked', "1", { domain: '.twitter.com', expires: 128000, path: '/' });return}if($.cookie('TwitterHideLiked') == 1) {$.cookie('TwitterHideLiked', "0", { domain: '.twitter.com', expires: 128000, path: '/' });location.reload();return}}
 function HideLiked (jnode) {jnode.parents('article[role="article"]').parent().parent().parent().hide();}
 GM_addStyle('#ToggleLikeButton {background-color:transparent;height:40px;width:40px;position:absolute;border:none!important;left:360px;color:white;font-size:20px;padding-top:5px;}#ToggleLikeButton:hover {background-color:rgba(121, 75, 196, 0.1)!important;color:rgb(121, 75, 196)!important;cursor: pointer;}');
+
+// Toggle ReTweets
+if($.cookie('TwitterHideRetweet') == undefined) {$.cookie('TwitterHideRetweet', "0", { domain: '.twitter.com', expires: 128000, path: '/' });}
+if($.cookie('TwitterHideRetweet') == 0) {$.cookie('TwitterHideRetweet', "0", { domain: '.twitter.com', expires: 128000, path: '/' });}
+if($.cookie('TwitterHideRetweet') == 1) {waitForKeyElements (`span[data-testid="socialContext"]:contains(" Retweeted")`, HideRetweeted, 0);$.cookie('TwitterHideRetweet', "1", { domain: '.twitter.com', expires: 128000, path: '/' });}
+waitForKeyElements ('#ToggleLikeButton', CreateToggleRetweetButton, 0);
+function CreateToggleRetweetButton(jnode) {var b3 = $('<input/>').attr({ type: "button", id: "ToggleRetweetButton", value: "R"});$(b3).insertAfter(jnode);document.getElementById("ToggleRetweetButton").addEventListener("click", ToggleRetweeted, false);if($.cookie('TwitterHideRetweet') == 1) {$('#ToggleRetweetButton').attr('style', 'background-color: rgb(60 178 197 / 10%);color: rgb(88 196 75);');}}
+function ToggleRetweeted() {if($.cookie('TwitterHideRetweet') == 0) {$('#ToggleRetweetButton').attr('style', 'background-color: rgb(60 178 197 / 10%);color: rgb(88 196 75);');}if($.cookie('TwitterHideRetweet') == 0) {waitForKeyElements (`span[data-testid="socialContext"]:contains(" Retweeted")`, HideRetweeted, 0);$.cookie('TwitterHideRetweet', "1", { domain: '.twitter.com', expires: 128000, path: '/' });return}if($.cookie('TwitterHideRetweet') == 1) {$.cookie('TwitterHideRetweet', "0", { domain: '.twitter.com', expires: 128000, path: '/' });location.reload();return}}
+function HideRetweeted (jnode) {jnode.parents('article[role="article"]').parent().parent().parent().hide();}
+GM_addStyle('#ToggleRetweetButton {background-color:transparent;height:40px;width:40px;position:absolute;border:none!important;left:400px;color:white;font-size:20px;padding-top:5px;}#ToggleRetweetButton:hover {background-color:rgba(121, 75, 196, 0.1)!important;color:rgb(121, 75, 196)!important;cursor: pointer;}');
+
 
 /////////////////////////////////////////////////
 //           Stuff Created by Others           //
