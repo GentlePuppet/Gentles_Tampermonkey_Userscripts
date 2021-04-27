@@ -1,13 +1,14 @@
 	// ==UserScript==
 // @name         Youtube Hide Blacklisted Videos
 // @author       GentlePuppet
-// @version      1.7.1
+// @version      1.8.0
 // @match        https://www.youtube.com/*
 // @icon         https://www.youtube.com/s/desktop/1eca3218/img/favicon_144.png
 // @require      https://code.jquery.com/jquery-3.5.1.min.js
 // @require      https://gist.github.com/raw/2625891/waitForKeyElements.js
 // @require      https://raw.githubusercontent.com/carhartl/jquery-cookie/v1.4.1/jquery.cookie.js
 // @require      https://github.com/pieroxy/lz-string/raw/master/libs/lz-string.min.js
+// @require      http://github.com/bartaz/sandbox.js/raw/master/jquery.highlight.js
 // @grant        GM_addStyle
 // @run-at       document-start
 // @updateURL    https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Youtube%20Hide%20Blacklisted%20Videos/Youtube%20Hide%20Blacklisted%20Videos.user.js
@@ -28,6 +29,8 @@ GM_addStyle(`
     #parent-bcboxes {position:absolute;height:100%;width:100%;z-index:5000000;display:block;margin:auto;background:#000000d4;}
     #bcboxes {height:fit-content;width:fit-content;margin:auto;display:grid;font-size:20px;border:2px solid var(--yt-spec-10-percent-layer2);background:var(--yt-spec-brand-background-primary);color:white;grid-template-columns: auto auto auto auto auto auto auto auto;}
     #bcboxes2 {height:fit-content;width:fit-content;margin:auto;display:grid;font-size:20px;background:var(--yt-spec-brand-background-primary);color:white;}
+    .highlight{color: #ff472a;}
+    a#video-title.yt-simple-endpoint.ytd-grid-video-renderer:hover{overflow: visible !important;max-height: fit-content !important;display: block;}
 `);
 window.addEventListener("yt-page-data-updated", function(e) {
     // Reset Blacklisted Video Counter Number
@@ -61,6 +64,11 @@ window.addEventListener("yt-page-data-updated", function(e) {
             jNode.parents("ytd-rich-item-renderer").attr("class", "Blacklisted_Video_Shown");
         }
     }
+    // Mark Blacklisted Words
+    var markedblacklist = getblacklist.replaceAll('"', '').replaceAll(', ', ',').replaceAll('" ', '"').split(',');
+    setInterval(function() {
+        $('a#video-title').highlight(markedblacklist);
+    },5000);
     // Check for Blacklisted Videos and Update Counter Every 2.5 Seconds
     setInterval(function() {
         var bvh = $(".Blacklisted_Video_Hidden").length;
