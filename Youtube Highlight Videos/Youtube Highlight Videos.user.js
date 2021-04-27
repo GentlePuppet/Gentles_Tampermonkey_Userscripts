@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Youtube Highlight Videos
 // @author       GentlePuppet
-// @version      1.4.1
+// @version      1.5.0
 // @match        https://www.youtube.com/*
 // @icon         https://www.youtube.com/s/desktop/1eca3218/img/favicon_144.png
 // @require      http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js
@@ -20,7 +20,7 @@ GM_addStyle(`
     #fcboxes2 {height:fit-content;width:fit-content;margin:auto;display:grid;font-size:20px;background:var(--yt-spec-brand-background-primary);color:white;}
     .NewFiltersButton {align-self: normal !important; color: var(--yt-spec-text-primary) !important; overflow: hidden !important; font-size: var(--ytd-subheadline-link_-_font-size) !important; font-weight: var(--ytd-subheadline-link_-_font-weight) !important; line-height: var(--ytd-subheadline-link_-_line-height) !important; letter-spacing: var(--ytd-subheadline-link_-_letter-spacing) !important; background: #383838 !important; border: black 1px solid; cursor: pointer; text-shadow: 1px 1px 3px black;} .BlacklistedVideoButton:hover {background: #595959 !important;}
     .Favorite_Video_Type { border:2px #27ff00 solid;background:#192b0d;padding:5px;}
-    .FavoriteVideoButton:hover {background: #48b304 !important;}
+    .FavoriteVideoButton:hover {background: #56ff00 !important;}
 `);
 window.addEventListener("yt-page-data-updated", function(e) {
     // Highlight Favorite Videos
@@ -33,6 +33,11 @@ window.addEventListener("yt-page-data-updated", function(e) {
         jNode.parents("ytd-grid-video-renderer").attr("class", "Favorite_Video_Type");
         //jNode.parents("ytd-compact-video-renderer").attr("class", "Favorite_Video_Type");
     }
+    // Mark Highlighted Titles
+    var markedfavorites = getfavorites.replaceAll('"', '').replaceAll(', ', ',').replaceAll('" ', '"').split(',');
+    setInterval(function() {
+        $('a#video-title').highlight(markedfavorites);
+    },5000);
     // Create Add New Favorite Button
     waitForKeyElements ('#search-form > #container', CreateAddFavoriteButton, 0);
     function CreateAddFavoriteButton () {
