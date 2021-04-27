@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Google Nightmode
 // @description  Makes Google DarkThemed
-// @version      0.9.2
+// @version      0.9.3
 // @author       Gentle Puppet
 // @include      https://www.google.com/*
 // @icon         https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png
@@ -12,7 +12,7 @@
 // ==/UserScript==
 GM_addStyle(`
     /* Primary Dark Theme */
-    body, .FoDaAb, .s8GCU, .dXdtIf, .cG5GOd, .IsZvec, .hb8SAc, .YSlUOe, .Xeztj, .yg51vc, .Cyt8W, .LMMXP, .JolIg, .mDj5wd, .I6TXqe, .MGqjK, .WpKAof:hover, .kLhEKe, .Ywxp6b, .f, .f a:link, html:not(.zAoYTe) .hide-focus-ring, .MXl0lf, .cfBJGe, .BlOseb.eSq3C g-fab, .k2Oeod.eSq3C g-fab, .YbqTTb, .dw-sb-cont .dw-sbi, .dw-sb-cont, .kp-blk, .sfbg, .RNNXgb, .gLFyf, .aajZCb, .Lj9fsd, .jZWadf, .sfbgg, #gbwa, .gb_Nc, #appbar, #top_nav, #before-appbar, .B7A8m, .p83fR, g-inner-card, .ZINbbc, .zDBTmf>div, .eUrIee, .ZINbbc, .XO51F, #brs .med, .gG0TJc, .m7VU0c, .sect, .rlc__slider, .rlc__slider-page, div.rl_feature{ background: rgb(16, 16, 16) !important; background-color: rgb(16, 16, 16) !important; color: #bbb !important; }
+    body, .aypzV, .FoDaAb, .s8GCU, .dXdtIf, .cG5GOd, .IsZvec, .hb8SAc, .YSlUOe, .Xeztj, .yg51vc, .Cyt8W, .LMMXP, .JolIg, .mDj5wd, .I6TXqe, .MGqjK, .WpKAof:hover, .kLhEKe, .Ywxp6b, .f, .f a:link, html:not(.zAoYTe) .hide-focus-ring, .MXl0lf, .cfBJGe, .BlOseb.eSq3C g-fab, .k2Oeod.eSq3C g-fab, .YbqTTb, .dw-sb-cont .dw-sbi, .dw-sb-cont, .kp-blk, .sfbg, .RNNXgb, .gLFyf, .aajZCb, .Lj9fsd, .jZWadf, .sfbgg, #gbwa, .gb_Nc, #appbar, #top_nav, #before-appbar, .B7A8m, .p83fR, g-inner-card, .ZINbbc, .zDBTmf>div, .eUrIee, .ZINbbc, .XO51F, #brs .med, .gG0TJc, .m7VU0c, .sect, .rlc__slider, .rlc__slider-page, div.rl_feature{ background: rgb(16, 16, 16) !important; background-color: rgb(16, 16, 16) !important; color: #bbb !important; }
 
     /* Support For Dark Theme */
     body{ max-width: 100% !important; }
