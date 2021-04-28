@@ -1,12 +1,13 @@
 // ==UserScript==
 // @name         Youtube Highlight Videos
 // @author       GentlePuppet
-// @version      1.5.0
+// @version      1.5.1
 // @match        https://www.youtube.com/*
 // @icon         https://www.youtube.com/s/desktop/1eca3218/img/favicon_144.png
 // @require      http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js
 // @require      https://gist.github.com/raw/2625891/waitForKeyElements.js
 // @require      https://raw.githubusercontent.com/carhartl/jquery-cookie/v1.4.1/jquery.cookie.js
+// @require      http://github.com/bartaz/sandbox.js/raw/master/jquery.highlight.js
 // @grant        GM_addStyle
 // @run-at       document-start
 // @updateURL    https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Youtube%20Highlight%20Videos/Youtube%20Highlight%20Videos.user.js
