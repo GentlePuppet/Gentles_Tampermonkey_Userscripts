@@ -1,7 +1,7 @@
 	// ==UserScript==
 // @name         Youtube Hide Blacklisted Videos
 // @author       GentlePuppet
-// @version      1.8.0
+// @version      1.8.1
 // @match        https://www.youtube.com/*
 // @icon         https://www.youtube.com/s/desktop/1eca3218/img/favicon_144.png
 // @require      https://code.jquery.com/jquery-3.5.1.min.js
@@ -30,7 +30,7 @@ GM_addStyle(`
     #bcboxes {height:fit-content;width:fit-content;margin:auto;display:grid;font-size:20px;border:2px solid var(--yt-spec-10-percent-layer2);background:var(--yt-spec-brand-background-primary);color:white;grid-template-columns: auto auto auto auto auto auto auto auto;}
     #bcboxes2 {height:fit-content;width:fit-content;margin:auto;display:grid;font-size:20px;background:var(--yt-spec-brand-background-primary);color:white;}
     .highlight{color: #ff472a;}
-    a#video-title.yt-simple-endpoint.ytd-grid-video-renderer:hover{overflow: visible !important;max-height: fit-content !important;display: block;}
+    #video-title:hover{overflow: visible !important;max-height: fit-content !important;display: block !important;}
 `);
 window.addEventListener("yt-page-data-updated", function(e) {
     // Reset Blacklisted Video Counter Number
@@ -67,7 +67,7 @@ window.addEventListener("yt-page-data-updated", function(e) {
     // Mark Blacklisted Words
     var markedblacklist = getblacklist.replaceAll('"', '').replaceAll(', ', ',').replaceAll('" ', '"').split(',');
     setInterval(function() {
-        $('a#video-title').highlight(markedblacklist);
+        $('#video-title').highlight(markedblacklist);
     },5000);
     // Check for Blacklisted Videos and Update Counter Every 2.5 Seconds
     setInterval(function() {
