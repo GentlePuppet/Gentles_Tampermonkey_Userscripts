@@ -1,7 +1,7 @@
 	// ==UserScript==
 // @name         Youtube Hide Blacklisted Videos
 // @author       GentlePuppet
-// @version      1.8.2
+// @version      1.8.3
 // @match        https://www.youtube.com/*
 // @icon         https://www.youtube.com/s/desktop/1eca3218/img/favicon_144.png
 // @require      https://code.jquery.com/jquery-3.5.1.min.js
@@ -67,8 +67,9 @@ window.addEventListener("yt-page-data-updated", function(e) {
     // Mark Blacklisted Words
     var markedblacklist = getblacklist.replaceAll('"', '').replaceAll(', ', ',').replaceAll('" ', '"').split(',');
     setInterval(function() {
-        $('#video-title').highlight(markedblacklist, { className: 'blacklistedtext' });
-    },5000);
+        $('.Blacklisted_Video_Hidden').find('#video-title').highlight(markedblacklist, { className: 'blacklistedtext' });
+        $('.Blacklisted_Video_Shown').find('#video-title').highlight(markedblacklist, { className: 'blacklistedtext' });
+    },2500);
     // Check for Blacklisted Videos and Update Counter Every 2.5 Seconds
     setInterval(function() {
         var bvh = $(".Blacklisted_Video_Hidden").length;
