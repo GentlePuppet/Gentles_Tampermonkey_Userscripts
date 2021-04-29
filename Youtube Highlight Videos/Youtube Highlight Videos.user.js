@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Youtube Highlight Videos
 // @author       GentlePuppet
-// @version      1.5.2
+// @version      1.5.3
 // @match        https://www.youtube.com/*
 // @icon         https://www.youtube.com/s/desktop/1eca3218/img/favicon_144.png
 // @require      http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js
@@ -38,8 +38,8 @@ window.addEventListener("yt-page-data-updated", function(e) {
     // Mark Highlighted Titles
     var markedfavorites = getfavorites.replaceAll('"', '').replaceAll(', ', ',').replaceAll('" ', '"').split(',');
     setInterval(function() {
-        $('#video-title').highlight(markedfavorites, { className: 'favoritetext' });
-    },5000);
+        $('.Favorite_Video_Type').find('#video-title').highlight(markedfavorites, { className: 'favoritetext' });
+    },2500);
     // Create Add New Favorite Button
     waitForKeyElements ('#search-form > #container', CreateAddFavoriteButton, 0);
     function CreateAddFavoriteButton () {
