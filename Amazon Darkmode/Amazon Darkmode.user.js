@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name         Amazon Darkmode
-// @version      1.1.8
+// @version      1.1.9
 // @author       GentlePuppet
 // @match        https://www.amazon.com/*
 // @icon         https://store-images.s-microsoft.com/image/apps.55760.13510798887500513.d2cc5d6f-e9f4-4850-a5d6-bbd7976d6c2d.ed4ef02c-b3d1-497d-8297-1a54e79abfad?mode=scale&q=90&h=200&w=200&background=%230078D7
 // @updateURL    https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/tree/main/Amazon%20Darkmode/AmazonDarkmode.js
 // @downloadURL  https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/tree/main/Amazon%20Darkmode/AmazonDarkmode.js
-// @run-at       document-start
+// @run-at        document-start
 // @match        *amazon*
 // @grant        GM_addStyle
 // @require      http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js
@@ -40,12 +40,13 @@ GM_addStyle('a, a:active, a:link, a:visited {color: #2bceff !important;}');
 
 GM_addStyle('#squished-desktop-row .desktop-row, .gw-card-layout .desktop-row>div {border-right: none !important; width: 100% !important;}');
 
-GM_addStyle('#deliveredAddress-container .lastReached .milestone-primaryMessage, #progressTracker-container .lastReached .milestone-primaryMessage, #deliveredAddress-container .reached .milestone-primaryMessage, #progressTracker-container .reached .milestone-primaryMessage {color: #009cb3 !important;}');
+GM_addStyle('.order-card .delivery-box__secondary-text, .order-card .delivery-box__primary-text,#deliveredAddress-container .lastReached .milestone-primaryMessage, #progressTracker-container .lastReached .milestone-primaryMessage, #deliveredAddress-container .reached .milestone-primaryMessage, #progressTracker-container .reached .milestone-primaryMessage {color: #009cb3 !important;}');
 
-waitForKeyElements ('.a-color-alternate-background', OverrideBackground, 0);
-waitForKeyElements ('.a-color-base-background', OverrideBackground, 0);
-waitForKeyElements ('.a-color-base', OverrideBackground, 0);
-waitForKeyElements ('.a-color-secondary, .a-color-tertiary', OverrideBackground, 0);
+waitForKeyElements('.a-color-alternate-background', OverrideBackground, 0);
+waitForKeyElements('.a-color-base-background', OverrideBackground, 0);
+waitForKeyElements('.a-color-base', OverrideBackground, 0);
+waitForKeyElements('.a-color-secondary, .a-color-tertiary', OverrideBackground, 0);
+waitForKeyElements('.a-box.a-color-alternate-background, .a-box.a-color-offset-background', OverrideBackground, 0);
     function OverrideBackground (jnode) {
         jnode.attr("style", "background-color: #222222 !important; color: #ddd !important");
     }
