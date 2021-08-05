@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Youtube Gentle's Better CSS Tweaks
 // @author       GentlePuppet
-// @version      1.0
+// @version      1.1
 // @include      https://www.youtube.com/*
 // @icon         https://www.youtube.com/s/desktop/1eca3218/img/favicon_144.png
 // @require      http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js
@@ -63,29 +63,11 @@ function playlistHeight () {
     var WindowHeight = (WindowHeightCalc + "px !important;");
     $("#container.ytd-playlist-panel-renderer, ytd-playlist-panel-renderer[js-panel-height_]").attr('style', 'max-height: ' + WindowHeight);
     $("ytd-watch-flexy[flexy_][js-panel-height_] #panels.ytd-watch-flexy ytd-engagement-panel-section-list-renderer.ytd-watch-flexy").attr('style', 'max-height: ' + WindowHeight);
+    $("#secondary-inner > ytd-playlist-panel-renderer").attr('style', 'max-height: ' + WindowHeight);
 }
 $(window).resize(playlistHeight);
 
 window.addEventListener("yt-page-data-updated", function(e) {
-
-    // Video Length Label
-    waitForKeyElements ('ytd-grid-video-renderer', RemoveViews, 0);
-    waitForKeyElements ('ytd-compact-video-renderer', RemoveViews, 0);
-    waitForKeyElements ('ytd-rich-item-renderer', RemoveViews, 0);
-    function RemoveViews (jnode) {
-        $(jnode).find('#metadata-line > .style-scope:contains("views")').remove();
-        $(jnode).find('#metadata-line > .style-scope:contains("views")').remove();
-        $(jnode).find('#metadata-line > .style-scope:contains("views")').remove();
-    }
-
-    // Show Date Uploaded on Playlist Pages
-    if(window.location.href.indexOf("youtube.com/playlist?list=") !==-1 ) {
-        waitForKeyElements ('a[id="video-title"]', GetAriaLabel, 0);
-        function GetAriaLabel (jnode) {
-            var Video_Title = jnode.attr('aria-label').replace(/^.*by /g, '').replace(/ago .*$/g, 'ago');
-            jnode.parents('#meta').find('ytd-video-meta-block > div > div > ytd-channel-name > div > div > yt-formatted-string > a').text(Video_Title);
-        }
-    }
 
     // Fade out Watched Videos from Playlists
     waitForKeyElements ('ytd-playlist-panel-video-renderer > a > div > div > ytd-thumbnail > a > div > ytd-thumbnail-overlay-resume-playback-renderer > #progress[style="width: 100%;"]', FadeWatched, 0);
