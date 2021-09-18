@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Youtube Gentle's Better CSS Tweaks
 // @author       GentlePuppet
-// @version      1.1
+// @version      1.2
 // @include      https://www.youtube.com/*
 // @icon         https://www.youtube.com/s/desktop/1eca3218/img/favicon_144.png
 // @require      http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js
@@ -98,40 +98,34 @@ window.addEventListener("yt-page-data-updated", function(e) {
     // Mini Progress Bar
     waitForKeyElements('.html5-video-container > video', CreateDummyProgress, 0);
     function CreateDummyProgress () {
-        var DCP = $('<div/>').attr({class: "DummyContainerProgress", style: "width: 100%; height: 3px; position: absolute; bottom: 0; left: 0; outline: none;"});
-        var DPP = $('<div/>').attr({class: "DummyPlayProgress", style: "scaleX: 0;width: 100%; height: 3px; position: absolute; left: 0px; transform-origin: 0 0; background-color: #9b08ad;"});
-        var DLP = $('<div/>').attr({class: "DummyLoadProgress", style: "scaleX: 0;width: 100%; height: 3px; position: absolute; left: 0px; transform-origin: 0 0; background: rgba(255,255,255,.4);"});
-
         var dummyprogress = document.querySelector(".DummyContainerProgress");
+        if (dummyprogress) {return;}
+
+        var DCP = $('<div/>').attr({class: "DummyContainerProgress", style: "width: 100%; height: 3px; bottom: 0; left: 0; outline: none; padding-top: 2px;"});
+        var DPP = $('<div/>').attr({class: "DummyPlayProgress", style: "transform: scaleX(0);width: 100%; height: 3px; position: absolute; left: 0px; transform-origin: 0 0; background-color: #9b08ad;"});
+        var DLP = $('<div/>').attr({class: "DummyLoadProgress", style: "transform: scaleX(0);width: 100%; height: 3px; position: absolute; left: 0px; transform-origin: 0 0; background: rgba(255,255,255,.4);"});
+
         if (!dummyprogress) {
-            $('.html5-video-player').attr({style: "padding-bottom: 5px !important;"});
-            $('.html5-video-player').append(DCP);
-            $(DCP).append(DPP);
-            $(DCP).append(DLP);
+            DCP.insertAfter('.html5-video-player');
+            $('.DummyContainerProgress').append(DPP);
+            $('.DummyContainerProgress').append(DLP);
         }
 
         // Update Mini Progress Bar
         // Original Code Created by Nemanja Bu for "Always Show Progress Bar" | Modified for Gentle's "Mini Progress Bar"
-        // https://greasyfork.org/en/scripts/30046-youtube-always-show-progress-bar/codevar findVideoInterval = setInterval(function() {
+        // https://greasyfork.org/en/scripts/30046-youtube-always-show-progress-bar/code var findVideoInterval = setInterval(function() {
         var findVideoInterval = setInterval(function() {
             var ytplayer = document.querySelector(".html5-video-player:not(.addedupdateevents)");
-            if (!ytplayer) {
-                return;
-            }
+            if (!ytplayer) {return;}
             clearInterval(findVideoInterval);
             ytplayer.className+=" addedupdateevents";
             var video = ytplayer.querySelector("video");
-            var progressbar = ytplayer.querySelector(".DummyPlayProgress");
-            var loadbar = ytplayer.querySelector(".DummyLoadProgress");
-            if (!video || !progressbar || !loadbar) {
-                return;
-            }
-            video.addEventListener("timeupdate",function() {
-                progressbar.style.transform = "scaleX("+(video.currentTime/video.duration)+")";
-            });
-            video.addEventListener("progress",function() {
-                loadbar.style.transform = "scaleX("+(video.buffered.end(video.buffered.length-1)/video.duration)+")";
-            });
+            var container = document.querySelector("ytd-player > #container");
+            var progressbar = container.querySelector(".DummyPlayProgress");
+            var loadbar = container.querySelector(".DummyLoadProgress");
+            if (!video || !progressbar || !loadbar) {return;}
+            video.addEventListener("timeupdate",function() {progressbar.style.transform = "scaleX("+(video.currentTime/video.duration)+")";});
+            video.addEventListener("progress",function() {loadbar.style.transform = "scaleX("+(video.buffered.end(video.buffered.length-1)/video.duration)+")";});
         },500);
     }
 });
