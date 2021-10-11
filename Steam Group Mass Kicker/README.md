@@ -5,6 +5,8 @@ A Tampermonkey Userscript I made to allow you to select multiple users in a stea
 
 When I update the script you'll get an auto update notification.
 
+Select users you want to click by checking the tick box next to the kick button. 
+Once you select all the users you want to kick click the verify button at the top.
 ![Preview of Script](https://i.imgur.com/RfDBlTN.png)
 ![Preview of Script 2](https://i.imgur.com/tHUfC0W.png)
 
