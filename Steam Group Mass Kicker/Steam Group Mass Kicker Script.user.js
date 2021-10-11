@@ -92,6 +92,8 @@ function startkick() {
             form.elements['memberId'].value = shiftedkicklist;
             form.submit();
             $.cookie('KickThesePlayers', userarray, { domain: '.steamcommunity.com', path: '/' });
+        } else {
+            location.reload();
         }
     }
 }
