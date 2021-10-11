@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Steam Group Mass Kicker Script
-// @version      0.3
+// @version      1.0
 // @author       GentlePuppet
 // @include      https://steamcommunity.com/groups/*
 // @run-at       document-body
@@ -9,6 +9,8 @@
 // @require      https://gist.github.com/raw/2625891/waitForKeyElements.js
 // @require      https://raw.githubusercontent.com/carhartl/jquery-cookie/v1.4.1/jquery.cookie.js
 // @icon         https://www.google.com/s2/favicons?domain=steamcommunity.com
+// @updateURL    https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Steam%20Group%20Mass%20Kicker/Steam%20Group%20Mass%20Kicker%20Script.user.js
+// @downloadURL  https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Steam%20Group%20Mass%20Kicker/Steam%20Group%20Mass%20Kicker%20Script.user.js
 // ==/UserScript==
 GM_addStyle(`
     #kicklistlabel {border: solid #3e6787 2px; padding: 0px 5px;}
@@ -37,6 +39,7 @@ function CreateCheckboxes() {
     $("#CheckAllBox").click(function() {
         $("input[id=KickUserCheckbox]").prop("checked", $(this).prop("checked"));
     });
+    return;
 }
 
 function GetCheckedBoxes() {
@@ -67,14 +70,24 @@ function GetCheckedBoxes() {
     $("#popupwarn").html("Make sure you want to kick these users. <br> If you made a mistake click cancel and change the check boxes and click verify again.");
     document.getElementById ("applyfiltersbutton").addEventListener ("click", startkick, false);
     document.getElementById ("cancelfiltersbutton").addEventListener ("click", CancelKick, false);
+    return;
 }
 
 function CancelKick(){
     $('#popuphome').remove();
+    return;
 }
 
 waitForKeyElements (`#memberManageList`, startkick, 0);
 function startkick() {
+    if($.cookie('hideblacklistedvideos') == undefined) {
+        return;
+    }
+    if($.cookie('KickThesePlayers') == "" ){
+        $.removeCookie('KickThesePlayers', {domain: '.steamcommunity.com', path: '/'});
+        alert('Kick Script Finished')
+        return;
+    }
     if($.cookie('KickThesePlayers') !== "" ) {
         var userarray = $.cookie('KickThesePlayers').replace('%2C', ',').split(',');
         var shiftedkicklist = userarray.shift();
@@ -84,14 +97,8 @@ function startkick() {
             form.elements['memberId'].value = shiftedkicklist;
             form.submit();
             $.cookie('KickThesePlayers', userarray, { domain: '.steamcommunity.com', path: '/' });
-        } else {
-            //userarray.push(shiftedkicklist);
-            //$.cookie('KickThesePlayers', userarray, { domain: '.steamcommunity.com', path: '/' });
-            //location.reload();
+            alert('Please Wait for the Selected Users to be Kicked');
+            return;
         }
-    }
-
-    if($.cookie('KickThesePlayers') == "" ){
-        $.removeCookie('KickThesePlayers', {domain: '.steamcommunity.com', path: '/'});
     }
 }
