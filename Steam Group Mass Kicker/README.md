@@ -1,6 +1,6 @@
 
 
-# Gentle's Steam Group Mass Kicker Tool
+# Gentle's Steam Group Mass Kicker Script
 A Tampermonkey Userscript I made to allow you to select multiple users in a steam group to kick in rapid succession, instead of going one by one.
 
 When I update the script you'll get an auto update notification.
@@ -10,7 +10,7 @@ When I update the script you'll get an auto update notification.
 
 
 As long as you have a userscript extension like Tampermonkey or Greasemonkey then clicking the link below will install the script for you.
-* [Install Darkmode Google](https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Steam%20Group%20Mass%20Kicker/Steam%20Group%20Mass%20Kicker%20Script.user.js)
+* [Install Steam Group Mass Kicker Script](https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Steam%20Group%20Mass%20Kicker/Steam%20Group%20Mass%20Kicker%20Script.user.js)
 
 ### Don't have a userscript extension?
 * [Get Tampermonkey for Chrome](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=en)
