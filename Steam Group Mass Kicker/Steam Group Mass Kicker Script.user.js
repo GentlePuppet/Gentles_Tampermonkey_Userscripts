@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Steam Group Mass Kicker Script
-// @version      1.0
+// @version      1.0.1
 // @author       GentlePuppet
 // @include      https://steamcommunity.com/groups/*
 // @run-at       document-body
@@ -66,7 +66,7 @@ function GetCheckedBoxes() {
     $(CNBL).insertAfter("#applyfiltersbutton");
     $("#applyfiltersbutton").text("Kick");
     $("#cancelfiltersbutton").text("Cancel");
-    $("#popupwarn").html("Make sure you want to kick these users. <br> If you made a mistake click cancel and change the check boxes and click verify again.");
+    $("#popupwarn").html("Make sure you want to kick these users. <br> If you made a mistake click cancel and change the check boxes and click verify again. <br> This Can Not Be Undone.");
     document.getElementById ("applyfiltersbutton").addEventListener ("click", startkick, false);
     document.getElementById ("cancelfiltersbutton").addEventListener ("click", CancelKick, false);
 }
