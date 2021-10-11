@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Steam Group Mass Kicker Script
-// @version      1.0.3
+// @version      1.0.4
 // @author       GentlePuppet
 // @include      https://steamcommunity.com/groups/*
 // @run-at       document-body
@@ -92,10 +92,6 @@ function startkick() {
             form.elements['memberId'].value = shiftedkicklist;
             form.submit();
             $.cookie('KickThesePlayers', userarray, { domain: '.steamcommunity.com', path: '/' });
-        } else {
-            userarray.push(shiftedkicklist);
-            $.cookie('KickThesePlayers', userarray, { domain: '.steamcommunity.com', path: '/' });
-            alert("Selected User: " + shiftedkicklist + " Not on Current Page\nSkipping User For Now.\nPlease Reload the page to Continue.")
         }
     }
 }
