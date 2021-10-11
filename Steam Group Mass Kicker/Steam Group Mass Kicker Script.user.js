@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Steam Group Mass Kicker Script
-// @version      1.0.4
+// @version      1.0.5
 // @author       GentlePuppet
 // @include      https://steamcommunity.com/groups/*
 // @run-at       document-body
@@ -12,6 +12,7 @@
 // @updateURL    https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Steam%20Group%20Mass%20Kicker/Steam%20Group%20Mass%20Kicker%20Script.user.js
 // @downloadURL  https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Steam%20Group%20Mass%20Kicker/Steam%20Group%20Mass%20Kicker%20Script.user.js
 // ==/UserScript==
+//console.log('SGMKS Debug: Steam Group Mass Kicker Script Loaded');
 GM_addStyle(`
     #kicklistlabel {border: solid #3e6787 2px; padding: 0px 5px;}
     #popuphome{margin: 0 auto;position: sticky;top: 30%;height: 0px;width: fit-content;z-index: 50000;}
@@ -24,6 +25,7 @@ GM_addStyle(`
 `);
 waitForKeyElements (`.groupadmin_header_location`, CreateCheckboxes, 0);
 function CreateCheckboxes() {
+    //console.log('SGMKS Debug: Checkboxes Created');
     var checkbox = $('<input/>').attr({type: "checkbox",id: "KickUserCheckbox",style: "margin-left: 5px"});
     $('img[data-tooltip-text="Kick this member from the group"]').after(checkbox);
     $("input[id=KickUserCheckbox]").click(function() {
@@ -40,17 +42,18 @@ function CreateCheckboxes() {
         $("input[id=KickUserCheckbox]").prop("checked", $(this).prop("checked"));
     });
 }
-
 function GetCheckedBoxes() {
+    //console.log('SGMKS Debug: Verify Users Popup Created');
     var userarray = [];
     var usernames = [];
+    var useravatar = [];
     $('#KickUserCheckbox:checked').each(function(index) {
         var profile_url = $(this).parents('.member_block').find('img.manageMemberAction').attr('onclick').replace("ManageMembers_Kick( '", '').replace(/', '.*' \);/, "");
         var profile_name = $(this).parents('.member_block').find('a.linkFriend').text();
         userarray.push(profile_url);
         usernames.push(profile_name);
         $.cookie('KickThesePlayers', userarray, { domain: '.steamcommunity.com', path: '/' });
-        console.log(profile_url)
+        $.cookie('KickThesePlayers-Names', usernames, { domain: '.steamcommunity.com', path: '/' });
     });
     var CBBLA1 = $('<div/>').attr({type: "div",id: "popuphome"});
     var CBBLA = $('<div/>').attr({type: "div",id: "popup"});
@@ -70,30 +73,37 @@ function GetCheckedBoxes() {
     document.getElementById ("applyfiltersbutton").addEventListener ("click", startkick, false);
     document.getElementById ("cancelfiltersbutton").addEventListener ("click", CancelKick, false);
 }
-
 function CancelKick(){
     $('#popuphome').remove();
+    $.removeCookie('KickThesePlayers', {domain: '.steamcommunity.com', path: '/'});
+    $.removeCookie('KickThesePlayers-Names', {domain: '.steamcommunity.com', path: '/'});
+    //console.log('SGMKS Debug: Kick Canceled Deleting Kick List');
 }
-
 waitForKeyElements (`#memberManageList`, startkick, 0);
 function startkick() {
+    //console.log('SGMKS Debug: function startkick');
     if($.cookie('KickThesePlayers') == undefined) {
+        //console.log('SGMKS Debug: No Kick List Created');
+        return;
     }
     if($.cookie('KickThesePlayers') == "" ){
         $.removeCookie('KickThesePlayers', {domain: '.steamcommunity.com', path: '/'});
+        $.removeCookie('KickThesePlayers-Names', {domain: '.steamcommunity.com', path: '/'});
         alert('Kick Script Finished')
+        //console.log('SGMKS Debug: Kick list Finished');
     }
     if($.cookie('KickThesePlayers') !== "" ) {
+        var usernames = $.cookie('KickThesePlayers-Names').replace('%2C', ',').split(',');
+        var shiftednamelist = usernames.shift();
         var userarray = $.cookie('KickThesePlayers').replace('%2C', ',').split(',');
         var shiftedkicklist = userarray.shift();
-        console.log(shiftedkicklist)
         if($(".manageMemberAction[onclick*=" + shiftedkicklist + "]").length ) {
             var form = document.forms['kick_form'];
             form.elements['memberId'].value = shiftedkicklist;
             form.submit();
             $.cookie('KickThesePlayers', userarray, { domain: '.steamcommunity.com', path: '/' });
-        } else {
-            location.reload();
+            $.cookie('KickThesePlayers-Names', usernames, { domain: '.steamcommunity.com', path: '/' });
+            console.log('SGMKS Debug: Kicking User ' + shiftednamelist);
         }
     }
 }
