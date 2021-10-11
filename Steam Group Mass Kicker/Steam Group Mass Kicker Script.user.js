@@ -39,6 +39,73 @@ function CreateCheckboxes() {
     $("#CheckAllBox").click(function() {
         $("input[id=KickUserCheckbox]").prop("checked", $(this).prop("checked"));
     });
+}
+
+function GetCheckedBoxes() {
+    var userarray = [];
+    var usernames = [];
+    $('#KickUserCheckbox:checked').each(function(index) {
+        var profile_url = $(this).parents('.member_block').find('img.manageMemberAction').attr('onclick').replace("ManageMembers_Kick( '", '').replace(/', '.*' \);/, "");
+        var profile_name = $(this).parents('.member_block').find('a.linkFriend').text();
+        userarray.push(profile_url);
+        usernames.push(profile_name);
+        $.cookie('KickThesePlayers', userarray, { domain: '.steamcommunity.com', path: '/' });
+        console.log(profile_url)
+    });
+    var CBBLA1 = $('<div/>').attr({type: "div",id: "popuphome"});
+    var CBBLA = $('<div/>').attr({type: "div",id: "popup"});
+    var CBBLA2 = $('<div/>').attr({type: "div",id: "popupwarn"});
+    $(CBBLA1).insertBefore('div#global_header');
+    $(CBBLA1).append(CBBLA);
+    $(CBBLA).before(CBBLA2);
+    var myDiv = document.getElementById("popup");
+    for (var i = 0; i < usernames.length; i++) {var label = document.createElement("label");label.id = "kicklistlabel";myDiv.appendChild(label);label.appendChild(document.createTextNode(usernames[i]));}
+    var ACBL = $('<button/>').attr({type: "button",id: "applyfiltersbutton",class: "popupKickButton"});
+    var CNBL = $('<button/>').attr({type: "button",id: "cancelfiltersbutton",class: "popupCancelButton"});
+    $('#popuphome').append(ACBL);
+    $(CNBL).insertAfter("#applyfiltersbutton");
+    $("#applyfiltersbutton").text("Kick");
+    $("#cancelfiltersbutton").text("Cancel");
+    $("#popupwarn").html("Make sure you want to kick these users. <br> If you made a mistake click cancel and change the check boxes and click verify again.");
+    document.getElementById ("applyfiltersbutton").addEventListener ("click", startkick, false);
+    document.getElementById ("cancelfiltersbutton").addEventListener ("click", CancelKick, false);
+}
+
+function CancelKick(){
+    $('#popuphome').remove();
+}
+
+waitForKeyElements (`#memberManageList`, startkick, 0);
+function startkick() {
+    if($.cookie('KickThesePlayers') == undefined) {
+    }
+    if($.cookie('KickThesePlayers') == "" ){
+        $.removeCookie('KickThesePlayers', {domain: '.steamcommunity.com', path: '/'});
+        alert('Kick Script Finished')
+    }
+    if($.cookie('KickThesePlayers') !== "" ) {
+        var userarray = $.cookie('KickThesePlayers').replace('%2C', ',').split(',');
+        var shiftedkicklist = userarray.shift();
+        console.log(shiftedkicklist)
+        if($(".manageMemberAction[onclick*=" + shiftedkicklist + "]").length ) {
+            var form = document.forms['kick_form'];
+            form.elements['memberId'].value = shiftedkicklist;
+            form.submit();
+            $.cookie('KickThesePlayers', userarray, { domain: '.steamcommunity.com', path: '/' });
+        } else {
+            userarray.push(shiftedkicklist);
+            $.cookie('KickThesePlayers', userarray, { domain: '.steamcommunity.com', path: '/' });
+            startkick();
+        }
+    }
+}box = $('<input/>').attr({type: "button",id: "VerifyUser",value: "Verify"});
+    $('.search_controls').after(verifybox);
+    document.getElementById("VerifyUser").addEventListener("click", GetCheckedBoxes, false);
+    var checkallboxs = $('<input/>').attr({type: "checkbox",id: "CheckAllBox",style: "margin-left: 5px"});
+    $(verifybox).after(checkallboxs);
+    $("#CheckAllBox").click(function() {
+        $("input[id=KickUserCheckbox]").prop("checked", $(this).prop("checked"));
+    });
     return;
 }
 
