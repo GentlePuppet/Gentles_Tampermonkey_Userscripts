@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Steam Group Mass Kicker Script
-// @version      1.0.6
+// @version      1.0.7
 // @author       GentlePuppet
 // @include      /https://steamcommunity.com/groups/.*/membersManage/
 // @run-at       document-body
@@ -14,6 +14,9 @@
 // ==/UserScript==
 //console.log('SGMKS Debug: Steam Group Mass Kicker Script Loaded');
 GM_addStyle(`
+    #KickUserCheckbox {margin-left: 5px;height: 25px;width: 25px;position: absolute;top: 10px;}
+    #KickUserCheckbox:Hover {cursor: pointer;}
+    .rank_icon {padding-right: 35px !important;}
     #kicklistlabel {border: solid #3e6787 2px; padding: 0px 5px;}
     #popuphome{margin: 0 auto;position: sticky;top: 30%;height: 0px;width: fit-content;z-index: 50000;}
     #popup{display: grid;color: #ddebde;background: #0d121a;grid-template-columns: auto auto auto;border: solid 5px #3e6786;box-shadow: 0px -15px 60px 30px black;grid-gap: 2px;}
@@ -26,7 +29,7 @@ GM_addStyle(`
 waitForKeyElements (`.groupadmin_header_location`, CreateCheckboxes, 0);
 function CreateCheckboxes() {
     //console.log('SGMKS Debug: Checkboxes Created');
-    var checkbox = $('<input/>').attr({type: "checkbox",id: "KickUserCheckbox",style: "margin-left: 5px"});
+    var checkbox = $('<input/>').attr({type: "checkbox",id: "KickUserCheckbox"});
     $('img[data-tooltip-text="Kick this member from the group"]').after(checkbox);
     $("input[id=KickUserCheckbox]").click(function() {
         if (!$(this).prop("checked")) {
