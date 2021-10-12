@@ -1,7 +1,7 @@
 
 
 # Gentle's Steam Group Mass Kicker Script
-A Tampermonkey Userscript I made to allow you to select multiple users in a steam group to kick in rapid succession, instead of going one by one.
+A Tampermonkey Userscript I made to allow you to select multiple users in a steam group to kick in rapid succession, instead of manually kicking one by one.
 
 When I update the script you'll get an auto update notification.
 
