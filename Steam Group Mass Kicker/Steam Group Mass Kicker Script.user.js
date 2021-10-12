@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Steam Group Mass Kicker Script
-// @version      1.0.5
+// @version      1.0.6
 // @author       GentlePuppet
-// @include      https://steamcommunity.com/groups/*
+// @include      /https://steamcommunity.com/groups/.*/membersManage/
 // @run-at       document-body
 // @grant        GM_addStyle
 // @require      https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js
