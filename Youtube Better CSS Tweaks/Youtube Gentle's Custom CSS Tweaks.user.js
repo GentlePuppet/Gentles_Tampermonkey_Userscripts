@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Youtube Gentle's Better CSS Tweaks
 // @author       GentlePuppet
-// @version      1.2
+// @version      1.3
 // @include      https://www.youtube.com/*
 // @icon         https://www.youtube.com/s/desktop/1eca3218/img/favicon_144.png
 // @require      http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js
@@ -110,7 +110,9 @@ window.addEventListener("yt-page-data-updated", function(e) {
             $('.DummyContainerProgress').append(DPP);
             $('.DummyContainerProgress').append(DLP);
         }
-
+    }
+    waitForKeyElements('.DummyContainerProgress', UpdateDummyProgress, 0);
+    function UpdateDummyProgress () {
         // Update Mini Progress Bar
         // Original Code Created by Nemanja Bu for "Always Show Progress Bar" | Modified for Gentle's "Mini Progress Bar"
         // https://greasyfork.org/en/scripts/30046-youtube-always-show-progress-bar/code var findVideoInterval = setInterval(function() {
