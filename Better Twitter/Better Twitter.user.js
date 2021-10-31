@@ -24,67 +24,84 @@
 //
 // @updateURL      https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Better%20Twitter/Better%20Twitter.user.js
 // @downloadURL    https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Better%20Twitter/Better%20Twitter.user.js
-// @version        0.8
+// @version        0.9
 // ==/UserScript==
 
 /////////////////////////////////////////////////
 // Stuff Created By Gentle
-// Scaling for windows
-GM_addStyle('header[role="banner"] {max-width: 0px !important;}');
-GM_addStyle('main[role="main"], header[role="banner"] > div > div > div > div, header[role="banner"] > div > div > div > div:nth-child(2) {max-width: 800px;}');
-GM_addStyle('main[role="main"]{max-width: calc(800px + 298px)!important;margin: auto !important;}');
-GM_addStyle('header[role="banner"] > div > div > div {margin: auto;padding-right: 298px;max-width: calc(800px + 298px);}');
-GM_addStyle('main[role="main"] > div {max-width: 800px;}');
-GM_addStyle('div[data-testid="sidebarColumn"] {max-width: 36% !important;}');
-GM_addStyle('div[data-testid="sidebarColumn"] > div > div:nth-child(2), div[data-testid="sidebarColumn"] > div > div:nth-child(2) > div > div > div > div:nth-child(1) {max-width: 100% !important; position: sticky;}');
-GM_addStyle('div[data-testid="sidebarColumn"] > div > div:nth-child(1) {display: none;}');
+/* Scaling */
+GM_addStyle(`header[role="banner"] {max-width: 0px !important;}
+             main[role="main"], header[role="banner"] > div > div > div > div, header[role="banner"] > div > div > div > div:nth-child(2) {max-width: 800px;}
+             main[role="main"]{max-width: calc(800px + 298px)!important;margin: auto !important;}
+             header[role="banner"] > div > div > div {margin: auto;padding-right: 298px;max-width: calc(800px + 298px);}
+             main[role="main"] > div {max-width: 800px;}
+             div[data-testid="sidebarColumn"] {max-width: 36% !important;}
+             div[data-testid="sidebarColumn"] > div > div:nth-child(2), div[data-testid="sidebarColumn"] > div > div:nth-child(2) > div > div > div > div:nth-child(1) {max-width: 100% !important; position: sticky;}
+             div[data-testid="sidebarColumn"] > div > div:nth-child(1) {display: none;}
 
-// Settings
-GM_addStyle('section[aria-labelledby="root-header"] {margin-left: -200px; top: 45px; border-top: 1px solid rgb(56, 68, 77);}');
-GM_addStyle('section[aria-labelledby="detail-header"] {top: 45px; border-top: 1px solid rgb(56, 68, 77);}');
+/* Settings */
+             section[aria-labelledby="root-header"] {margin-left: -200px; top: 45px; border-top: 1px solid rgb(56, 68, 77);}
+             section[aria-labelledby="detail-header"] {top: 45px; border-top: 1px solid rgb(56, 68, 77);}
 
-// Hide Whats Happening
-GM_addStyle('div[data-testid="sidebarColumn"] > div > div:nth-child(2) > div > div > div > div:nth-child(2), div[aria-label="Timeline: Trending now"] {display: none !important;}');
+/* Hide Whats Happening */
+             div[data-testid="sidebarColumn"] > div > div:nth-child(2) > div > div > div > div:nth-child(2), div[aria-label="Timeline: Trending now"] {display: none !important;}
 
-// Wider Posts
-GM_addStyle('div[data-testid="primaryColumn"], .r-1ye8kvj {max-width: 800px !important; margin-right: 10px; background-color: #101923 !important;}');
-GM_addStyle('div[data-testid="primaryColumn"] > div > div:nth-child(3) {display: none;}');
-GM_addStyle('div[role="blockquote"] {background-color: #172535 !important; border-color: #253341 !important;}');
-GM_addStyle('section[aria-label="Section navigation"] {margin-right: 0px !important;}');
-GM_addStyle('section[aria-label="Section details"] {margin-right: -100px !important;}');
+/* Wider Posts */
+             div[data-testid="primaryColumn"], .r-1ye8kvj {max-width: 800px !important; margin-right: 10px; background-color: #101923 !important;}
+             div[data-testid="primaryColumn"] > div > div:nth-child(3) {display: none;}
+             div[role="blockquote"] {background-color: #172535 !important; border-color: #253341 !important;}
+             section[aria-label="Section navigation"] {margin-right: 0px !important;}
+             section[aria-label="Section details"] {margin-right: -100px !important;}
 
-// Adjusted Left Sidebar
-GM_addStyle('main[role="main"] > div > div > div > div > div > div:nth-child(1) {padding-top: 40px;}');
-GM_addStyle('main[role="main"] > div > div > div > div > div > div > div {border-top: 1px solid rgb(56, 68, 77);}');
-GM_addStyle('header[role="banner"] > div, header[role="banner"] > div > div, header[role="banner"] > div > div > div {width: 100%; overflow: hidden; padding: 0px; height: 40px;}');
-GM_addStyle('header[role="banner"] > div > div > div > div {height: 40px; border-left: 1px solid #101923; border-right: 1px solid #101923; background: #101923;}');
-GM_addStyle('a[href="/home"], a[href="/notifications"],a[aria-label="Direct Messages"],a[aria-label="Bookmarks"],a[aria-label="Lists"],a[aria-label="Profile"],div[aria-label="More menu items"] {width: 40px; height: 40px; padding: 0px;}');
-GM_addStyle('a[aria-label="Twitter"] > div > svg,a[aria-label="Home"] > div > div,a[href="/notifications"] > div > div,a[aria-label="Direct Messages"] > div > div,a[aria-label="Bookmarks"] > div > div,a[aria-label="Lists"] > div > div,a[aria-label="Profile"] > div > div,div[aria-label="More menu items"] > div > div {top: -2px;}');
-GM_addStyle('a[aria-label="Home"] div > div:nth-child(2),a[aria-label="Notifications"] div > div:nth-child(2),a[aria-label="Direct Messages"] div > div:nth-child(2),a[aria-label="Bookmarks"] div > div:nth-child(2),a[aria-label="Lists"] div > div:nth-child(2),a[aria-label="Profile"] div > div:nth-child(2),div[aria-label="More menu items"] div > div:nth-child(2) {display:none; margin: none; padding: none;}');
-GM_addStyle('a[href="/home"] div > div:nth-child(2) {margin: 0px !important;}');
-GM_addStyle('a[href="/notifications"] div > div:nth-child(2) {margin: 0px !important;}');
-GM_addStyle('a[aria-label="Twitter"] {top: 0px !important; left: 0px !important; min-width: 40px; min-height: 40px; width: 40px; height: 40px; padding: 0px;}');
-GM_addStyle('a[href="/home"]                   {top: -45px;  left: 40px}');
-GM_addStyle('a[href="/notifications"]          {top: -85px;  left: 80px}');
-GM_addStyle('a[href="/messages"]               {top: -125px; left: 120px}');
-GM_addStyle('a[aria-label="Bookmarks"]         {top: -165px; left: 160px}');
-GM_addStyle('a[aria-label="Lists"]             {top: -205px; left: 200px}');
-GM_addStyle('a[aria-label="Profile"]           {top: -245px; left: 240px}');
-GM_addStyle('div[aria-label="More menu items"] {top: -285px; left: 280px}');
-GM_addStyle('header[role="banner"] > div > div > div > div:nth-child(2) {top: -40px; margin-top: 0px; margin-bottom: 0px; padding: 0px; left: 575px; width: 220px; height: 40px; border: none;}');
-GM_addStyle('header[role="banner"] > div > div > div > div:nth-child(2) > div > div {margin: 0px; padding: 0px; padding-right: 10px; width: 220px; height: 40px; border: none;}');
+/* Adjusted Left Sidebar */
+             main[role="main"] > div > div > div > div > div > div:nth-child(1) {padding-top: 40px;}
+             main[role="main"] > div > div > div > div > div > div > div {border-top: 1px solid rgb(56, 68, 77);}
+             header[role="banner"] > div, header[role="banner"] > div > div, header[role="banner"] > div > div > div {width: 100%; overflow: hidden; padding: 0px; height: 40px;}
+             header[role="banner"] > div > div > div > div {height: 40px; border-left: 1px solid #101923; border-right: 1px solid #101923; background: #101923;}
+             a[href="/home"], a[href="/notifications"],a[aria-label="Direct Messages"],a[aria-label="Bookmarks"],a[aria-label="Lists"],a[aria-label="Profile"],div[aria-label="More menu items"] {width: 40px; height: 40px; padding: 0px;}
+             a[aria-label="Twitter"] > div > svg,a[aria-label="Home"] > div > div,a[href="/notifications"] > div > div,a[aria-label="Direct Messages"] > div > div,a[aria-label="Bookmarks"] > div > div,a[aria-label="Lists"] > div > div,a[aria-label="Profile"] > div > div,div[aria-label="More menu items"] > div > div {top: -2px;}
+             a[aria-label="Home"] div > div:nth-child(2),a[aria-label="Notifications"] div > div:nth-child(2),a[aria-label="Direct Messages"] div > div:nth-child(2),a[aria-label="Bookmarks"] div > div:nth-child(2),a[aria-label="Lists"] div > div:nth-child(2),a[aria-label="Profile"] div > div:nth-child(2),div[aria-label="More menu items"] div > div:nth-child(2) {display:none; margin: none; padding: none;}
+             a[href="/home"] div > div:nth-child(2) {margin: 0px !important;}
+             a[href="/notifications"] div > div:nth-child(2) {margin: 0px !important;}
+             a[aria-label="Twitter"] {top: 0px !important; left: 0px !important; min-width: 40px; min-height: 40px; width: 40px; height: 40px; padding: 0px;}
+             a[href="/home"]                   {top: -45px;  left: 40px}
+             a[href="/notifications"]          {top: -85px;  left: 80px}
+             a[href="/messages"]               {top: -125px; left: 120px}
+             a[aria-label="Bookmarks"]         {top: -165px; left: 160px}
+             a[aria-label="Lists"]             {top: -205px; left: 200px}
+             a[aria-label="Profile"]           {top: -245px; left: 240px}
+             div[aria-label="More menu items"] {top: -285px; left: 280px}
+             header[role="banner"] > div > div > div > div:nth-child(2) {top: -40px; margin-top: 0px; margin-bottom: 0px; padding: 0px; left: 575px; width: 220px; height: 40px; border: none;}
+             header[role="banner"] > div > div > div > div:nth-child(2) > div > div {margin: 0px; padding: 0px; padding-right: 10px; width: 220px; height: 40px; border: none;}
 
-// Box Avatars
-GM_addStyle('.r-sdzlij {border-radius: 0px !important;}');
+/* Box Avatars */
+             .r-sdzlij {border-radius: 0px !important;}
 
-// Uncropped Images
-GM_addStyle('div[aria-label="Image"] {margin: 0px 0px 0px !important;}');
-GM_addStyle('div[aria-label="Image"] > div {background-size:contain !important; background-position-x: 0 !important;}');
-GM_addStyle('.r-18bvks7 {border-color: transparent; border-radius: 0px !important;}');
+/* Uncropped Images */
+             div[aria-label="Image"] {margin: 0px 0px 0px !important;}
+             div[aria-label="Image"] > div {background-size:contain !important; background-position-x: 0 !important;}
+             .r-18bvks7 {border-color: transparent; border-radius: 0px !important;}
 
-// Show Hidden Content
-GM_addStyle('.u-hidden {display:inherit !important;}');
-GM_addStyle('.Tombstone {display:none;}');
+/* Show Hidden Content */
+             .u-hidden {display:inherit !important;}
+             .Tombstone {display:none;}
+
+/* Toggle Buttons */
+             #ToggleMediaButton {background-color:transparent;height:40px;width:40px;position:absolute;border:none!important;left:320px;color:white;font-size:20px;padding-top:5px;}
+             #ToggleMediaButton:hover {background-color:rgba(121, 75, 196, 0.1)!important;color:rgb(121, 75, 196)!important;cursor: pointer;}
+             #ToggleLikeButton {background-color:transparent;height:40px;width:40px;position:absolute;border:none!important;left:360px;color:white;font-size:20px;padding-top:5px;}
+             #ToggleLikeButton:hover {background-color:rgba(121, 75, 196, 0.1)!important;color:rgb(121, 75, 196)!important;cursor: pointer;}
+             #ToggleRetweetButton {background-color:transparent;height:40px;width:40px;position:absolute;border:none!important;left:400px;color:white;font-size:20px;padding-top:5px;}
+             #ToggleRetweetButton:hover {background-color:rgba(121, 75, 196, 0.1)!important;color:rgb(121, 75, 196)!important;cursor: pointer;}
+             #ToggleSelfRetweetButton {background-color:transparent;height:40px;width:60px;position:absolute;border:none!important;left:440px;color:white;font-size:20px;padding-top:5px;}
+             #ToggleSelfRetweetButton:hover {background-color:rgba(121, 75, 196, 0.1)!important;color:rgb(121, 75, 196)!important;cursor: pointer;}
+`);
+
+// Highlight Liked Posts
+waitForKeyElements (`div[role="group"] > div > div[aria-label*="Liked"]`, HighlightLiked, 0);
+function HighlightLiked (jnode) {
+    $(jnode).parents('article[role="article"]').attr("style", "background-color: #3f0546;border-top: #b809ce 1px solid;border-bottom: #b809ce 1px solid;");
+}
 
 // Toggle Hide Tweets with No Image or Video
 if($.cookie('TwitterImageOnly') == undefined) {$.cookie('TwitterImageOnly', "0", { domain: '.twitter.com', expires: 128000, path: '/' });}
@@ -93,13 +110,6 @@ if($.cookie('TwitterImageOnly') == 1) {waitForKeyElements ('article[role="articl
 waitForKeyElements ('header > div > div > div > div:nth-child(2)', CreateToggleBlacklistButton, 0);
 function CreateToggleBlacklistButton(jnode) {var b1 = $('<input/>').attr({ type: "button", id: "ToggleMediaButton", value: "M"});$(b1).insertAfter(jnode);document.getElementById("ToggleMediaButton").addEventListener("click", ToggleMedia, false);if($.cookie('TwitterImageOnly') == 1) {$('#ToggleMediaButton').attr('style', 'background-color: rgb(60 178 197 / 10%);color: rgb(88 196 75);');}}
 function ToggleMedia() {if($.cookie('TwitterImageOnly') == 0) {$('#ToggleMediaButton').attr('style', 'background-color: rgb(60 178 197 / 10%);color: rgb(88 196 75);');}if($.cookie('TwitterImageOnly') == 0) {waitForKeyElements ('article[role="article"]', HideNoImage, 0);function HideNoImage (jnode) {var PostWithVideo = jnode.find('div[aria-label="Embedded video"]');var PostWithImage = jnode.find('div[aria-label="Image"]');if(PostWithVideo.length | PostWithImage.length) {} else {jnode.parent().parent().parent().hide();};};$.cookie('TwitterImageOnly', "1", { domain: '.twitter.com', expires: 128000, path: '/' });return}if($.cookie('TwitterImageOnly') == 1) {$.cookie('TwitterImageOnly', "0", { domain: '.twitter.com', expires: 128000, path: '/' });location.reload();return}}
-GM_addStyle('#ToggleMediaButton {background-color:transparent;height:40px;width:40px;position:absolute;border:none!important;left:320px;color:white;font-size:20px;padding-top:5px;}#ToggleMediaButton:hover {background-color:rgba(121, 75, 196, 0.1)!important;color:rgb(121, 75, 196)!important;cursor: pointer;}');
-
-// Highlight Liked Posts
-waitForKeyElements (`div[role="group"] > div > div[aria-label*="Liked"]`, HighlightLiked, 0);
-function HighlightLiked (jnode) {
-    $(jnode).parents('article[role="article"]').attr("style", "background-color: #3f0546;border-top: #b809ce 1px solid;border-bottom: #b809ce 1px solid;");
-}
 
 // Toggle Hide Liked Tweets
 if($.cookie('TwitterHideLiked') == undefined) {$.cookie('TwitterHideLiked', "0", { domain: '.twitter.com', expires: 128000, path: '/' });}
@@ -108,19 +118,35 @@ if($.cookie('TwitterHideLiked') == 1) {waitForKeyElements (`div[aria-label*="Lik
 waitForKeyElements ('#ToggleMediaButton', CreateToggleLikedButton, 0);
 function CreateToggleLikedButton(jnode) {var b2 = $('<input/>').attr({ type: "button", id: "ToggleLikeButton", value: "L"});$(b2).insertAfter(jnode);document.getElementById("ToggleLikeButton").addEventListener("click", ToggleLiked, false);if($.cookie('TwitterHideLiked') == 1) {$('#ToggleLikeButton').attr('style', 'background-color: rgb(60 178 197 / 10%);color: rgb(88 196 75);');}}
 function ToggleLiked() {if($.cookie('TwitterHideLiked') == 0) {$('#ToggleLikeButton').attr('style', 'background-color: rgb(60 178 197 / 10%);color: rgb(88 196 75);');}if($.cookie('TwitterHideLiked') == 0) {waitForKeyElements (`div[aria-label*="Liked"]`, HideLiked, 0);$.cookie('TwitterHideLiked', "1", { domain: '.twitter.com', expires: 128000, path: '/' });return}if($.cookie('TwitterHideLiked') == 1) {$.cookie('TwitterHideLiked', "0", { domain: '.twitter.com', expires: 128000, path: '/' });location.reload();return}}
-function HideLiked (jnode) {jnode.parents('article[role="article"]').parent().parent().parent().hide();}
-GM_addStyle('#ToggleLikeButton {background-color:transparent;height:40px;width:40px;position:absolute;border:none!important;left:360px;color:white;font-size:20px;padding-top:5px;}#ToggleLikeButton:hover {background-color:rgba(121, 75, 196, 0.1)!important;color:rgb(121, 75, 196)!important;cursor: pointer;}');
+function HideLiked (jnode) {jnode.parents('article[role="article"]').parent().remove();}
 
 // Toggle ReTweets
 if($.cookie('TwitterHideRetweet') == undefined) {$.cookie('TwitterHideRetweet', "0", { domain: '.twitter.com', expires: 128000, path: '/' });}
 if($.cookie('TwitterHideRetweet') == 0) {$.cookie('TwitterHideRetweet', "0", { domain: '.twitter.com', expires: 128000, path: '/' });}
-if($.cookie('TwitterHideRetweet') == 1) {waitForKeyElements (`span[data-testid="socialContext"]:contains(" Retweeted")`, HideRetweeted, 0);$.cookie('TwitterHideRetweet', "1", { domain: '.twitter.com', expires: 128000, path: '/' });}
+if($.cookie('TwitterHideRetweet') == 1) {waitForKeyElements (`span[data-testid="socialContext"]:contains('Retweeted')`, HideRetweeted, 0);$.cookie('TwitterHideRetweet', "1", { domain: '.twitter.com', expires: 128000, path: '/' });}
 waitForKeyElements ('#ToggleLikeButton', CreateToggleRetweetButton, 0);
 function CreateToggleRetweetButton(jnode) {var b3 = $('<input/>').attr({ type: "button", id: "ToggleRetweetButton", value: "R"});$(b3).insertAfter(jnode);document.getElementById("ToggleRetweetButton").addEventListener("click", ToggleRetweeted, false);if($.cookie('TwitterHideRetweet') == 1) {$('#ToggleRetweetButton').attr('style', 'background-color: rgb(60 178 197 / 10%);color: rgb(88 196 75);');}}
-function ToggleRetweeted() {if($.cookie('TwitterHideRetweet') == 0) {$('#ToggleRetweetButton').attr('style', 'background-color: rgb(60 178 197 / 10%);color: rgb(88 196 75);');}if($.cookie('TwitterHideRetweet') == 0) {waitForKeyElements (`span[data-testid="socialContext"]:contains(" Retweeted")`, HideRetweeted, 0);$.cookie('TwitterHideRetweet', "1", { domain: '.twitter.com', expires: 128000, path: '/' });return}if($.cookie('TwitterHideRetweet') == 1) {$.cookie('TwitterHideRetweet', "0", { domain: '.twitter.com', expires: 128000, path: '/' });location.reload();return}}
-function HideRetweeted (jnode) {jnode.parents('article[role="article"]').parent().parent().parent().hide();}
-GM_addStyle('#ToggleRetweetButton {background-color:transparent;height:40px;width:40px;position:absolute;border:none!important;left:400px;color:white;font-size:20px;padding-top:5px;}#ToggleRetweetButton:hover {background-color:rgba(121, 75, 196, 0.1)!important;color:rgb(121, 75, 196)!important;cursor: pointer;}');
+function ToggleRetweeted() {if($.cookie('TwitterHideRetweet') == 0) {$('#ToggleRetweetButton').attr('style', 'background-color: rgb(60 178 197 / 10%);color: rgb(88 196 75);');}if($.cookie('TwitterHideRetweet') == 0) {waitForKeyElements (`span[data-testid="socialContext"]:contains('Retweeted')`, HideRetweeted, 0);$.cookie('TwitterHideRetweet', "1", { domain: '.twitter.com', expires: 128000, path: '/' });return}if($.cookie('TwitterHideRetweet') == 1) {$.cookie('TwitterHideRetweet', "0", { domain: '.twitter.com', expires: 128000, path: '/' });location.reload();return}}
+function HideRetweeted (jnode) {jnode.parents('article[role="article"]').parent().remove();}
 
+// Toggle Self-ReTweets
+if($.cookie('TwitterHideSelfRetweet') == undefined) {$.cookie('TwitterHideSelfRetweet', "0", { domain: '.twitter.com', expires: 128000, path: '/' });}
+if($.cookie('TwitterHideSelfRetweet') == 0) {$.cookie('TwitterHideSelfRetweet', "0", { domain: '.twitter.com', expires: 128000, path: '/' });}
+if($.cookie('TwitterHideSelfRetweet') == 1) {waitForKeyElements(`span[data-testid="socialContext"]:contains('Retweeted')`, CheckForSelfRetweet, 0);$.cookie('TwitterHideSelfRetweet', "1", { domain: '.twitter.com', expires: 128000, path: '/' });}
+waitForKeyElements ('#ToggleRetweetButton', CreateToggleSelfRetweetButton, 0);
+function CreateToggleSelfRetweetButton(jnode) {var b3 = $('<input/>').attr({ type: "button", id: "ToggleSelfRetweetButton", value: "SR"});$(b3).insertAfter(jnode);document.getElementById("ToggleSelfRetweetButton").addEventListener("click", ToggleSelfRetweeted, false);if($.cookie('TwitterHideSelfRetweet') == 1) {$('#ToggleSelfRetweetButton').attr('style', 'background-color: rgb(60 178 197 / 10%);color: rgb(88 196 75);');}}
+function ToggleSelfRetweeted() {if($.cookie('TwitterHideSelfRetweet') == 0) {$('#ToggleSelfRetweetButton').attr('style', 'background-color: rgb(60 178 197 / 10%);color: rgb(88 196 75);');}if($.cookie('TwitterHideSelfRetweet') == 0) {waitForKeyElements(`span[data-testid="socialContext"]:contains('Retweeted')`, CheckForSelfRetweet, 0);$.cookie('TwitterHideSelfRetweet', "1", { domain: '.twitter.com', expires: 128000, path: '/' });return}if($.cookie('TwitterHideSelfRetweet') == 1) {$.cookie('TwitterHideSelfRetweet', "0", { domain: '.twitter.com', expires: 128000, path: '/' });location.reload();return}}
+function CheckForSelfRetweet (jnode) {
+    var Retweeted = jnode.parent().attr('href');
+    var Retweeter = jnode.parents('article[role="article"]').find('div > div > div > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div > div > div:nth-child(1) > div:nth-child(1) > a[role="link"]').attr('href');
+    if (Retweeter == Retweeted) {
+        //console.log("Retweeted: " + Retweeted + " | Retweeter: " + Retweeter)
+        jnode.parents('article[role="article"]').parent().remove();
+    } else {
+        //console.log("Retweeted: " + Retweeted + " | Retweeter: " + Retweeter)
+        return;
+    }
+}
 
 /////////////////////////////////////////////////
 //           Stuff Created by Others           //
