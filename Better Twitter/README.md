@@ -3,7 +3,7 @@
 # Gentle's Tweaked Twitter UserScript
 
 ## Credits:
-Modified CSS - Toggle Media Only Tweets - Highlight Liked Tweets - Toggle Hide Liked Tweets - Toggle Hide Retweets |
+Modified CSS - Toggle Media Only Tweets - Highlight Liked Tweets - Toggle Hide Liked Tweets - Toggle Hide Retweets - Toggle Hide Self-Retweets |
 [Gentle Puppet](https://github.com/GentlePuppet)
 
 [Hide Promoted Tweets](https://greasyfork.org/en/scripts/396474-ad-free-twitter/code) |
