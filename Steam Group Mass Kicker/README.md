@@ -8,6 +8,7 @@ When I update the script you'll get an auto update notification.
 Select users you want to click by checking the tick box next to the kick button. 
 
 Once you select all the users you want to kick click the verify button at the top.
+(You can only kick players visbile on the current page.)
 
 
 ![Preview of Script](https://i.imgur.com/0FpCtkc.png)
