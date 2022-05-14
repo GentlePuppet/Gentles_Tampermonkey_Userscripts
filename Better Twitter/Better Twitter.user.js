@@ -24,7 +24,7 @@
 //
 // @updateURL      https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Better%20Twitter/Better%20Twitter.user.js
 // @downloadURL    https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Better%20Twitter/Better%20Twitter.user.js
-// @version        0.9
+// @version        0.9.1
 // ==/UserScript==
 
 /////////////////////////////////////////////////
@@ -54,7 +54,7 @@ GM_addStyle(`header[role="banner"] {max-width: 0px !important;}
              section[aria-label="Section details"] {margin-right: -100px !important;}
 
 /* Adjusted Left Sidebar */
-             main[role="main"] > div > div > div > div > div > div:nth-child(1) {padding-top: 40px;}
+             main[role="main"] > div > div > div > div > div > div:nth-child(1) {/*padding-top: 40px;*/}
              main[role="main"] > div > div > div > div > div > div > div {border-top: 1px solid rgb(56, 68, 77);}
              header[role="banner"] > div, header[role="banner"] > div > div, header[role="banner"] > div > div > div {width: 100%; overflow: hidden; padding: 0px; height: 40px;}
              header[role="banner"] > div > div > div > div {height: 40px; border-left: 1px solid #101923; border-right: 1px solid #101923; background: #101923;}
@@ -87,13 +87,13 @@ GM_addStyle(`header[role="banner"] {max-width: 0px !important;}
              .Tombstone {display:none;}
 
 /* Toggle Buttons */
-             #ToggleMediaButton {background-color:transparent;height:40px;width:40px;position:absolute;border:none!important;left:320px;color:white;font-size:20px;padding-top:5px;}
+             #ToggleMediaButton {background-color:transparent;height:40px;width:40px;position:absolute;border:none!important;left:-180px;color:white;font-size:20px;padding-top:5px;}
              #ToggleMediaButton:hover {background-color:rgba(121, 75, 196, 0.1)!important;color:rgb(121, 75, 196)!important;cursor: pointer;}
-             #ToggleLikeButton {background-color:transparent;height:40px;width:40px;position:absolute;border:none!important;left:360px;color:white;font-size:20px;padding-top:5px;}
+             #ToggleLikeButton {background-color:transparent;height:40px;width:40px;position:absolute;border:none!important;left:-140px;color:white;font-size:20px;padding-top:5px;}
              #ToggleLikeButton:hover {background-color:rgba(121, 75, 196, 0.1)!important;color:rgb(121, 75, 196)!important;cursor: pointer;}
-             #ToggleRetweetButton {background-color:transparent;height:40px;width:40px;position:absolute;border:none!important;left:400px;color:white;font-size:20px;padding-top:5px;}
+             #ToggleRetweetButton {background-color:transparent;height:40px;width:40px;position:absolute;border:none!important;left:-100px;color:white;font-size:20px;padding-top:5px;}
              #ToggleRetweetButton:hover {background-color:rgba(121, 75, 196, 0.1)!important;color:rgb(121, 75, 196)!important;cursor: pointer;}
-             #ToggleSelfRetweetButton {background-color:transparent;height:40px;width:60px;position:absolute;border:none!important;left:440px;color:white;font-size:20px;padding-top:5px;}
+             #ToggleSelfRetweetButton {background-color:transparent;height:40px;width:60px;position:absolute;border:none!important;left:-60px;color:white;font-size:20px;padding-top:5px;}
              #ToggleSelfRetweetButton:hover {background-color:rgba(121, 75, 196, 0.1)!important;color:rgb(121, 75, 196)!important;cursor: pointer;}
 `);
 
@@ -107,8 +107,8 @@ function HighlightLiked (jnode) {
 if($.cookie('TwitterImageOnly') == undefined) {$.cookie('TwitterImageOnly', "0", { domain: '.twitter.com', expires: 128000, path: '/' });}
 if($.cookie('TwitterImageOnly') == 0) {$.cookie('TwitterImageOnly', "0", { domain: '.twitter.com', expires: 128000, path: '/' });}
 if($.cookie('TwitterImageOnly') == 1) {waitForKeyElements ('article[role="article"]', HideNoImage, 0);function HideNoImage (jnode) {var PostWithVideo = jnode.find('div[aria-label="Embedded video"]');var PostWithImage = jnode.find('div[aria-label="Image"]');if(PostWithVideo.length | PostWithImage.length) {} else {jnode.parent().parent().parent().hide();};};$.cookie('TwitterImageOnly', "1", { domain: '.twitter.com', expires: 128000, path: '/' });}
-waitForKeyElements ('header > div > div > div > div:nth-child(2)', CreateToggleBlacklistButton, 0);
-function CreateToggleBlacklistButton(jnode) {var b1 = $('<input/>').attr({ type: "button", id: "ToggleMediaButton", value: "M"});$(b1).insertAfter(jnode);document.getElementById("ToggleMediaButton").addEventListener("click", ToggleMedia, false);if($.cookie('TwitterImageOnly') == 1) {$('#ToggleMediaButton').attr('style', 'background-color: rgb(60 178 197 / 10%);color: rgb(88 196 75);');}}
+waitForKeyElements ('div[aria-label="Top Tweets on"]', CreateToggleBlacklistButton, 0);
+function CreateToggleBlacklistButton(jnode) {var b1 = $('<input/>').attr({ type: "button", id: "ToggleMediaButton", value: "M"});$(b1).insertBefore(jnode);document.getElementById("ToggleMediaButton").addEventListener("click", ToggleMedia, false);if($.cookie('TwitterImageOnly') == 1) {$('#ToggleMediaButton').attr('style', 'background-color: rgb(60 178 197 / 10%);color: rgb(88 196 75);');}}
 function ToggleMedia() {if($.cookie('TwitterImageOnly') == 0) {$('#ToggleMediaButton').attr('style', 'background-color: rgb(60 178 197 / 10%);color: rgb(88 196 75);');}if($.cookie('TwitterImageOnly') == 0) {waitForKeyElements ('article[role="article"]', HideNoImage, 0);function HideNoImage (jnode) {var PostWithVideo = jnode.find('div[aria-label="Embedded video"]');var PostWithImage = jnode.find('div[aria-label="Image"]');if(PostWithVideo.length | PostWithImage.length) {} else {jnode.parent().parent().parent().hide();};};$.cookie('TwitterImageOnly', "1", { domain: '.twitter.com', expires: 128000, path: '/' });return}if($.cookie('TwitterImageOnly') == 1) {$.cookie('TwitterImageOnly', "0", { domain: '.twitter.com', expires: 128000, path: '/' });location.reload();return}}
 
 // Toggle Hide Liked Tweets
