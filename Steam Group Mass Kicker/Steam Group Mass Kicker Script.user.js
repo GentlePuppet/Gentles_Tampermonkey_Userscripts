@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Steam Group Mass Kicker Script
-// @version      3
+// @version      3.1
 // @author       GentlePuppet
 // @description	 Mass Kick Users From Steam Yer Group
 // @include      /https://steamcommunity.com/groups/.*/membersManage/
@@ -25,6 +25,10 @@ function checkprofile() {
     if($('*:contains("★·.·´¯`·.·★ Thank you for visiting my profile! ★·.·´¯`·.·★")').children().length > 0){MarkBotProfile();return;}
 
     if($('*:contains("[w̲̅][e̲̅][l̲̅][c̲̅][o̲̅][m̲̅][e̲̅] [t̲̅][o̲̅] [m̲̅][y̲̅] [p̲̅][r̲̅][o̲̅][f̲̅][i̲̅][l̲̅]")').children().length > 0){MarkBotProfile();return;}
+
+    if($('*:contains("•● W E L C O M E- T O -M Y -P R O F I L E ●•")').children().length > 0){MarkBotProfile();return;}
+
+    if($('*:contains("Whats ups, cutie, im litle absent-minded")').children().length > 0){MarkBotProfile();return;}
 
     if($('*:contains("Thank you for visiting my profile.")').children().length > 0){MarkBotProfile();return;}
 
@@ -51,29 +55,24 @@ GM_addStyle(`
     .popupCancelButton:hover {background: #7d6f6f;}
 `);
 
-waitForKeyElements(`.linkFriend:contains("🔥"),
-.linkFriend:contains("✨"),
-.linkFriend:contains("💫"),
-.linkFriend:contains("👑"),
-.linkFriend:contains("🎩"),
-.linkFriend:contains("📼"),
-.linkFriend:contains("⚡"),
-.linkFriend:contains("🖤"),
-.linkFriend:contains("💙"),
-.linkFriend:contains("⭐"),
-.linkFriend:contains("🍀"),
-.linkFriend:contains("🌸"),
-.linkFriend:contains("💀"),
-.linkFriend:contains("💣"),
-.linkFriend:contains("🎮"),
-.linkFriend:contains("🧀"),
-.linkFriend:contains("🌙"),
-.linkFriend:contains("🐲"),
-.linkFriend:contains("✯"),
-.linkFriend:contains("🍌"),
-.linkFriend:contains("💎"),
-.linkFriend:contains("🌴"),
-.linkFriend:contains("🌟")
+waitForKeyElements(`.linkFriend:contains("🔥"),.linkFriend:contains("👀"),
+.linkFriend:contains("✨"),.linkFriend:contains("💫"),
+.linkFriend:contains("👑"),.linkFriend:contains("🎩"),
+.linkFriend:contains("📼"),.linkFriend:contains("⚡"),
+.linkFriend:contains("🖤"),.linkFriend:contains("💙"),
+.linkFriend:contains("⭐"),.linkFriend:contains("🍀"),
+.linkFriend:contains("🗝"),.linkFriend:contains("🗝"),
+.linkFriend:contains("🌸"),.linkFriend:contains("💀"),
+.linkFriend:contains("💣"),.linkFriend:contains("🎮"),
+.linkFriend:contains("🧀"),.linkFriend:contains("🌙"),
+.linkFriend:contains("🐲"),.linkFriend:contains("✯"),
+.linkFriend:contains("🍌"),.linkFriend:contains("💎"),
+.linkFriend:contains("🌴"),.linkFriend:contains("★"),
+.linkFriend:contains("☠"),.linkFriend:contains("🍩"),
+.linkFriend:contains("🔹"),.linkFriend:contains("🐝"),
+.linkFriend:contains("🍉"),.linkFriend:contains("👻"),
+.linkFriend:contains("⚓"),.linkFriend:contains("💗"),
+.linkFriend:contains("📚"),.linkFriend:contains("🌟")
 `, markSUS, 0);
 function markSUS(e) {
     e.parents('.member_block').attr('style', 'background-color: rgb(108 16 16 / 35%) !important; box-shadow: 0px 0px 5px red; z-index: 1;');
@@ -97,7 +96,7 @@ function CreateCheckboxes() {
     var checkbox = $('<input/>').attr({type: "checkbox",id: "KickUserCheckbox"});
     $('img[data-tooltip-text="Kick this member from the group"]').after(checkbox);
     $("input[id=KickUserCheckbox]").click(function() {if (!$(this).prop("checked")) {$("#CheckAllBox").prop("checked", false);}});
-    var verifybox = $('<input/>').attr({type: "button",id: "VerifyUser",value: "Verify"});
+    var verifybox = $('<input/>').attr({type: "button",id: "VerifyUser",value: "Kick Marked Users"});
     $('.search_controls').after(verifybox);
     document.getElementById("VerifyUser").addEventListener("click", GetCheckedBoxes, false);
     var checkallboxs = $('<input/>').attr({type: "checkbox",id: "CheckAllBox",style: "margin-left: 5px"});
@@ -128,7 +127,7 @@ function GetCheckedBoxes() {
     $('#popuphome').append(ACBL);
     $(CNBL).insertAfter("#applyfiltersbutton");
     $("#applyfiltersbutton").text("Kick");
-    $("#cancelfiltersbutton").text("Clear");
+    $("#cancelfiltersbutton").text("Cancel");
     $("#popupwarn").html("Make sure you want to kick these users. <br> If you made a mistake click cancel and change the check boxes and click verify again.");
     document.getElementById ("applyfiltersbutton").addEventListener ("click", startkick, false);
     document.getElementById ("cancelfiltersbutton").addEventListener ("click", CancelKick, false);
