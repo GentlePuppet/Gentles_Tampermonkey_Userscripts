@@ -1,9 +1,11 @@
 // ==UserScript==
 // @name         Steam Group Mass Kicker Script
-// @version      2.0
+// @version      3
 // @author       GentlePuppet
 // @description	 Mass Kick Users From Steam Yer Group
 // @include      /https://steamcommunity.com/groups/.*/membersManage/
+// @include      /https://steamcommunity.com/profiles/.*/
+// @include      /https://steamcommunity.com/id/.*/
 // @run-at       document-body
 // @grant        GM_addStyle
 // @grant        unsafeWindow
@@ -11,10 +13,30 @@
 // @require      https://gist.github.com/raw/2625891/waitForKeyElements.js
 // @require      https://raw.githubusercontent.com/carhartl/jquery-cookie/v1.4.1/jquery.cookie.js
 // @icon         https://www.google.com/s2/favicons?domain=steamcommunity.com
+// @source       https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/tree/main/Steam%20Group%20Mass%20Kicker
 // @updateURL    https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Steam%20Group%20Mass%20Kicker/Steam%20Group%20Mass%20Kicker%20Script.user.js
 // @downloadURL  https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Steam%20Group%20Mass%20Kicker/Steam%20Group%20Mass%20Kicker%20Script.user.js
 // ==/UserScript==
 //console.log('SGMKS Debug: Steam Group Mass Kicker Script Loaded');
+waitForKeyElements(`.profile_summary`, checkprofile, 0);
+function checkprofile() {
+    if($('*:contains("𝓦𝒆𝓵𝓬𝓸𝓶𝒆 𝓽𝓸 𝓶𝔂 𝓹𝓻𝓸𝒇𝓲𝓵𝒆")').children().length > 0){MarkBotProfile();return;}
+
+    if($('*:contains("★·.·´¯`·.·★ Thank you for visiting my profile! ★·.·´¯`·.·★")').children().length > 0){MarkBotProfile();return;}
+
+    if($('*:contains("[w̲̅][e̲̅][l̲̅][c̲̅][o̲̅][m̲̅][e̲̅] [t̲̅][o̲̅] [m̲̅][y̲̅] [p̲̅][r̲̅][o̲̅][f̲̅][i̲̅][l̲̅]")').children().length > 0){MarkBotProfile();return;}
+
+    if($('*:contains("Thank you for visiting my profile.")').children().length > 0){MarkBotProfile();return;}
+
+    if($('*:contains("░█░█░█░█▀▀▀░█░░░░█▀▀▀░█▀▀█░█▀█▀█░█▀▀▀░")').children().length > 0){MarkBotProfile();return;}
+}
+
+function MarkBotProfile() {
+    $('body.profile_page, div.profile_page').attr('style', 'background-image: none; background-color: #460505; --gradient-left: none; --gradient-right: none; --gradient-background: #460505;')
+    var MARKPROFILEBOT = $('<div/>').attr('id', 'SUSWARNING').attr('style', 'margin: 9px 0px; font-size: x-large; background-color: #2A475E; border: solid 5px rgba( 0, 0, 0, 0.2 ); color: white; padding: 5px; text-align: center;').html('<span style="color:red; font-weight: 800;">Notice:</span> There are many duplicate profiles that have the same exact profile Bio as this one.');
+    $('#global_header').after(MARKPROFILEBOT);
+}
+
 GM_addStyle(`
     #KickUserCheckbox {margin-left: 5px;height: 25px;width: 25px;position: absolute;top: 10px;}
     #KickUserCheckbox:Hover {cursor: pointer;}
@@ -28,8 +50,50 @@ GM_addStyle(`
     .popupCancelButton {height: 40px;color: white;background: #383838;border: black 1px solid;cursor: pointer;text-shadow: 1px 1px 3px black;}
     .popupCancelButton:hover {background: #7d6f6f;}
 `);
-waitForKeyElements (`.groupadmin_header_location`, CreateCheckboxes, 0);
+
+waitForKeyElements(`.linkFriend:contains("🔥"),
+.linkFriend:contains("✨"),
+.linkFriend:contains("💫"),
+.linkFriend:contains("👑"),
+.linkFriend:contains("🎩"),
+.linkFriend:contains("📼"),
+.linkFriend:contains("⚡"),
+.linkFriend:contains("🖤"),
+.linkFriend:contains("💙"),
+.linkFriend:contains("⭐"),
+.linkFriend:contains("🍀"),
+.linkFriend:contains("🌸"),
+.linkFriend:contains("💀"),
+.linkFriend:contains("💣"),
+.linkFriend:contains("🎮"),
+.linkFriend:contains("🧀"),
+.linkFriend:contains("🌙"),
+.linkFriend:contains("🐲"),
+.linkFriend:contains("✯"),
+.linkFriend:contains("🍌"),
+.linkFriend:contains("💎"),
+.linkFriend:contains("🌴"),
+.linkFriend:contains("🌟")
+`, markSUS, 0);
+function markSUS(e) {
+    e.parents('.member_block').attr('style', 'background-color: rgb(108 16 16 / 35%) !important; box-shadow: 0px 0px 5px red; z-index: 1;');
+}
+
+function hovercheck() {
+    if ($(".miniprofile_game_name").text() === "Team Fortress 2" && $('.rich_presence').length === 0){
+        $('.miniprofile_hover_inner.shadow_content').attr('style', 'background-color: rgb(108 16 16 / 35%) !important; box-shadow: 0px 0px 5px red;')
+    } else {
+        $('.miniprofile_hover_inner.shadow_content').attr('style', '')
+    }
+    setTimeout(() => {hovercheck()}, 100);
+}
+hovercheck();
+
+waitForKeyElements(`.groupadmin_header_location`, CreateCheckboxes, 0);
 function CreateCheckboxes() {
+    window.scrollBy(0,205)
+    var SUSWARN = $('<div/>').attr('id', 'SUSWARNING').attr('style', 'margin: 9px 0px; font-size: x-large; background-color: #2A475E; border: solid 5px rgba( 0, 0, 0, 0.2 ); color: white; padding: 5px; text-align: center;').html('If Users Are Highlighted In <span style="color:red; font-weight: 600;">Red</span> They Are SUS.<br>This is <span style="color:red; font-weight: 800;">NOT</span> a 100% guarantee they are a bot.<br>But you should inspect these users profiles.');
+    $('#memberManageList').before(SUSWARN);
     var checkbox = $('<input/>').attr({type: "checkbox",id: "KickUserCheckbox"});
     $('img[data-tooltip-text="Kick this member from the group"]').after(checkbox);
     $("input[id=KickUserCheckbox]").click(function() {if (!$(this).prop("checked")) {$("#CheckAllBox").prop("checked", false);}});
@@ -79,7 +143,7 @@ function startkick() {
     if($.cookie('KickThesePlayers') == "" ){
         $.removeCookie('KickThesePlayers', {domain: '.steamcommunity.com', path: '/'});
         $.removeCookie('KickThesePlayers-Names', {domain: '.steamcommunity.com', path: '/'});
-        ShowBlockingWaitDialog("Players Kicked");
+        ShowBlockingWaitDialog("Players Kicked", '<span style="font-size: large;">' + 'Waiting for Steam To Process...');
         setTimeout(() => {location.reload();}, 2000);
     }
     if($.cookie('KickThesePlayers') !== "" ) {
@@ -93,8 +157,8 @@ function startkick() {
             $.cookie('KickThesePlayers', userarray, { domain: '.steamcommunity.com', path: '/' });
             $.cookie('KickThesePlayers-Names', usernames, { domain: '.steamcommunity.com', path: '/' });
             console.log('SGMKS Debug: Kicking User ' + shiftednamelist);
-            ShowBlockingWaitDialog("Kicking Players...");
-            setTimeout(() => {startkick()}, 100);
+            ShowBlockingWaitDialog("Kicking Players...", '<span style="font-size: large; text-align: center;">Kicking user: <span style="text-decoration: underline;text-underline-offset: 3px;">' + shiftednamelist + '</span><br>&emsp;&ensp;&nbsp; Steam ID: <span style="text-decoration: underline;text-underline-offset: 3px;">' + shiftedkicklist);
+            setTimeout(() => {startkick()}, 500);
         }
     }
 }
