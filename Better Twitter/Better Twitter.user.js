@@ -24,13 +24,15 @@
 //
 // @updateURL      https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Better%20Twitter/Better%20Twitter.user.js
 // @downloadURL    https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Better%20Twitter/Better%20Twitter.user.js
-// @version        0.9.1
+// @version        0.9.2
 // ==/UserScript==
 
 /////////////////////////////////////////////////
 // Stuff Created By Gentle
 /* Scaling */
-GM_addStyle(`header[role="banner"] {max-width: 0px !important;}
+GM_addStyle(`
+/* Main Page */
+             header[role="banner"] {max-width: 0px !important;}
              main[role="main"], header[role="banner"] > div > div > div > div, header[role="banner"] > div > div > div > div:nth-child(2) {max-width: 800px;}
              main[role="main"]{max-width: calc(800px + 298px)!important;margin: auto !important;}
              header[role="banner"] > div > div > div {margin: auto;padding-right: 298px;max-width: calc(800px + 298px);}
@@ -39,40 +41,15 @@ GM_addStyle(`header[role="banner"] {max-width: 0px !important;}
              div[data-testid="sidebarColumn"] > div > div:nth-child(2), div[data-testid="sidebarColumn"] > div > div:nth-child(2) > div > div > div > div:nth-child(1) {max-width: 100% !important; position: sticky;}
              div[data-testid="sidebarColumn"] > div > div:nth-child(1) {display: none;}
 
-/* Settings */
-             section[aria-labelledby="root-header"] {margin-left: -200px; top: 45px; border-top: 1px solid rgb(56, 68, 77);}
-             section[aria-labelledby="detail-header"] {top: 45px; border-top: 1px solid rgb(56, 68, 77);}
 
 /* Hide Whats Happening */
              div[data-testid="sidebarColumn"] > div > div:nth-child(2) > div > div > div > div:nth-child(2), div[aria-label="Timeline: Trending now"] {display: none !important;}
 
 /* Wider Posts */
              div[data-testid="primaryColumn"], .r-1ye8kvj {max-width: 800px !important; margin-right: 10px; background-color: #101923 !important;}
-             div[data-testid="primaryColumn"] > div > div:nth-child(3) {display: none;}
              div[role="blockquote"] {background-color: #172535 !important; border-color: #253341 !important;}
              section[aria-label="Section navigation"] {margin-right: 0px !important;}
              section[aria-label="Section details"] {margin-right: -100px !important;}
-
-/* Adjusted Left Sidebar */
-             main[role="main"] > div > div > div > div > div > div:nth-child(1) {/*padding-top: 40px;*/}
-             main[role="main"] > div > div > div > div > div > div > div {border-top: 1px solid rgb(56, 68, 77);}
-             header[role="banner"] > div, header[role="banner"] > div > div, header[role="banner"] > div > div > div {width: 100%; overflow: hidden; padding: 0px; height: 40px;}
-             header[role="banner"] > div > div > div > div {height: 40px; border-left: 1px solid #101923; border-right: 1px solid #101923; background: #101923;}
-             a[href="/home"], a[href="/notifications"],a[aria-label="Direct Messages"],a[aria-label="Bookmarks"],a[aria-label="Lists"],a[aria-label="Profile"],div[aria-label="More menu items"] {width: 40px; height: 40px; padding: 0px;}
-             a[aria-label="Twitter"] > div > svg,a[aria-label="Home"] > div > div,a[href="/notifications"] > div > div,a[aria-label="Direct Messages"] > div > div,a[aria-label="Bookmarks"] > div > div,a[aria-label="Lists"] > div > div,a[aria-label="Profile"] > div > div,div[aria-label="More menu items"] > div > div {top: -2px;}
-             a[aria-label="Home"] div > div:nth-child(2),a[aria-label="Notifications"] div > div:nth-child(2),a[aria-label="Direct Messages"] div > div:nth-child(2),a[aria-label="Bookmarks"] div > div:nth-child(2),a[aria-label="Lists"] div > div:nth-child(2),a[aria-label="Profile"] div > div:nth-child(2),div[aria-label="More menu items"] div > div:nth-child(2) {display:none; margin: none; padding: none;}
-             a[href="/home"] div > div:nth-child(2) {margin: 0px !important;}
-             a[href="/notifications"] div > div:nth-child(2) {margin: 0px !important;}
-             a[aria-label="Twitter"] {top: 0px !important; left: 0px !important; min-width: 40px; min-height: 40px; width: 40px; height: 40px; padding: 0px;}
-             a[href="/home"]                   {top: -45px;  left: 40px}
-             a[href="/notifications"]          {top: -85px;  left: 80px}
-             a[href="/messages"]               {top: -125px; left: 120px}
-             a[aria-label="Bookmarks"]         {top: -165px; left: 160px}
-             a[aria-label="Lists"]             {top: -205px; left: 200px}
-             a[aria-label="Profile"]           {top: -245px; left: 240px}
-             div[aria-label="More menu items"] {top: -285px; left: 280px}
-             header[role="banner"] > div > div > div > div:nth-child(2) {top: -40px; margin-top: 0px; margin-bottom: 0px; padding: 0px; left: 575px; width: 220px; height: 40px; border: none;}
-             header[role="banner"] > div > div > div > div:nth-child(2) > div > div {margin: 0px; padding: 0px; padding-right: 10px; width: 220px; height: 40px; border: none;}
 
 /* Box Avatars */
              .r-sdzlij {border-radius: 0px !important;}
