@@ -34,14 +34,14 @@ $(document).ready(function () {
                 var NewWhisperItemSingle = (Username + "Hello, I'd like to trade " + Cost + ":platinum: for " + Item + " (warframe.market)")
 
                 if (NewWhisperItemSingle.includes("Blueprint")) {
-                    var BlueprintWhisper = NewWhisperItemSingle.replace(/ Blueprint]/g, "] Blueprint")
+                    var BlueprintWhisper = NewWhisperItemSingle.replace(' Blueprint]', "] Blueprint")
                     GM_setClipboard(BlueprintWhisper, "{ type: 'text', mimetype: 'text/plain'}")
                 }
-                if (NewWhisperItemSingle.includes("rank 5")) {
+                else if (NewWhisperItemSingle.includes("rank 5")) {
                     var ArcaneWhisper = NewWhisperItemSingle.replace(' (rank 5)]', "] (Rank 5)")
                     GM_setClipboard(ArcaneWhisper, "{ type: 'text', mimetype: 'text/plain'}")
                 }
-                if (NewWhisperItemSingle.includes("Helmet")) {
+                else if (NewWhisperItemSingle.includes("Helmet")) {
                     var ArcaneHelmetWhisper = NewWhisperItemSingle.replace('[', "").replace(']', "")
                     GM_setClipboard(ArcaneHelmetWhisper, "{ type: 'text', mimetype: 'text/plain'}")
                 }
