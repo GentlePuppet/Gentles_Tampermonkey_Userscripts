@@ -37,6 +37,10 @@ $(document).ready(function () {
                     var BlueprintWhisper = NewWhisperItemSingle.replace(/ Blueprint]/g, "] Blueprint")
                     GM_setClipboard(BlueprintWhisper, "{ type: 'text', mimetype: 'text/plain'}")
                 }
+                if (NewWhisperItemSingle.includes("rank 5")) {
+                    var ArcaneWhisper = NewWhisperItemSingle.replace(' (rank 5)]', "] (Rank 5)")
+                    GM_setClipboard(ArcaneWhisper, "{ type: 'text', mimetype: 'text/plain'}")
+                }
                 else {
                     GM_setClipboard(NewWhisperItemSingle, "{ type: 'text', mimetype: 'text/plain'}")
                 }
