@@ -41,6 +41,10 @@ $(document).ready(function () {
                     var ArcaneWhisper = NewWhisperItemSingle.replace(' (rank 5)]', "] (Rank 5)")
                     GM_setClipboard(ArcaneWhisper, "{ type: 'text', mimetype: 'text/plain'}")
                 }
+                if (NewWhisperItemSingle.includes("Helmet")) {
+                    var ArcaneHelmetWhisper = NewWhisperItemSingle.replace('[', "").replace(']', "")
+                    GM_setClipboard(ArcaneHelmetWhisper, "{ type: 'text', mimetype: 'text/plain'}")
+                }
                 else {
                     GM_setClipboard(NewWhisperItemSingle, "{ type: 'text', mimetype: 'text/plain'}")
                 }
