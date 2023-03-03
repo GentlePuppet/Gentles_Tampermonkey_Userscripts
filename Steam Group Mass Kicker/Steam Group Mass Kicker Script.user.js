@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Steam Group Mass Kicker Script
-// @version      3.2
+// @version      3.3
 // @author       GentlePuppet
 // @description	 Mass Kick Users From Steam Yer Group
 // @include      /https://steamcommunity.com/groups/.*/membersManage/
@@ -22,21 +22,27 @@ waitForKeyElements(`.profile_summary`, checkprofile, 0);
 function checkprofile() {
     if($('*:contains("𝓦𝒆𝓵𝓬𝓸𝓶𝒆 𝓽𝓸 𝓶𝔂 𝓹𝓻𝓸𝒇𝓲𝓵𝒆")').children().length > 0){MarkBotProfile();return;}
 
-    if($('*:contains("ᗯᕮᒪᑕOᗰᕮ TO ᗰY ᑭᖇOᖴIᒪᕮ ヅ")').children().length > 0){MarkBotProfile();return;}
+    else if($('*:contains("ᗯᕮᒪᑕOᗰᕮ TO ᗰY ᑭᖇOᖴIᒪᕮ ヅ")').children().length > 0){MarkBotProfile();return;}
 
-    if($('*:contains("website moderator")').children().length > 0){MarkBotProfile();return;}
+    else if($('*:contains("website moderator")').children().length > 0){MarkBotProfile();return;}
 
-    if($('*:contains("★·.·´¯`·.·★ Thank you for visiting my profile! ★·.·´¯`·.·★")').children().length > 0){MarkBotProfile();return;}
+    else if($('*:contains("★·.·´¯`·.·★ Thank you for visiting my profile! ★·.·´¯`·.·★")').children().length > 0){MarkBotProfile();return;}
 
-    if($('*:contains("[w̲̅][e̲̅][l̲̅][c̲̅][o̲̅][m̲̅][e̲̅] [t̲̅][o̲̅] [m̲̅][y̲̅] [p̲̅][r̲̅][o̲̅][f̲̅][i̲̅][l̲̅]")').children().length > 0){MarkBotProfile();return;}
+    else if($('*:contains("[w̲̅][e̲̅][l̲̅][c̲̅][o̲̅][m̲̅][e̲̅] [t̲̅][o̲̅] [m̲̅][y̲̅] [p̲̅][r̲̅][o̲̅][f̲̅][i̲̅][l̲̅]")').children().length > 0){MarkBotProfile();return;}
 
-    if($('*:contains("•● W E L C O M E- T O -M Y -P R O F I L E ●•")').children().length > 0){MarkBotProfile();return;}
+    else if($('*:contains("•● W E L C O M E- T O -M Y -P R O F I L E ●•")').children().length > 0){MarkBotProfile();return;}
 
-    if($('*:contains("Whats ups, cutie, im litle absent-minded")').children().length > 0){MarkBotProfile();return;}
+    else if($('*:contains("Whats ups, cutie, im litle absent-minded")').children().length > 0){MarkBotProfile();return;}
 
-    if($('*:contains("Thank you for visiting my profile.")').children().length > 0){MarkBotProfile();return;}
+    else if($('*:contains("Thank you for visiting my profile.")').children().length > 0){MarkBotProfile();return;}
 
-    if($('*:contains("░█░█░█░█▀▀▀░█░░░░█▀▀▀░█▀▀█░█▀█▀█░█▀▀▀░")').children().length > 0){MarkBotProfile();return;}
+    else if($('*:contains("░█░█░█░█▀▀▀░█░░░░█▀▀▀░█▀▀█░█▀█▀█░█▀▀▀░")').children().length > 0){MarkBotProfile();return;}
+
+    else if($('*:contains("csgo and tf2 gamer")').children().length > 0){MarkBotProfile();return;}
+
+    else if($('*:contains("tf2 and csgo gamer")').children().length > 0){MarkBotProfile();return;}
+
+    else if($('*:contains("Hello and welcome to my profile")').children().length > 0){MarkBotProfile();return;}
 }
 
 function MarkBotProfile() {
