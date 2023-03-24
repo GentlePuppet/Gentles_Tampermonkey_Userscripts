@@ -10,6 +10,7 @@ Select users you want to click by checking the tick box next to the kick button.
 Once you select all the users you want to kick click the verify button at the top.
 (You can only kick players visbile on the current page.)
 
+![Profile Preview Update 4](https://i.imgur.com/3qXefnJ.png)
 
 ![Preview of Script](https://i.imgur.com/0FpCtkc.png)
 ![Preview of Script 2](https://i.imgur.com/tHUfC0W.png)
