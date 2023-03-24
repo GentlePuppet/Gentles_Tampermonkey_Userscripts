@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Steam Group Mass Kicker Script
-// @version      4.0
+// @version      4.1
 // @author       GentlePuppet
 // @description	 Mass Kick Users From Steam Yer Group
 // @include      /https://steamcommunity.com/groups/.*/membersManage/
@@ -26,6 +26,8 @@ function checkprofile() {
 
     else if($('*:contains("website moderator")').children().length > 0){MarkBotProfile();return;}
 
+    else if($('*:contains("lvl. Competitive: Expert Assassin 2")').children().length > 0){MarkBotProfile();return;}
+
     else if($('*:contains("★·.·´¯`·.·★ Thank you for visiting my profile! ★·.·´¯`·.·★")').children().length > 0){MarkBotProfile();return;}
 
     else if($('*:contains("[w̲̅][e̲̅][l̲̅][c̲̅][o̲̅][m̲̅][e̲̅] [t̲̅][o̲̅] [m̲̅][y̲̅] [p̲̅][r̲̅][o̲̅][f̲̅][i̲̅][l̲̅]")').children().length > 0){MarkBotProfile();return;}
@@ -49,7 +51,7 @@ function checkprofile() {
 
 function MarkBotProfile() {
     $('body.profile_page, div.profile_page').attr('style', 'background-image: none; background-color: #460505; --gradient-left: none; --gradient-right: none; --gradient-background: #460505;')
-    $('.profile_summary').attr('style', 'height: fit-content; overflow: visible; background: #2A475E; color: white; padding: 10px; border: 5px solid rgba( 0, 0, 0, 0.2 );')
+    $('.profile_summary').attr('style', 'height: fit-content; overflow: visible; background: #2A475E; color: white; margin-left: -20px;margin-top: -25px;margin-right: -10px; padding: 10px; border: 5px solid rgba( 0, 0, 0, 0.2 );')
     var MARKPROFILEBOT = $('<div/>').attr('id', 'SUSWARNING').attr('style', 'margin: 9px 0px; font-size: x-large; background-color: #2A475E; border: 5px solid rgba( 0, 0, 0, 0.2 ); color: white; padding: 5px; text-align: center;').html('<span style="color:red; font-weight: 800;">Notice:</span> There are many profile summaries containing similarly duplicated text as this one.<br>Double Check that it is not just satire, mocking scammers/bots. ');
     $('#global_header').after(MARKPROFILEBOT);
 }
@@ -97,24 +99,21 @@ function HoverPreview(e) {
     var varpreviewbox = $('<iframe/>').attr('data-src',profilelink).attr('class','previewbox');
     var parent = $(e).closest('.playerAvatar')
     $(varpreviewbox).insertBefore(parent);
-    //$(varpreviewbox).attr('src',profilelink)
-    //$(e).attr('src',profilelink)
-    //console.log(parent)
+
+    var parentblock = $(e).closest('.member_block')
+    $(parentblock).mouseover(function() {
+        $(this).children(".previewbox").show();
+        $(this).attr('style','background-color: rgba( 84, 133, 183, 0.5);')
+        var framey = $(this).children(".previewbox");
+        var frameysrc = $(this).children(".previewbox").attr('data-src');
+        framey.attr('src',frameysrc);
+    }).mouseout(function() {
+        $(this).children(".previewbox").hide();
+        $(this).attr('style','background-color: rgba( 84, 133, 183, 0.2);')
+        var framey = $(this).children(".previewbox");
+        framey.removeAttr('src');
+    });
 }
-$(".member_block").mouseover(function() {
-    $(this).children(".previewbox").show();
-    $(this).attr('style','background-color: rgba( 84, 133, 183, 0.5);')
-    var framey = $(this).children(".previewbox");
-    var frameysrc = $(this).children(".previewbox").attr('data-src');
-    framey.attr('src',frameysrc);
-}).mouseout(function() {
-    $(this).children(".previewbox").hide();
-    $(this).attr('style','background-color: rgba( 84, 133, 183, 0.2);')
-    var framey = $(this).children(".previewbox");
-    framey.removeAttr('src');
-});
-
-
 GM_addStyle(`
      .previewbox {
           display:none;
