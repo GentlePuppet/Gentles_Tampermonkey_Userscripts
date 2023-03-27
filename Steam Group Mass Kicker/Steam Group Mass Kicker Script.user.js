@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Steam Group Mass Kicker Script
-// @version      4.1
+// @version      4.2
 // @author       GentlePuppet
 // @description	 Mass Kick Users From Steam Yer Group
 // @include      /https://steamcommunity.com/groups/.*/membersManage/
@@ -186,6 +186,17 @@ function CancelKick(){
     $.removeCookie('KickThesePlayers', {domain: '.steamcommunity.com', path: '/'});
     $.removeCookie('KickThesePlayers-Names', {domain: '.steamcommunity.com', path: '/'});
 }
+function createQuery2( postUrl, returnFn, postData )
+{
+	var uid = Math.round(Math.random()*100000);
+	var rUid = "requester"+uid;
+	eval(rUid+" = new xHttpQuery_Post();");
+	eval(rUid+".postUrl = postUrl;");
+	eval(rUid+".returnFn = returnFn;");
+	eval(rUid+".postData = postData;");
+	eval(rUid+".selfRef = \""+rUid+"\";");
+	eval(rUid+".doRequest();");
+}
 function startkick() {
     if($.cookie('KickThesePlayers') == undefined) {return;}
     if($.cookie('KickThesePlayers') == "" ){
@@ -201,7 +212,7 @@ function startkick() {
         var userarray = $.cookie('KickThesePlayers').replace('%2C', ',').split(',');
         var shiftedkicklist = userarray.shift();
         if($(".manageMemberAction[onclick*=" + shiftedkicklist + "]").length ) {
-            $.post(g_strGroupURL + "/membersManage", { sessionID: g_sessionID, action: "kick", memberId: shiftedkicklist, queryString: "" });
+            $.post( g_strProcessURL, {"xml": 1, "action": "kick", "memberId": shiftedkicklist, "sessionID": g_sessionID} );
             $.cookie('KickThesePlayers', userarray, { domain: '.steamcommunity.com', path: '/' });
             $.cookie('KickThesePlayers-Names', usernames, { domain: '.steamcommunity.com', path: '/' });
             console.log('SGMKS Debug: Kicking User ' + shiftednamelist);
