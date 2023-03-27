@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Steam Group Mass Kicker Script
-// @version      4.2
+// @version      4.3
 // @author       GentlePuppet
 // @description	 Mass Kick Users From Steam Yer Group
 // @include      /https://steamcommunity.com/groups/.*/membersManage/
@@ -100,20 +100,24 @@ function HoverPreview(e) {
     var parent = $(e).closest('.playerAvatar')
     $(varpreviewbox).insertBefore(parent);
 
+    const PREVIEWBOX_CLASS = 'previewbox';
+    const HIGHLIGHTED_CLASS = 'highlighted';
+
     var parentblock = $(e).closest('.member_block')
     $(parentblock).mouseover(function() {
-        $(this).children(".previewbox").show();
-        $(this).attr('style','background-color: rgba( 84, 133, 183, 0.5);')
-        var framey = $(this).children(".previewbox");
-        var frameysrc = $(this).children(".previewbox").attr('data-src');
-        framey.attr('src',frameysrc);
+        $(this).children(`.${PREVIEWBOX_CLASS}`).show();
+        $(this).addClass(HIGHLIGHTED_CLASS);
+        const $previewbox = $(this).children(`.${PREVIEWBOX_CLASS}`);
+        const previewboxSrc = $previewbox.attr('data-src');
+        $previewbox.attr('src', previewboxSrc);
     }).mouseout(function() {
-        $(this).children(".previewbox").hide();
-        $(this).attr('style','background-color: rgba( 84, 133, 183, 0.2);')
-        var framey = $(this).children(".previewbox");
-        framey.removeAttr('src');
+        $(this).children(`.${PREVIEWBOX_CLASS}`).hide();
+        $(this).removeClass(HIGHLIGHTED_CLASS);
+        $(this).children(`.${PREVIEWBOX_CLASS}`).removeAttr('src');
     });
 }
+
+// Define styles for previewbox
 GM_addStyle(`
      .previewbox {
           display:none;
@@ -124,6 +128,9 @@ GM_addStyle(`
           z-index: 9000;
           top:0;
           right:0;
+     }
+     .highlighted {
+          background-color: rgba( 84, 133, 183, 0.5);
      }
 `);
 
@@ -186,17 +193,6 @@ function CancelKick(){
     $.removeCookie('KickThesePlayers', {domain: '.steamcommunity.com', path: '/'});
     $.removeCookie('KickThesePlayers-Names', {domain: '.steamcommunity.com', path: '/'});
 }
-function createQuery2( postUrl, returnFn, postData )
-{
-	var uid = Math.round(Math.random()*100000);
-	var rUid = "requester"+uid;
-	eval(rUid+" = new xHttpQuery_Post();");
-	eval(rUid+".postUrl = postUrl;");
-	eval(rUid+".returnFn = returnFn;");
-	eval(rUid+".postData = postData;");
-	eval(rUid+".selfRef = \""+rUid+"\";");
-	eval(rUid+".doRequest();");
-}
 function startkick() {
     if($.cookie('KickThesePlayers') == undefined) {return;}
     if($.cookie('KickThesePlayers') == "" ){
@@ -212,7 +208,11 @@ function startkick() {
         var userarray = $.cookie('KickThesePlayers').replace('%2C', ',').split(',');
         var shiftedkicklist = userarray.shift();
         if($(".manageMemberAction[onclick*=" + shiftedkicklist + "]").length ) {
+            //createQuery2( g_strProcessURL, null, {"xml": 1, "action": "kick", "memberId": shiftedkicklist, "sessionID": g_sessionID} );
+            //$.post(g_strGroupURL + "/membersManage", { sessionID: g_sessionID, action: "kick", memberId: steamId, queryString: "" });
             $.post( g_strProcessURL, {"xml": 1, "action": "kick", "memberId": shiftedkicklist, "sessionID": g_sessionID} );
+
+
             $.cookie('KickThesePlayers', userarray, { domain: '.steamcommunity.com', path: '/' });
             $.cookie('KickThesePlayers-Names', usernames, { domain: '.steamcommunity.com', path: '/' });
             console.log('SGMKS Debug: Kicking User ' + shiftednamelist);
