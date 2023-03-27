@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Steam Group Mass Kicker Script
-// @version      4.3
+// @version      4.4
 // @author       GentlePuppet
 // @description	 Mass Kick Users From Steam Yer Group
 // @include      /https://steamcommunity.com/groups/.*/membersManage/
@@ -17,7 +17,10 @@
 // @updateURL    https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Steam%20Group%20Mass%20Kicker/Steam%20Group%20Mass%20Kicker%20Script.user.js
 // @downloadURL  https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Steam%20Group%20Mass%20Kicker/Steam%20Group%20Mass%20Kicker%20Script.user.js
 // ==/UserScript==
-//console.log('SGMKS Debug: Steam Group Mass Kicker Script Loaded');
+
+//----------------------------------
+//-- Mark Sussy Profile Pages with specific about me sections that match these filters
+//----------------------------------
 waitForKeyElements(`.profile_summary`, checkprofile, 0);
 function checkprofile() {
     if($('*:contains("𝓦𝒆𝓵𝓬𝓸𝓶𝒆 𝓽𝓸 𝓶𝔂 𝓹𝓻𝓸𝒇𝓲𝓵𝒆")').children().length > 0){MarkBotProfile();return;}
@@ -48,7 +51,6 @@ function checkprofile() {
 
     else if($('*:contains("I\'m a 3d artist (now I\'m developing tf2 maps)")').children().length > 0){MarkBotProfile();return;}
 }
-
 function MarkBotProfile() {
     $('body.profile_page, div.profile_page').attr('style', 'background-image: none; background-color: #460505; --gradient-left: none; --gradient-right: none; --gradient-background: #460505;')
     $('.profile_summary').attr('style', 'height: fit-content; overflow: visible; background: #2A475E; color: white; margin-left: -20px;margin-top: -25px;margin-right: -10px; padding: 10px; border: 5px solid rgba( 0, 0, 0, 0.2 );')
@@ -56,53 +58,17 @@ function MarkBotProfile() {
     $('#global_header').after(MARKPROFILEBOT);
 }
 
-GM_addStyle(`
-    #KickUserCheckbox {margin-left: 5px;height: 25px;width: 25px;position: absolute;top: 10px;}
-    #KickUserCheckbox:Hover {cursor: pointer;}
-    .rank_icon {padding-right: 35px !important;}
-    #kicklistlabel {border: solid #3e6787 2px; padding: 0px 5px;}
-    #popuphome{margin: 0 auto;position: sticky;top: 30%;height: 0px;width: fit-content;z-index: 50000;}
-    #popup{display: grid;color: #ddebde;background: #0d121a;grid-template-columns: auto auto auto;border: solid 5px #3e6786;box-shadow: 0px -15px 60px 30px black;grid-gap: 2px;}
-    #popupwarn{display: grid;position: relative;color: #e9684c;background: #0d121a;border: solid 5px #3e6786;border-bottom: none;grid-gap: 2px;z-index: 50000;padding: 5px;font-size: 16px;}
-    .popupKickButton {height: 40px;width: 60px;color: white;background: #7a1717;border: black 1px solid;cursor: pointer;text-shadow: 1px 1px 3px black;margin-left: 40%;}
-    .popupKickButton:hover {background: #d51717}
-    .popupCancelButton {height: 40px;color: white;background: #383838;border: black 1px solid;cursor: pointer;text-shadow: 1px 1px 3px black;}
-    .popupCancelButton:hover {background: #7d6f6f;}
-`);
-
-waitForKeyElements(`.linkFriend:contains("🔥"),.linkFriend:contains("👀"),
-.linkFriend:contains("✨"),.linkFriend:contains("💫"),
-.linkFriend:contains("👑"),.linkFriend:contains("🎩"),
-.linkFriend:contains("📼"),.linkFriend:contains("⚡"),
-.linkFriend:contains("🖤"),.linkFriend:contains("💙"),
-.linkFriend:contains("⭐"),.linkFriend:contains("🍀"),
-.linkFriend:contains("🗝"),.linkFriend:contains("🗝"),
-.linkFriend:contains("🌸"),.linkFriend:contains("💀"),
-.linkFriend:contains("💣"),.linkFriend:contains("🎮"),
-.linkFriend:contains("🧀"),.linkFriend:contains("🌙"),
-.linkFriend:contains("🐲"),.linkFriend:contains("✯"),
-.linkFriend:contains("🍌"),.linkFriend:contains("💎"),
-.linkFriend:contains("🌴"),.linkFriend:contains("★"),
-.linkFriend:contains("☠"),.linkFriend:contains("🍩"),
-.linkFriend:contains("🔹"),.linkFriend:contains("🐝"),
-.linkFriend:contains("🍉"),.linkFriend:contains("👻"),
-.linkFriend:contains("⚓"),.linkFriend:contains("💗"),
-.linkFriend:contains("📚"),.linkFriend:contains("🌟")
-`, markSUS, 0);
-function markSUS(e) {
-    e.parents('.member_block').attr('style', 'background-color: rgb(108 16 16 / 35%) !important; box-shadow: 0px 0px 5px red; z-index: 1;');
-}
-
+//----------------------------------
+//-- Hover to See Profile Previews
+//----------------------------------
 waitForKeyElements(`.playerAvatar > a`, HoverPreview, 0);
 function HoverPreview(e) {
     var profilelink = $(e).attr('href');
     var varpreviewbox = $('<iframe/>').attr('data-src',profilelink).attr('class','previewbox');
     var parent = $(e).closest('.playerAvatar')
     $(varpreviewbox).insertBefore(parent);
-
     const PREVIEWBOX_CLASS = 'previewbox';
     const HIGHLIGHTED_CLASS = 'highlighted';
-
     var parentblock = $(e).closest('.member_block')
     $(parentblock).mouseover(function() {
         $(this).children(`.${PREVIEWBOX_CLASS}`).show();
@@ -116,8 +82,6 @@ function HoverPreview(e) {
         $(this).children(`.${PREVIEWBOX_CLASS}`).removeAttr('src');
     });
 }
-
-// Define styles for previewbox
 GM_addStyle(`
      .previewbox {
           display:none;
@@ -134,16 +98,22 @@ GM_addStyle(`
      }
 `);
 
-function hovercheck() {
-    if ($(".miniprofile_game_name").text() === "Team Fortress 2" && $('.rich_presence').length === 0){
-        $('.miniprofile_hover_inner.shadow_content').attr('style', 'background-color: rgb(108 16 16 / 35%) !important; box-shadow: 0px 0px 5px red;')
-    } else {
-        $('.miniprofile_hover_inner.shadow_content').attr('style', '')
-    }
-    setTimeout(() => {hovercheck()}, 100);
-}
-hovercheck();
-
+//----------------------------------
+//-- The Checkboxes and Kicking part of the script
+//----------------------------------
+GM_addStyle(`
+    #KickUserCheckbox {margin-left: 5px;height: 25px;width: 25px;position: absolute;top: 10px;}
+    #KickUserCheckbox:Hover {cursor: pointer;}
+    .rank_icon {padding-right: 35px !important;}
+    #kicklistlabel {border: solid #3e6787 2px; padding: 0px 5px;}
+    #popuphome{margin: 0 auto;position: sticky;top: 30%;height: 0px;width: fit-content;z-index: 50000;}
+    #popup{display: grid;color: #ddebde;background: #0d121a;grid-template-columns: auto auto auto;border: solid 5px #3e6786;box-shadow: 0px -15px 60px 30px black;grid-gap: 2px;}
+    #popupwarn{display: grid;position: relative;color: #e9684c;background: #0d121a;border: solid 5px #3e6786;border-bottom: none;grid-gap: 2px;z-index: 50000;padding: 5px;font-size: 16px;}
+    .popupKickButton {height: 40px;width: 60px;color: white;background: #7a1717;border: black 1px solid;cursor: pointer;text-shadow: 1px 1px 3px black;margin-left: 40%;}
+    .popupKickButton:hover {background: #d51717}
+    .popupCancelButton {height: 40px;color: white;background: #383838;border: black 1px solid;cursor: pointer;text-shadow: 1px 1px 3px black;}
+    .popupCancelButton:hover {background: #7d6f6f;}
+`);
 waitForKeyElements(`.groupadmin_header_location`, CreateCheckboxes, 0);
 function CreateCheckboxes() {
     window.scrollBy(0,205)
@@ -208,11 +178,7 @@ function startkick() {
         var userarray = $.cookie('KickThesePlayers').replace('%2C', ',').split(',');
         var shiftedkicklist = userarray.shift();
         if($(".manageMemberAction[onclick*=" + shiftedkicklist + "]").length ) {
-            //createQuery2( g_strProcessURL, null, {"xml": 1, "action": "kick", "memberId": shiftedkicklist, "sessionID": g_sessionID} );
-            //$.post(g_strGroupURL + "/membersManage", { sessionID: g_sessionID, action: "kick", memberId: steamId, queryString: "" });
             $.post( g_strProcessURL, {"xml": 1, "action": "kick", "memberId": shiftedkicklist, "sessionID": g_sessionID} );
-
-
             $.cookie('KickThesePlayers', userarray, { domain: '.steamcommunity.com', path: '/' });
             $.cookie('KickThesePlayers-Names', usernames, { domain: '.steamcommunity.com', path: '/' });
             console.log('SGMKS Debug: Kicking User ' + shiftednamelist);
