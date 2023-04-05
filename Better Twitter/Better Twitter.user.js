@@ -24,18 +24,18 @@
 //
 // @updateURL      https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Better%20Twitter/Better%20Twitter.user.js
 // @downloadURL    https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Better%20Twitter/Better%20Twitter.user.js
-// @version        0.9.5
+// @version        0.9.6
 // ==/UserScript==
 
 /////////////////////////////////////////////////
 // Stuff Created By Gentle
 /* Scaling */
 GM_addStyle(`
-/* Main Page */
-             header[role="banner"] {max-width: 0px !important;}
+/* Main Page
+             header[role="banner"] {position:absolute!important;}
              main[role="main"], header[role="banner"] > div > div > div > div, header[role="banner"] > div > div > div > div:nth-child(2) {max-width: 800px;}
              main[role="main"]{max-width: calc(800px + 298px)!important;margin: auto !important;}
-             header[role="banner"] > div > div > div {margin: auto;padding-right: 298px;max-width: calc(800px + 298px);}
+
              main[role="main"] > div {max-width: 800px;}
              div[data-testid="sidebarColumn"] {max-width: 36% !important;}
              div[data-testid="sidebarColumn"] > div > div:nth-child(2), div[data-testid="sidebarColumn"] > div > div:nth-child(2) > div > div > div > div:nth-child(1) {max-width: 100% !important; position: sticky;}
@@ -64,13 +64,14 @@ GM_addStyle(`
              .Tombstone {display:none;}
 
 /* Toggle Buttons */
-             #ToggleMediaButton {background-color:transparent;height:40px;width:40px;top:-8px;position:absolute;border:none!important;left:200px;color:white;font-size:20px;padding-top:5px;}
+             #ButtonContainer {display: block; position: fixed; left: 600px;}
+             #ToggleMediaButton {background-color:transparent;height:40px;width:40px;top:-8px;border:none!important;;color:white;font-size:20px;padding-top:5px;}
              #ToggleMediaButton:hover {background-color:rgba(121, 75, 196, 0.1)!important;color:rgb(121, 75, 196)!important;cursor: pointer;}
-             #ToggleLikeButton {background-color:transparent;height:40px;width:40px;top:-8px;position:absolute;border:none!important;left:160px;color:white;font-size:20px;padding-top:5px;}
+             #ToggleLikeButton {background-color:transparent;height:40px;width:40px;top:-8px;border:none!important;color:white;font-size:20px;padding-top:5px;}
              #ToggleLikeButton:hover {background-color:rgba(121, 75, 196, 0.1)!important;color:rgb(121, 75, 196)!important;cursor: pointer;}
-             #ToggleRetweetButton {background-color:transparent;height:40px;width:40px;top:-8px;position:absolute;border:none!important;left:120px;color:white;font-size:20px;padding-top:5px;}
+             #ToggleRetweetButton {background-color:transparent;height:40px;width:40px;top:-8px;border:none!important;color:white;font-size:20px;padding-top:5px;}
              #ToggleRetweetButton:hover {background-color:rgba(121, 75, 196, 0.1)!important;color:rgb(121, 75, 196)!important;cursor: pointer;}
-             #ToggleSelfRetweetButton {background-color:transparent;height:40px;width:60px;top:-8px;position:absolute;border:none!important;left:60px;color:white;font-size:20px;padding-top:5px;}
+             #ToggleSelfRetweetButton {background-color:transparent;height:40px;width:60px;top:-8px;border:none!important;color:white;font-size:20px;padding-top:5px;}
              #ToggleSelfRetweetButton:hover {background-color:rgba(121, 75, 196, 0.1)!important;color:rgb(121, 75, 196)!important;cursor: pointer;}
 `);
 
@@ -88,8 +89,10 @@ waitForKeyElements ('h2[dir="ltr"]', CreateToggleBlacklistButton, 0);
 function CreateToggleBlacklistButton(jnode) {
     var MainHeader = $(jnode).closest('main[role="main"]');
     if(MainHeader.get(0)){
+        var a1 = $('<div/>').attr({ id: "ButtonContainer" });
         var b1 = $('<input/>').attr({ type: "button", id: "ToggleMediaButton", value: "M"});
-        $(b1).insertBefore(jnode);
+        $(a1).insertBefore(jnode);
+        $(a1).append(b1);
         document.getElementById("ToggleMediaButton").addEventListener("click", ToggleMedia, false);
         if($.cookie('TwitterImageOnly') == 1) {$('#ToggleMediaButton').attr('style', 'background-color: rgb(60 178 197 / 10%);color: rgb(88 196 75);');}}
     else{
