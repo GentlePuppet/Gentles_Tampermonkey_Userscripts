@@ -24,14 +24,14 @@
 //
 // @updateURL      https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Better%20Twitter/Better%20Twitter.user.js
 // @downloadURL    https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Better%20Twitter/Better%20Twitter.user.js
-// @version        0.9.6
+// @version        0.9.6.1
 // ==/UserScript==
 
 /////////////////////////////////////////////////
 // Stuff Created By Gentle
 /* Scaling */
 GM_addStyle(`
-/* Main Page
+/* Main Page */
              header[role="banner"] {position:absolute!important;}
              main[role="main"], header[role="banner"] > div > div > div > div, header[role="banner"] > div > div > div > div:nth-child(2) {max-width: 800px;}
              main[role="main"]{max-width: calc(800px + 298px)!important;margin: auto !important;}
