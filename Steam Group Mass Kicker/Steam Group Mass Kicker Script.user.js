@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Steam Group Mass Kicker Script
-// @version      4.4.2
+// @version      4.4.3
 // @author       GentlePuppet
 // @description	 Mass Kick Users From Steam Yer Group
 // @include      /https://steamcommunity.com/groups/.*/membersManage/
@@ -105,8 +105,6 @@ GM_addStyle(`
 waitForKeyElements(`.groupadmin_header_location`, CreateCheckboxes, 0);
 function CreateCheckboxes() {
     window.scrollBy(0,205)
-    var SUSWARN = $('<div/>').attr('id', 'SUSWARNING').attr('style', 'margin: 9px 0px; font-size: x-large; background-color: #2A475E; border: solid 5px rgba( 0, 0, 0, 0.2 ); color: white; padding: 5px; text-align: center;').html('If Users Are Highlighted In <span style="color:red; font-weight: 600;">Red</span> They Are SUS.<br>This is <span style="color:red; font-weight: 800;">NOT</span> a 100% guarantee they are a bot.<br>But you should inspect these users profiles.');
-    $('#memberManageList').before(SUSWARN);
     var checkbox = $('<input/>').attr({type: "checkbox",id: "KickUserCheckbox"});
     $('img[data-tooltip-text="Kick this member from the group"]').after(checkbox);
     $("input[id=KickUserCheckbox]").click(function() {if (!$(this).prop("checked")) {$("#CheckAllBox").prop("checked", false);}});
@@ -121,7 +119,7 @@ function GetCheckedBoxes() {
     var userarray = [];
     var usernames = [];
     $('#KickUserCheckbox:checked').each(function(index) {
-        var profile_url = $(this).parents('.member_block').find('img.manageMemberAction').attr('onclick').replace("ManageMembers_Kick( '", '').replace(/', '.*' \);/, "");
+        var profile_url = $(this).parents('.member_block').find('img[onclick*=ManageMembers_Kick]').attr('onclick').replace("ManageMembers_Kick( '", '').replace(/', '.*' \);/, "");
         var profile_name = $(this).parents('.member_block').find('a.linkFriend').text();
         userarray.push(profile_url);
         usernames.push(profile_name);
@@ -165,6 +163,7 @@ function startkick() {
         var shiftednamelist = usernames.shift();
         var userarray = $.cookie('KickThesePlayers').replace('%2C', ',').split(',');
         var shiftedkicklist = userarray.shift();
+        console.log(shiftedkicklist);
         if($(".manageMemberAction[onclick*=" + shiftedkicklist + "]").length ) {
             $.post( g_strProcessURL, {"xml": 1, "action": "kick", "memberId": shiftedkicklist, "sessionID": g_sessionID} );
             $.cookie('KickThesePlayers', userarray, { domain: '.steamcommunity.com', path: '/' });
