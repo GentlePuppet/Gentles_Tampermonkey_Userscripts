@@ -163,7 +163,6 @@ function startkick() {
         var shiftednamelist = usernames.shift();
         var userarray = $.cookie('KickThesePlayers').replace('%2C', ',').split(',');
         var shiftedkicklist = userarray.shift();
-        console.log(shiftedkicklist);
         if($(".manageMemberAction[onclick*=" + shiftedkicklist + "]").length ) {
             $.post( g_strProcessURL, {"xml": 1, "action": "kick", "memberId": shiftedkicklist, "sessionID": g_sessionID} );
             $.cookie('KickThesePlayers', userarray, { domain: '.steamcommunity.com', path: '/' });
