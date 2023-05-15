@@ -42,7 +42,7 @@ function checkprofile() {
 function MarkBotProfile() {
     $('body.profile_page, div.profile_page').attr('style', 'background-image: none; background-color: #460505; --gradient-left: none; --gradient-right: none; --gradient-background: #460505;')
     $('.profile_summary').attr('style', 'height: fit-content; overflow: visible; background: #2A475E; color: white; margin-left: -20px;margin-top: -25px;margin-right: -10px; padding: 10px; border: 5px solid rgba( 0, 0, 0, 0.2 );')
-    var MARKPROFILEBOT = $('<div/>').attr('id', 'SUSWARNING').attr('style', 'margin: 9px 0px; font-size: x-large; background-color: #2A475E; border: 5px solid rgba( 0, 0, 0, 0.2 ); color: white; padding: 5px; text-align: center;').html('<span style="color:red; font-weight: 800;">Notice:</span> There are many profile summaries containing similarly duplicated text as this one.<br>Double Check that it is not just satire, mocking scammers/bots. ');
+    var MARKPROFILEBOT = $('<div/>').attr('id', 'SUSWARNING').attr('style', 'margin: 9px 0px; font-size: x-large; background-color: #2A475E; border: 5px solid rgba( 0, 0, 0, 0.2 ); color: white; padding: 5px; text-align: center;').html('<span style="color:red; font-weight: 800;">Notice:</span> This profile contains text that is shared with known scammer profiles.<br>Double Check that it is not just satire, mocking said scammers/bots. ');
     $('#global_header').after(MARKPROFILEBOT);
 }
 
