@@ -5,8 +5,8 @@ A Tampermonkey Userscript I made to allow you to select multiple users in a stea
 
 When I update the script you'll get an auto update notification.
 
-Click the image to view a demo.
-[![Update 5 Demo](http://i.imgur.com/QbDguYch.gif)](http://i.imgur.com/QbDguYc.gif)
+
+![Demo](https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/blob/main/Steam%20Group%20Mass%20Kicker/demo.gif)
 
 
 As long as you have a userscript extension like Tampermonkey or Greasemonkey then clicking the link below will install the script for you.
