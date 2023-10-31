@@ -19,7 +19,8 @@ This is a collection of userscripts that tweak and add a few things to Youtube.
 ## [Install Userscript: Video Progress Trackers](https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Youtube%20Better%20CSS%20Tweaks/Video%20Progress%20Trackers.user.js)
 * It adds a little progress bar under videos to let you know how far you watched a video.
   - Visible at the bottom of the video while fullscreen.
-* It adds a countdown timer to let you know how much of a video is left.
+* It adds a simple countdown timer to let you know how much of a video is left.
+  - Doesn't account for playback speed. (assumes playback is 1.0)
 ![image](https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/assets/43224790/7b210d39-66f2-4b93-aecb-cef0144a38e5)
 
 <br><br>
