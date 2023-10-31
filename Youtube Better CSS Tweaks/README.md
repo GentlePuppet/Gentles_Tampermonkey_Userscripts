@@ -1,8 +1,6 @@
 
 
 # Gentle's Youtube Tweaks
-
-## Description:
 This is a collection of userscripts that tweak and add a few things to Youtube.
 
 ### Don't have a userscript extension?
