@@ -1,6 +1,6 @@
 // ==UserScript==
-// @name         Youtube Gentle's Youtube Progress Things
-// @version      1.0
+// @name         Youtube Gentle's Youtube Video Progress Trackers
+// @version      1.1
 // @author       GentlePuppet
 // @include      https://www.youtube.com/*
 // @icon         https://www.youtube.com/s/desktop/1eca3218/img/favicon_144.png
@@ -8,23 +8,28 @@
 // @require      https://gist.github.com/raw/2625891/waitForKeyElements.js
 // @require      https://raw.githubusercontent.com/carhartl/jquery-cookie/v1.4.1/jquery.cookie.js
 // @run-at       document-start
+// @grant        GM_addStyle
 // @updateURL    https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Youtube%20Better%20CSS%20Tweaks/Video%20Progress%20Trackers.user.js
 // @downloadURL  https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Youtube%20Better%20CSS%20Tweaks/Video%20Progress%20Trackers.user.js
 // ==/UserScript==
+GM_addStyle(`{
+    #container.ytd-player:has(.ytp-fullscreen) > .DummyContainerProgress {margin-top:-7px !important;}
+    #container.ytd-player:not(.ytp-fullscreen) > .DummyContainerProgress {margin-top: 0px;}}
+`);
 window.addEventListener("yt-page-data-updated", function(e) {
     // Mini Progress Bar
     // Created by Gentle
     if(window.location.href.indexOf("watch") !==-1 ) {
         const dummyprogress = document.querySelector(".DummyContainerProgress");
         const DCP = $('<div/>').attr({class: "DummyContainerProgress", style: "width: 100%; height: 3px; bottom: 0; left: 0; outline: none; padding-top: 2px;"});
-        const DPP = $('<div/>').attr({class: "DummyPlayProgress", style: "transform: scaleX(0);width: 100%; height: 3px; position: absolute; left: 0px; transform-origin: 0 0; z-index: 3; background-color: #f00;"});
+        const DPP = $('<div/>').attr({class: "DummyPlayProgress", style: "transform: scaleX(0);width: 100%; height: 3px; position: absolute; left: 0px; transform-origin: 0 0; z-index: 3; background-color: #df6eed;"});
         const DLP = $('<div/>').attr({class: "DummyLoadProgress", style: "transform: scaleX(0);width: 100%; height: 3px; position: absolute; left: 0px; transform-origin: 0 0; z-index: 2; background: rgba(255,255,255,.4);"});
-        const DBP = $('<div/>').attr({class: "DummyBackgroundProgress", style: "width: 100%; height: 3px; position: absolute; left: 0px; transform-origin: 0 0; z-index: 1; background: rgba(255,255,255,.2);"});
+        const DBP = $('<div/>').attr({class: "DummyBackgroundProgress", style: "width: 100%; height: 3px; position: absolute; left: 0px; transform-origin: 0 0; z-index: 1; background: rgba(90,90,90,.4);"});
         var createdummytimer = setInterval(function() {
             if (dummyprogress) {
                 clearInterval(createdummytimer);
-                $('.DummyPlayProgress').attr({style: "transform: scaleX(0);width: 100%; height: 3px; position: absolute; left: 0px; transform-origin: 0 0; background-color: #f00;"});
-                $('.DummyLoadProgress').attr({style: "transform: scaleX(0);width: 100%; height: 3px; position: absolute; left: 0px; transform-origin: 0 0; background: rgba(255,255,255,.4);"});
+                $('.DummyPlayProgress').attr({style: "transform: scaleX(0);width: 100%; height: 3px; position: absolute; left: 0px; transform-origin: 0 0; z-index: 3; background-color: #df6eed;"});
+                $('.DummyLoadProgress').attr({style: "transform: scaleX(0);width: 100%; height: 3px; position: absolute; left: 0px; transform-origin: 0 0; z-index: 2; background: rgba(255,255,255,.4);"});
                 UpdateDummyProgress();
             }
             if (!dummyprogress) {
