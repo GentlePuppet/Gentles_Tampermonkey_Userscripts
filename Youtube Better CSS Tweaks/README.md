@@ -20,7 +20,7 @@ This is a collection of userscripts that tweak and add a few things to Youtube.
 * It adds a little progress bar under videos to let you know how far you watched a video.
   - Visible at the bottom of the video while fullscreen.
 * It adds a simple countdown timer to let you know how much of a video is left.
-  - Doesn't account for playback speed. (assumes playback is 1.0)
+  - Does account for playback speed.
 
 ![image](https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/assets/43224790/7b210d39-66f2-4b93-aecb-cef0144a38e5)
 
