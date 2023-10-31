@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Youtube Gentle's Youtube Video Progress Trackers
-// @version      1.1
+// @version      1.2
 // @author       GentlePuppet
 // @include      https://www.youtube.com/*
 // @icon         https://www.youtube.com/s/desktop/1eca3218/img/favicon_144.png
@@ -78,9 +78,11 @@ window.addEventListener("yt-page-data-updated", function(e) {
             }
         },1000);
         function format(sec) {
-            let hours = Math.floor(sec / 3600)
-            let minutes = Math.floor(sec % 3600 / 60)
-            let seconds = Math.ceil(sec % 3600 % 60)
+            const rate = document.querySelector(".video-stream.html5-main-video").playbackRate;
+            let time = sec/rate
+            let hours = Math.floor(time / 3600)
+            let minutes = Math.floor(time % 3600 / 60)
+            let seconds = Math.ceil(time % 3600 % 60)
             if (hours < 10) hours = '0' + hours
             if (minutes < 10) minutes = '0' + minutes
             if (seconds < 10) seconds = '0' + seconds
