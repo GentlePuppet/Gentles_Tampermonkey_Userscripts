@@ -23,6 +23,7 @@ This is a collection of userscripts that tweak and add a few things to Youtube.
   - Does account for playback speed.
 
 ![image](https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/assets/43224790/7b210d39-66f2-4b93-aecb-cef0144a38e5)
+![image](https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/assets/43224790/47f5feef-6f1d-4c37-a55c-b60075cfdff7)
 
 <br><br>
 
