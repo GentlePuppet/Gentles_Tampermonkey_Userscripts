@@ -21,6 +21,7 @@ This is a collection of userscripts that tweak and add a few things to Youtube.
   - Visible at the bottom of the video while fullscreen.
 * It adds a simple countdown timer to let you know how much of a video is left.
   - Doesn't account for playback speed. (assumes playback is 1.0)
+
 ![image](https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/assets/43224790/7b210d39-66f2-4b93-aecb-cef0144a38e5)
 
 <br><br>
@@ -36,7 +37,8 @@ This is a collection of userscripts that tweak and add a few things to Youtube.
 * Adds a toggle to hide/show blacklisted videos. 
 * Click the + button that lets you add text the filter list. (No regrex and isn't case sensative)
 * To blacklist channels add "by CHANNELNAME" to the filter. 
-* To remove filters hold shift and click on the + button. 
+* To remove filters hold shift and click on the + button.
+  
 ![Off](https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/assets/43224790/827aadcf-3330-4319-b100-c0dd1bfe76db)
 ![On](https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/assets/43224790/eb28d38f-f3f1-4ee7-b780-f769b078a10b)
 
@@ -44,6 +46,7 @@ This is a collection of userscripts that tweak and add a few things to Youtube.
 
 ## [Install Userscript: Hide Watched Videos](https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Youtube%20Better%20CSS%20Tweaks/Hide%20Watched%20Videos.user.js)
 * Adds a toggle to hide/show watched videos.
+  
 ![image](https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/assets/43224790/fa545e09-7fe1-416d-b8c9-584d705eede3)
 ![image](https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/assets/43224790/ea40c2e0-2d36-45af-8e44-3cf087be55a9)
 
@@ -54,4 +57,5 @@ This is a collection of userscripts that tweak and add a few things to Youtube.
 * Click the + button that lets you add text the filter list. (No regrex and isn't case sensative)
 * To hightlight channels add "by CHANNELNAME" to the filter.
 * To remove filters hold shift and click on the + button.
+  
 ![image](https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/assets/43224790/42b2822e-7e27-4500-89cc-7172dbfac618)
