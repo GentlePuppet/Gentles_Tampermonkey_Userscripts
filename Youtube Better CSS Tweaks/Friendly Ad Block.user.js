@@ -7,6 +7,8 @@
 // @description  Friendly Ad Block is an extension created by 0x48piraj @https://github.com/0x48piraj/fadblock/tree/master. Converted into a simple userscript by Gentle.
 // @require      http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js
 // @run-at       document-start
+// @updateURL    https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Youtube%20Better%20CSS%20Tweaks/Friendly%20Ad%20Block.user.js
+// @downloadURL  https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Youtube%20Better%20CSS%20Tweaks/Friendly%20Ad%20Block.user.js
 // ==/UserScript==
 setInterval(function() {
     const videoContainer = document.getElementById("movie_player");
