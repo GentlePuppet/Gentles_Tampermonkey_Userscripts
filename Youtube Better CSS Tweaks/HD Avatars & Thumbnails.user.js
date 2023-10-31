@@ -1,7 +1,6 @@
 // ==UserScript==
 // @name         Youtube HD Avatars & Thumbnails
-// @namespace    http://tampermonkey.net/
-// @version      1.2
+// @version      1.0
 // @author       GentlePuppet
 // @match        https://www.youtube.com/*
 // @icon         https://www.youtube.com/s/desktop/1eca3218/img/favicon_144.png
