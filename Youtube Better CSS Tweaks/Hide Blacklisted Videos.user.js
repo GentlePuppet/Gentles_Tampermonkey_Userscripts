@@ -11,8 +11,8 @@
 // @require      http://github.com/bartaz/sandbox.js/raw/master/jquery.highlight.js
 // @grant        GM_addStyle
 // @run-at       document-start
-// @updateURL    https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Youtube%20Hide%20Blacklisted%20Videos/Youtube%20Hide%20Blacklisted%20Videos.user.js
-// @downloadURL  https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Youtube%20Hide%20Blacklisted%20Videos/Youtube%20Hide%20Blacklisted%20Videos.user.js
+// @updateURL    https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Youtube%20Better%20CSS%20Tweaks/Youtube%20Hide%20Blacklisted%20Videos.user.js
+// @downloadURL  https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Youtube%20Better%20CSS%20Tweaks/Youtube%20Hide%20Blacklisted%20Videos.user.js
 // ==/UserScript==
 // Blacklisted Toggle Button Stlye
 GM_addStyle(`
