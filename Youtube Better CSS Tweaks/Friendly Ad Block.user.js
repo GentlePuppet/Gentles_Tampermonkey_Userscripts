@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gentle's Ad Block
-// @version      1.0
-// @author       Originally Created by 0x48piraj | Converted to userscript by Gentle
+// @version      1.1
+// @author       Originally Created by 0x48piraj | Converted to simple userscript by Gentle
 // @match        https://www.youtube.com/*
 // @icon         https://www.youtube.com/s/desktop/1eca3218/img/favicon_144.png
 // @description  Friendly Ad Block is an extension created by 0x48piraj @https://github.com/0x48piraj/fadblock/tree/master. Converted into a simple userscript by Gentle.
