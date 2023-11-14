@@ -20,13 +20,13 @@ window.addEventListener("yt-page-data-updated", function(e) {
     if(window.location.href.indexOf("watch") !==-1 ) {
         const dummyprogress = document.querySelector(".DummyContainerProgress");
         const DCP = $('<div/>').attr({class: "DummyContainerProgress", style: "width: 100%; height: 3px; bottom: 0; left: 0; outline: none; padding-top: 2px;"});
-        const DPP = $('<div/>').attr({class: "DummyPlayProgress", style: "transform: scaleX(0);width: 100%; height: 3px; position: absolute; left: 0px; transform-origin: 0 0; z-index: 3; background-color: #df6eed;"});
+        const DPP = $('<div/>').attr({class: "DummyPlayProgress", style: "transform: scaleX(0);width: 100%; height: 3px; position: absolute; left: 0px; transform-origin: 0 0; z-index: 3; background-color: #f00;"});
         const DLP = $('<div/>').attr({class: "DummyLoadProgress", style: "transform: scaleX(0);width: 100%; height: 3px; position: absolute; left: 0px; transform-origin: 0 0; z-index: 2; background: rgba(255,255,255,.4);"});
         const DBP = $('<div/>').attr({class: "DummyBackgroundProgress", style: "width: 100%; height: 3px; position: absolute; left: 0px; transform-origin: 0 0; z-index: 1; background: rgba(90,90,90,.4);"});
         var createdummytimer = setInterval(function() {
             if (dummyprogress) {
                 clearInterval(createdummytimer);
-                $('.DummyPlayProgress').attr({style: "transform: scaleX(0);width: 100%; height: 3px; position: absolute; left: 0px; transform-origin: 0 0; z-index: 3; background-color: #df6eed;"});
+                $('.DummyPlayProgress').attr({style: "transform: scaleX(0);width: 100%; height: 3px; position: absolute; left: 0px; transform-origin: 0 0; z-index: 3; background-color: #f00;"});
                 $('.DummyLoadProgress').attr({style: "transform: scaleX(0);width: 100%; height: 3px; position: absolute; left: 0px; transform-origin: 0 0; z-index: 2; background: rgba(255,255,255,.4);"});
                 UpdateDummyProgress();
             }
