@@ -1,12 +1,10 @@
 // ==UserScript==
 // @name         Youtube Gentle's Youtube Video Progress Trackers
-// @version      1.3
+// @version      1.4
 // @author       GentlePuppet
 // @include      https://www.youtube.com/*
 // @icon         https://www.youtube.com/s/desktop/1eca3218/img/favicon_144.png
 // @require      http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js
-// @require      https://gist.github.com/raw/2625891/waitForKeyElements.js
-// @require      https://raw.githubusercontent.com/carhartl/jquery-cookie/v1.4.1/jquery.cookie.js
 // @run-at       document-start
 // @grant        GM_addStyle
 // @updateURL    https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Youtube%20Better%20CSS%20Tweaks/Video%20Progress%20Trackers.user.js
@@ -48,7 +46,7 @@ window.addEventListener("yt-page-data-updated", function(e) {
     // https://greasyfork.org/en/scripts/30046-youtube-always-show-progress-bar/code
     function UpdateDummyProgress() {
         function timeup() {progressbar.style.transform = "scaleX("+(video.currentTime/video.duration)+")";}
-        function progup() {var buffer = video.buffered.end(video.buffered.length-1)/video.duration;if(buffer < 0){return};loadbar.style.transform = "scaleX("+buffer+")";}
+        function progup() {if (!video.buffered.length) {return;};var buffer = video.buffered.end(video.buffered.length-1)/video.duration;if(buffer < 0){return};loadbar.style.transform = "scaleX("+buffer+")";}
         const video = document.querySelector(".video-stream.html5-main-video");
         const container = document.querySelector("ytd-player > #container");
         const progressbar = container.querySelector(".DummyPlayProgress");
@@ -78,6 +76,7 @@ window.addEventListener("yt-page-data-updated", function(e) {
             }
         },1000);
         function format(sec, rate) {
+            if (!sec) {return `00:00:00`}
             let time = sec/rate
             let hours = Math.floor(time / 3600)
             let minutes = Math.floor(time % 3600 / 60)
