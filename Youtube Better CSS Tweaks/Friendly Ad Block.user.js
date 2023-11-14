@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         Friendly Ad Block
+// @name         Gentle's Ad Block
 // @version      1.0
-// @author       Created by 0x48piraj | Converted to userscript by Gentle
+// @author       Originally Created by 0x48piraj | Converted to userscript by Gentle
 // @match        https://www.youtube.com/*
 // @icon         https://www.youtube.com/s/desktop/1eca3218/img/favicon_144.png
 // @description  Friendly Ad Block is an extension created by 0x48piraj @https://github.com/0x48piraj/fadblock/tree/master. Converted into a simple userscript by Gentle.
@@ -11,27 +11,10 @@
 // @downloadURL  https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Youtube%20Better%20CSS%20Tweaks/Friendly%20Ad%20Block.user.js
 // ==/UserScript==
 setInterval(function() {
-    const videoContainer = document.getElementById("movie_player");
-    const isAd = videoContainer?.classList.contains("ad-interrupting") || videoContainer?.classList.contains("ad-showing");
-    const skipLock = document.querySelector(".ytp-ad-preview-text")?.innerText;
-    const surveyLock = document.querySelector(".ytp-ad-survey")?.length > 0;
-
-    const videoPlayer = document.getElementsByClassName("video-stream")[0];
-    const adbutton = document.querySelector(".ytp-ad-skip-button")
-    const adbuttonmodern = document.querySelector(".ytp-ad-skip-button-modern")
-
-    if (videoPlayer && !isAd && !skipLock) {
-        videoPlayer.muted = false;
-    }
-    if (isAd && skipLock) {
-        videoPlayer.muted = true;
-        videoPlayer.currentTime = videoPlayer.duration - 0.1;
-        videoPlayer.paused && videoPlayer.play()
-        adbutton?.click();
-        adbuttonmodern?.click();
-    } else if (isAd && surveyLock) {
-        adbutton?.click();
-        adbuttonmodern?.click();
+    if ($(".ad-showing") || $(".ad-interrupting")) {
+        $(".video-steam").currentTime = $(".video-steam").duration - 0.1;
+        $(".ytp-ad-skip-button").click();
+        $(".ytp-ad-skip-button-modern").click();
     }
 },100);
 
