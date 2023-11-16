@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Gentle's Ad Block
-// @version      1.2
+// @version      1.2.1
 // @author       Originally by 0x48piraj | Converted to a simpified userscript by Gentle
 // @match        https://www.youtube.com/*
 // @icon         https://www.youtube.com/s/desktop/1eca3218/img/favicon_144.png
@@ -10,6 +10,8 @@
 // @updateURL    https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Youtube%20Better%20CSS%20Tweaks/Friendly%20Ad%20Block.user.js
 // @downloadURL  https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Youtube%20Better%20CSS%20Tweaks/Friendly%20Ad%20Block.user.js
 // ==/UserScript==
+
+var script = document.createElement('script'); script.src = "https://code.jquery.com/jquery-3.7.1.min.js"; document.getElementsByTagName('head')[0].appendChild(script);
 
 let TimerActive = false;
 
@@ -28,6 +30,7 @@ function AdTimer() {
         },100);
     }
 }
+AdTimer()
 
 function ClickAdButton(e) {
     if (e == null) {return} else {e.click()}
