@@ -1,22 +1,37 @@
 // ==UserScript==
 // @name         Gentle's Ad Block
-// @version      1.1
-// @author       Originally Created by 0x48piraj | Converted to simple userscript by Gentle
+// @version      1.2
+// @author       Created by 0x48piraj | Converted to userscript by Gentle
 // @match        https://www.youtube.com/*
 // @icon         https://www.youtube.com/s/desktop/1eca3218/img/favicon_144.png
 // @description  Friendly Ad Block is an extension created by 0x48piraj @https://github.com/0x48piraj/fadblock/tree/master. Converted into a simple userscript by Gentle.
-// @require      http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js
+// @require      https://code.jquery.com/jquery-3.7.1.min.js
 // @run-at       document-start
 // @updateURL    https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Youtube%20Better%20CSS%20Tweaks/Friendly%20Ad%20Block.user.js
 // @downloadURL  https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Youtube%20Better%20CSS%20Tweaks/Friendly%20Ad%20Block.user.js
 // ==/UserScript==
-setInterval(function() {
-    if ($(".ad-showing") || $(".ad-interrupting")) {
-        $(".video-steam").currentTime = $(".video-steam").duration - 0.1;
-        $(".ytp-ad-skip-button").click();
-        $(".ytp-ad-skip-button-modern").click();
+
+let TimerActive = false;
+
+window.addEventListener("yt-page-data-updated", function() {AdTimer();})
+
+function AdTimer() {
+    const video = $("video")
+    if (TimerActive == false) {
+        TimerActive = true;
+        setInterval(function() {
+            if ($(".ad-showing") || $(".ad-interrupting")) {
+                video.currentTime = video.duration - 0.1
+                ClickAdButton($(".ytp-ad-skip-button"));
+                ClickAdButton($(".ytp-ad-skip-button-modern"));
+            }
+        },100);
     }
-},100);
+}
+
+function ClickAdButton(e) {
+    if (e == null) {return} else {e.click()}
+}
 
 window.addEventListener("yt-page-data-updated", function(e) {
     function HideAdLoop() {
