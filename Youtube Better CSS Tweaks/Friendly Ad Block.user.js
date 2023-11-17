@@ -17,7 +17,7 @@ let TimerActive = false;
 // Attach Adtimer function to the page update event to restart the timer if the page changes.
 window.addEventListener("yt-page-data-updated", function() {AdTimer();})
 
-// The Adtimer function that is the core of the
+// The Adtimer function that is the core of the ad skipper.
 function AdTimer() {
     // If the timer isn't already running start it.
     if (TimerActive == false) {
