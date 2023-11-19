@@ -10,8 +10,7 @@ This is a collection of userscripts that tweak and add a few things to Youtube.
   
 <br><br>
 
-### [Go give 0x48piraj some love.](https://github.com/0x48piraj/fadblock/tree/master)
-* This is just a simple **userscript only** version of 0x48piraj's extension.
+### [0x48piraj's Friendly Ad Block.](https://github.com/0x48piraj/fadblock/tree/master)
 
 <br><br>
   
