@@ -10,7 +10,6 @@ This is a collection of userscripts that tweak and add a few things to Youtube.
   
 <br><br>
 
-## [Install Userscript: Friendly Ad Block Originally by 0x48piraj](https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Youtube%20Better%20CSS%20Tweaks/Friendly%20Ad%20Block.user.js)
 ### [Go give 0x48piraj some love.](https://github.com/0x48piraj/fadblock/tree/master)
 * This is just a simple **userscript only** version of 0x48piraj's extension.
 
