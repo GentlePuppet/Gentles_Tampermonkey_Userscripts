@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Gentle's Ad Block
-// @version      1.5
+// @version      1.6
 // @author       Originally by 0x48piraj | Converted to a simpified userscript by Gentle
 // @match        https://www.youtube.com/*
 // @icon         https://www.youtube.com/s/desktop/1eca3218/img/favicon_144.png
@@ -11,30 +11,26 @@
 // @downloadURL  https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Youtube%20Better%20CSS%20Tweaks/Friendly%20Ad%20Block.user.js
 // ==/UserScript==
 
-var script = document.createElement('script'); script.src = "https://code.jquery.com/jquery-3.7.1.min.js"; document.getElementsByTagName('head')[0].appendChild(script);
+let TimerActive = false
 
-let TimerActive = false;
-
-window.addEventListener("yt-page-data-updated", function() {AdTimer();})
-
+function ClickAdButtons() {document.querySelectorAll(".ytp-ad-skip-button, .ytp-ad-skip-button-modern").forEach(b => {if (b !== null) {b.click()}})}
 function AdTimer() {
-    const video = $("video")
-    if (TimerActive == false) {
-        TimerActive = true;
-        setInterval(function() {
-            if ($(".ad-showing") || $(".ad-interrupting")) {
-                video.currentTime = video.duration - 0.1
-                ClickAdButton($(".ytp-ad-skip-button"));
-                ClickAdButton($(".ytp-ad-skip-button-modern"));
+    if (!TimerActive) {
+        TimerActive = true
+        function update() {
+            if (document.querySelector(".ad-showing, .ad-interrupting")) {
+                if (document.querySelector('#movie_player > div.html5-video-container > video').currentTime > 0) {
+                    document.querySelector('#movie_player > div.html5-video-container > video').currentTime = Math.max(0, document.querySelector('#movie_player > div.html5-video-container > video').duration - 0.1)
+                    document.querySelector('#movie_player > div.html5-video-container > video').paused && document.querySelector('#movie_player > div.html5-video-container > video').play()
+                }
+                ClickAdButtons()
             }
-        },100);
+            requestAnimationFrame(update)
+        }
+        requestAnimationFrame(update)
     }
 }
-AdTimer()
-
-function ClickAdButton(e) {
-    if (e == null) {return} else {e.click()}
-}
+window.addEventListener("yt-page-data-updated", function() {AdTimer()})
 
 window.addEventListener("yt-page-data-updated", function(e) {
     function HideAdLoop() {
@@ -45,8 +41,8 @@ window.addEventListener("yt-page-data-updated", function(e) {
                            ".ytd-display-ad-renderer", ".ytd-statement-banner-renderer", ".ytd-in-feed-ad-layout-renderer", // homepage ads
                            "div#player-ads.style-scope.ytd-watch-flexy, div#panels.style-scope.ytd-watch-flexy", // sponsors
                            ".ytd-banner-promo-renderer", ".ytd-video-masthead-ad-v3-renderer", ".ytd-primetime-promo-renderer" // subscribe for premium & youtube tv ads
-                          ];
-        staticAds.forEach((ad) => {document.querySelectorAll(ad).forEach((el) => (el.style.display = "none"))});
+                          ]
+        staticAds.forEach((ad) => {document.querySelectorAll(ad).forEach((el) => (el.style.display = "none"))})
     }
-    setTimeout(HideAdLoop, 1000);
-});
+    setTimeout(HideAdLoop, 1000)
+})
