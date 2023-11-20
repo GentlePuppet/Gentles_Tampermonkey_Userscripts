@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Gentle's Ad Block
-// @version      1.6
+// @version      1.6.1
 // @author       Originally by 0x48piraj | Converted to a simpified userscript by Gentle
 // @match        https://www.youtube.com/*
 // @icon         https://www.youtube.com/s/desktop/1eca3218/img/favicon_144.png
@@ -19,11 +19,14 @@ function AdTimer() {
         TimerActive = true
         function update() {
             if (document.querySelector(".ad-showing, .ad-interrupting")) {
+                document.querySelector('#movie_player > div.html5-video-container > video').muted = true
                 if (document.querySelector('#movie_player > div.html5-video-container > video').currentTime > 0) {
                     document.querySelector('#movie_player > div.html5-video-container > video').currentTime = Math.max(0, document.querySelector('#movie_player > div.html5-video-container > video').duration - 0.1)
                     document.querySelector('#movie_player > div.html5-video-container > video').paused && document.querySelector('#movie_player > div.html5-video-container > video').play()
                 }
                 ClickAdButtons()
+            } else {
+                document.querySelector('#movie_player > div.html5-video-container > video').muted = false
             }
             requestAnimationFrame(update)
         }
