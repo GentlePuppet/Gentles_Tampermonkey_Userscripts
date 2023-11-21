@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Youtube Gentle's Youtube Video Progress Trackers
-// @version      1.5
+// @version      1.6
 // @author       GentlePuppet
 // @description  Adds video progression displays
 // @match        https://www.youtube.com/*
@@ -30,12 +30,9 @@ window.addEventListener("yt-page-data-updated", function(e) {
                 $('.DummyContainerProgress').append(DPP);
                 $('.DummyContainerProgress').append(DLP);
                 $('.DummyContainerProgress').append(DBP);
-                requestAnimationFrame(createdummytimer);
-            } else {
-                $('.DummyPlayProgress').attr({style: "transform: scaleX(0);width: 100%; height: 3px; position: absolute; left: 0px; transform-origin: 0 0; z-index: 3; background-color: #df6eed;"});
-                $('.DummyLoadProgress').attr({style: "transform: scaleX(0);width: 100%; height: 3px; position: absolute; left: 0px; transform-origin: 0 0; z-index: 2; background: rgba(255,255,255,0.4);"});
                 UpdateDummyProgress();
-            }
+                requestAnimationFrame(createdummytimer);
+            } else {requestAnimationFrame(createdummytimer)}
         }
         requestAnimationFrame(createdummytimer)
     }
@@ -47,6 +44,8 @@ window.addEventListener("yt-page-data-updated", function(e) {
         function progup() {if (!video.buffered.length) {return;};var buffer = video.buffered.end(video.buffered.length-1)/video.duration;if(buffer < 0){return};loadbar.style.transform = "scaleX("+buffer+")";}
         document.querySelector(".video-stream").removeEventListener("timeupdate", timeup, true);
         document.querySelector(".video-stream").removeEventListener("progress", progup, true);
+        $('.DummyPlayProgress').attr({style: "transform: scaleX(0);width: 100%; height: 3px; position: absolute; left: 0px; transform-origin: 0 0; z-index: 3; background-color: #df6eed;"});
+        $('.DummyLoadProgress').attr({style: "transform: scaleX(0);width: 100%; height: 3px; position: absolute; left: 0px; transform-origin: 0 0; z-index: 2; background: rgba(255,255,255,0.4);"});
         const video = document.querySelector(".video-stream");
         const progressbar = document.querySelector(".DummyPlayProgress");
         const loadbar = document.querySelector(".DummyLoadProgress");
@@ -66,7 +65,7 @@ window.addEventListener("yt-page-data-updated", function(e) {
                 UpdateTime();
             }
             if (!cont) {
-                const container2 = $('<div>').addClass('VTLC').css({display: 'block',overflow: 'hidden','font-weight': 500,color: '#f1f1f1','font-size': '14px','line-height': '36px','background-color': 'var(--yt-spec-badge-chip-background)',padding: '0px 10px','border-radius': '2px','margin-left': '8px'})
+                const container2 = $('<div>').addClass('VTLC').css({display: 'block','min-width': 'fit-content',overflow: 'hidden','font-weight': 500,color: '#f1f1f1','font-size': '14px','line-height': '36px','background-color': 'var(--yt-spec-badge-chip-background)',padding: '0px 10px','border-radius': '2px','margin-left': '8px'})
                 const subbutton = document.querySelector('#owner > #subscribe-button')
                 $(container2).insertAfter(subbutton);
                 requestAnimationFrame(createTime)
