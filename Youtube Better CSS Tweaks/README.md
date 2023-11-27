@@ -7,6 +7,7 @@ This is a collection of userscripts that tweak and add a few things to Youtube.
 * [Get Tampermonkey for Chrome](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=en)
 * [Get Tampermonkey for Firefox](https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/)
 * [Get Tampermonkey for Opera](https://addons.opera.com/en/extensions/details/tampermonkey-beta/)
+* [Get Tampermonkey for Safari](https://apps.apple.com/us/app/tampermonkey/id1482490089?mt=12)
   
 <br><br>
 
