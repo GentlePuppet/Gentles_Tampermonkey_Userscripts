@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Steam Group Mass Kicker Script
-// @version      5.0
+// @version      5.1
 // @author       GentlePuppet
 // @description	 Mass Kick Users From Steam Yer Group
 // @include      /https://steamcommunity.com/groups/.*/membersManage/
@@ -9,7 +9,7 @@
 // @run-at       document-body
 // @grant        GM_addStyle
 // @grant        unsafeWindow
-// @require      https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js
+// @require      https://code.jquery.com/jquery-3.7.1.min.js
 // @require      https://gist.github.com/raw/2625891/waitForKeyElements.js
 // @require      https://raw.githubusercontent.com/carhartl/jquery-cookie/v1.4.1/jquery.cookie.js
 // @icon         https://www.google.com/s2/favicons?domain=steamcommunity.com
@@ -140,7 +140,9 @@ GM_addStyle(`
 waitForKeyElements(`.groupadmin_header_location`, CreateCheckboxes, 0);
 function CreateCheckboxes() {
     $('.profilelink').each(function(index) {
-        var ID = $(this).parents('.member_block').find('img[onclick*=ManageMembers_Kick]').attr('onclick').replace("ManageMembers_Kick( '", '').replace(/', '.*' \);/, "");
+        var block = $(this).parents('.member_block').find('img[onclick*=ManageMembers_Kick]').attr('onclick')
+        if (block == undefined) {return};
+        var ID = block.replace("ManageMembers_Kick( '", '').replace(/', '.*' \);/, "");
         $(this).attr('href', 'https://steamcommunity.com/profiles/' + ID)
         $(this).text(ID)
     })
