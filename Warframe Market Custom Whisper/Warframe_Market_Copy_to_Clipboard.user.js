@@ -1,13 +1,15 @@
 // ==UserScript==
 // @name         Warframe Market Copy to Clipboard
-// @version      0.1
+// @version      1.0
 // @author       GentlePuppet
 // @description  Warframe Market Copy to Clipboard
 // @match        https://warframe.market/*
-// @require      http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js
+// @require      https://code.jquery.com/jquery-3.7.1.min.js
 // @require      https://gist.github.com/raw/2625891/waitForKeyElements.js
 // @grant        GM_setClipboard
 // @icon         https://warframe.market/static/assets/user/default-avatar.png
+// @updateURL    https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Warframe%20Market%20Custom%20Whisper/Warframe_Market_Copy_to_Clipboard.user.js
+// @downloadURL  https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Warframe%20Market%20Custom%20Whisper/Warframe_Market_Copy_to_Clipboard.user.js
 // ==/UserScript==
 
 $(document).ready(function () {
@@ -22,32 +24,52 @@ $(document).ready(function () {
                 var NewWhisperItemSet = (Username + "Hello, I'd like to trade " + Cost + ":platinum: for a [" + ItemSet + "] Set. (warframe.market)")
 
                 GM_setClipboard(NewWhisperItemSet, "{ type: 'text', mimetype: 'text/plain'}")
+                console.log(NewWhisperItemSet)
             }
         }
         if(window.location.href.indexOf("set") ==-1 ) {
             waitForKeyElements ('section[class*="order-clipboard"]', CopytoClipboard, 0);
             function CopytoClipboard (jNode) {
-                var Username = jNode.find("input").attr("value").replace(/Hi!.*$/g, "")
-                var Cost = jNode.find("input").attr("value").replace(/^.*for /g, "").replace(/ platinum.*$/g, "")
-                var Item = jNode.find("input").attr("value").replace(/^.*I want to buy: /g, "[").replace(/ for.*$/g, "].");
+                var buy_or_sell = jNode.find("input").attr("value")
+                var Username = jNode.find("input").attr("value").replace(/Hi!.*$/g, '')
+                var Cost = jNode.find("input").attr("value").replace(/^.*for /g, '').replace(/ platinum.*$/g, '')
+                var Item = jNode.find("input").attr("value").replace(/^.*I want to buy: /g, '[').replace(/ for.*$/g, ']').replace(/\"/g, '');
+                var SellItem = jNode.find("input").attr("value").replace(/^.*I want to sell: /g, '[').replace(/ for.*$/g, ']').replace(/\"/g, '');
+                var NewWhisperItemSingle = (Username + "Hello, I'd like to trade " + Cost + ":platinum: for a " + Item + ". (warframe.market)")
+                var SellWhisperItemSingle = (Username + "Hello, I'd like to sell a " + SellItem + " for " + Cost + ":platinum: (warframe.market)")
 
-                var NewWhisperItemSingle = (Username + "Hello, I'd like to trade " + Cost + ":platinum: for " + Item + " (warframe.market)")
+                var Whisper = ""
 
-                if (NewWhisperItemSingle.includes("Blueprint")) {
-                    var BlueprintWhisper = NewWhisperItemSingle.replace(' Blueprint]', "] Blueprint")
-                    GM_setClipboard(BlueprintWhisper, "{ type: 'text', mimetype: 'text/plain'}")
+                if (buy_or_sell.includes("sell")) {
+                    if (SellWhisperItemSingle.includes("Blueprint")) {
+                        Whisper = SellWhisperItemSingle.replace(' Blueprint]', "] Blueprint")
+                    }
+                    else if (SellWhisperItemSingle.includes("rank 5")) {
+                        Whisper = SellWhisperItemSingle.replace('for a ["', 'for a [').replace(' (rank 5)"]', '] (Rank 5)')
+                    }
+                    else if (SellWhisperItemSingle.includes("Helmet")) {
+                        Whisper = SellWhisperItemSingle.replace('[', "").replace(']', "")
+                    }
+                    else {
+                        Whisper = SellWhisperItemSingle
+                    }
                 }
-                else if (NewWhisperItemSingle.includes("rank 5")) {
-                    var ArcaneWhisper = NewWhisperItemSingle.replace(' (rank 5)]', "] (Rank 5)")
-                    GM_setClipboard(ArcaneWhisper, "{ type: 'text', mimetype: 'text/plain'}")
+                if (buy_or_sell.includes("buy")) {
+                    if (NewWhisperItemSingle.includes("Blueprint")) {
+                        Whisper = NewWhisperItemSingle.replace(' Blueprint]', "] Blueprint")
+                    }
+                    else if (NewWhisperItemSingle.includes("rank 5")) {
+                        Whisper = NewWhisperItemSingle.replace('for a ["', 'for a [').replace(' (rank 5)"]', '] (Rank 5)')
+                    }
+                    else if (NewWhisperItemSingle.includes("Helmet")) {
+                        Whisper = NewWhisperItemSingle.replace('[', "").replace(']', "")
+                    }
+                    else {
+                        Whisper = NewWhisperItemSingle
+                    }
                 }
-                else if (NewWhisperItemSingle.includes("Helmet")) {
-                    var ArcaneHelmetWhisper = NewWhisperItemSingle.replace('[', "").replace(']', "")
-                    GM_setClipboard(ArcaneHelmetWhisper, "{ type: 'text', mimetype: 'text/plain'}")
-                }
-                else {
-                    GM_setClipboard(NewWhisperItemSingle, "{ type: 'text', mimetype: 'text/plain'}")
-                }
+                GM_setClipboard(Whisper, "{ type: 'text', mimetype: 'text/plain'}")
+                console.log(Whisper)
             }
         }
     });
