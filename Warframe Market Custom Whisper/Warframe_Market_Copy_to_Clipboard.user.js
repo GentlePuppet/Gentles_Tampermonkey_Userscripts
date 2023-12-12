@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Warframe Market Copy to Clipboard
-// @version      1.0
+// @version      1.1
 // @author       GentlePuppet
 // @description  Warframe Market Copy to Clipboard
 // @match        https://warframe.market/*
@@ -14,31 +14,24 @@
 
 $(document).ready(function () {
     $('body').bind('DOMSubtreeModified', 'test', function () {
-        if(window.location.href.indexOf("set") !==-1 ) {
-            waitForKeyElements('section[class*="order-clipboard"]', CopytoClipboard, 0);
-            function CopytoClipboard (jNode) {
-                var Username = jNode.find("input").attr("value").replace(/Hi!.*$/g, "")
-                var Cost = jNode.find("input").attr("value").replace(/^.*for /g, "").replace(/ platinum.*$/g, "")
-                var ItemSet = jNode.find("input").attr("value").replace(/^.*I want to buy: /g, "").replace(/ for.*$/g, ".").replace(/ Set.*$/g, "")
+        waitForKeyElements ('section[class*="order-clipboard"]', CopytoClipboard, 0);
+        function CopytoClipboard (jNode) {
+            var debug = false
 
-                var NewWhisperItemSet = (Username + "Hello, I'd like to trade " + Cost + ":platinum: for a [" + ItemSet + "] Set. (warframe.market)")
+            var buy_or_sell = jNode.find("input").attr("value")
+            var Username = jNode.find("input").attr("value").replace(/Hi!.*$/g, '')
+            var Cost = jNode.find("input").attr("value").replace(/^.*for /g, '').replace(/ platinum.*$/g, '')
+            var Item = jNode.find("input").attr("value").replace(/^.*I want to sell: /g, '[').replace(/^.*I want to buy: /g, '[').replace(/ for.*$/g, ']').replace(/ Set.*$/g, "]").replace(/\"/g, '');
 
-                GM_setClipboard(NewWhisperItemSet, "{ type: 'text', mimetype: 'text/plain'}")
-                console.log(NewWhisperItemSet)
+            var Whisper = ""
+
+            if(window.location.href.indexOf("_set") !==-1 ) {
+                Whisper = (Username + "Hello, I'd like to trade " + Cost + ":platinum: for a " + Item + " Set. (warframe.market)")
             }
-        }
-        if(window.location.href.indexOf("set") ==-1 ) {
-            waitForKeyElements ('section[class*="order-clipboard"]', CopytoClipboard, 0);
-            function CopytoClipboard (jNode) {
-                var buy_or_sell = jNode.find("input").attr("value")
-                var Username = jNode.find("input").attr("value").replace(/Hi!.*$/g, '')
-                var Cost = jNode.find("input").attr("value").replace(/^.*for /g, '').replace(/ platinum.*$/g, '')
-                var Item = jNode.find("input").attr("value").replace(/^.*I want to buy: /g, '[').replace(/ for.*$/g, ']').replace(/\"/g, '');
-                var SellItem = jNode.find("input").attr("value").replace(/^.*I want to sell: /g, '[').replace(/ for.*$/g, ']').replace(/\"/g, '');
-                var NewWhisperItemSingle = (Username + "Hello, I'd like to trade " + Cost + ":platinum: for a " + Item + ". (warframe.market)")
-                var SellWhisperItemSingle = (Username + "Hello, I'd like to sell a " + SellItem + " for " + Cost + ":platinum: (warframe.market)")
 
-                var Whisper = ""
+            else if(window.location.href.indexOf("_set") ==-1 ) {
+                var NewWhisperItemSingle = (Username + "Hello, I'd like to trade " + Cost + ":platinum: for a " + Item + ". (warframe.market)")
+                var SellWhisperItemSingle = (Username + "Hello, I'd like to sell a " + Item + " for " + Cost + ":platinum: (warframe.market)")
 
                 if (buy_or_sell.includes("sell")) {
                     if (SellWhisperItemSingle.includes("Blueprint")) {
@@ -54,7 +47,7 @@ $(document).ready(function () {
                         Whisper = SellWhisperItemSingle
                     }
                 }
-                if (buy_or_sell.includes("buy")) {
+                else if (buy_or_sell.includes("buy")) {
                     if (NewWhisperItemSingle.includes("Blueprint")) {
                         Whisper = NewWhisperItemSingle.replace(' Blueprint]', "] Blueprint")
                     }
@@ -68,9 +61,10 @@ $(document).ready(function () {
                         Whisper = NewWhisperItemSingle
                     }
                 }
-                GM_setClipboard(Whisper, "{ type: 'text', mimetype: 'text/plain'}")
-                console.log(Whisper)
             }
+
+            GM_setClipboard(Whisper, "{ type: 'text', mimetype: 'text/plain'}")
+            if (debug == true) {console.log(' Username: '+Username+'\n     Cost: '+Cost+'\n     Item: '+Item+'\nClipboard: '+Whisper)}
         }
     });
 });
