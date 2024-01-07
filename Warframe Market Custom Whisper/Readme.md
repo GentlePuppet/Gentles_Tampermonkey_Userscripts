@@ -1,7 +1,8 @@
 # Gentle's Warframe Market Custom Whisper Message
 
-This is a userscript that automatically copies a better message to your clipboard when clicking the BUY/SELL button on warframe market.
-I hated that the default copy/paste message doesn't link the item you are trading for, so I made my own copy/paste message that actually does.
+This is a userscript that automatically copies a better message to your clipboard when clicking the BUY/SELL button on warframe market.<br>
+I hated that the default copy/paste message doesn't link the item you are trading for;<br>
+So I made my own more personal copy/paste message that actually does.
 <br><br><br>
 Default Buy Message: 
 > /w Username Hello, I want to buy: Harrow Prime Chassis Blueprint for 4 platinum. (warframe.market)
