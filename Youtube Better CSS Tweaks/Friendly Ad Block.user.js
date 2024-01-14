@@ -1,18 +1,18 @@
 // ==UserScript==
 // @name         Gentle's Ad Skipper
-// @version      1.7
+// @version      1.8
 // @author       GentlePuppet
 // @match        https://www.youtube.com/*
 // @icon         https://www.youtube.com/s/desktop/1eca3218/img/favicon_144.png
 // @description  A simple script to instantly skip any ads that start playing. It also hides various static ads.
-// @grant        GM_addStyle
 // @require      https://code.jquery.com/jquery-3.7.1.min.js
 // @run-at       document-start
 // @updateURL    https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Youtube%20Better%20CSS%20Tweaks/Friendly%20Ad%20Block.user.js
 // @downloadURL  https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Youtube%20Better%20CSS%20Tweaks/Friendly%20Ad%20Block.user.js
+// @grant        GM_addStyle
 // ==/UserScript==
 GM_addStyle(`
-    .ytd-companion-slot-renderer, .ytd-action-companion-ad-renderer,
+    .ytd-companion-slot-renderer, .ytd-action-companion-ad-renderer, yt-mealbar-promo-renderer#mealbar-promo-renderer,
     .ytd-watch-next-secondary-results-renderer.sparkles-light-cta, .ytd-unlimited-offer-module-renderer,
     .ytp-ad-overlay-image, .ytp-ad-text-overlay,
     div#root.style-scope.ytd-display-ad-renderer.yt-simple-endpoint, div#sparkles-container.style-scope.ytd-promoted-sparkles-web-renderer,
@@ -27,7 +27,7 @@ function AdTimer() {
     if (!TimerActive) {
         TimerActive = true
         function update() {
-            if (document.querySelector(".ad-showing, .ad-interrupting")) {
+            if (document.querySelector(".ad-showing, .ad-interrupting, ytp-ad-display-override" )) {
                 document.querySelector('#movie_player > div.html5-video-container > video').muted = true
                 if (document.querySelector('#movie_player > div.html5-video-container > video').currentTime > 0) {
                     document.querySelector('#movie_player > div.html5-video-container > video').currentTime = Math.max(0, document.querySelector('#movie_player > div.html5-video-container > video').duration - 0.1)
