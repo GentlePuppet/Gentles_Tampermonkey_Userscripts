@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         Steam Group Mass Kicker Script
-// @version      5.1
+// @version      6.0
 // @author       GentlePuppet
 // @description	 Mass Kick Users From Steam Yer Group
-// @include      /https://steamcommunity.com/groups/.*/membersManage/
-// @include      /https://steamcommunity.com/profiles/.*/
-// @include      /https://steamcommunity.com/id/.*/
+// @match        https://steamcommunity.com/groups/*
+// @match        https://steamcommunity.com/profiles/*
+// @match        https://steamcommunity.com/id/*
 // @run-at       document-body
 // @grant        GM_addStyle
 // @grant        unsafeWindow
@@ -312,3 +312,17 @@ function LoadSavedFilters() {
         }
     )}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
