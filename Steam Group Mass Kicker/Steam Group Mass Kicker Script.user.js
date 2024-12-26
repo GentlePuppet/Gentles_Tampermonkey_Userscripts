@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Steam Group Mass Kicker Script
-// @version      6.0
+// @version      7.0
 // @author       GentlePuppet
 // @description	 Mass Kick Users From Steam Yer Group
 // @match        https://steamcommunity.com/groups/*
@@ -18,36 +18,53 @@
 // @downloadURL  https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Steam%20Group%20Mass%20Kicker/Steam%20Group%20Mass%20Kicker%20Script.user.js
 // ==/UserScript==
 
-//---------------------------------
-//-- Scroll the window down by 205px
-//---------------------------------
-if(window.location.href.indexOf("membersManage") !==-1 ) {
-    window.scrollBy(0,205)
-}
+//--------------------------
+//-- Customizable Settings
+//--------------------------
+// Keep hovered profile previews loaded? 
+// Will consume your memory if you are previewing all the profiles at once, since it's like opening 50 tabs at once.
+// If you have a good PC feel free to set this to true.
+const keeploaded = false
 
-//-------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------
+//-- Get the Group Name (Used to restrict the kick list created in a group to that group)
+//------------------------------------------------------------------------------------------
+const url = window.location.href
+const pagepath = url.replace('https://steamcommunity.com','').replace(/membersManage.*$/g,'membersManage')
+
+//--------------------------------------------------------------------------------------
 //-- Mark Sussy Profile Pages with specific about me sections that match these filters
-//-------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------
 // Wait for the users profile about me section to load, then run the profile duplicate filter
-waitForKeyElements(`.profile_summary`, checkprofile, 0);
+waitForKeyElements(`.profile_summary`, checkProfile, 0);
 // The filter that is run when the profile about me loads
-function checkprofile() {
-    if($('*:contains("𝓦𝒆𝓵𝓬𝓸𝓶𝒆 𝓽𝓸 𝓶𝔂 𝓹𝓻𝓸𝒇𝓲𝓵𝒆")').children().length > 0){MarkBotProfile();return;}
-    else if($('*:contains("ᗯᕮᒪᑕOᗰᕮ TO ᗰY ᑭᖇOᖴIᒪᕮ ヅ")').children().length > 0){MarkBotProfile();return;}
-    else if($('*:contains("website moderator")').children().length > 0){MarkBotProfile();return;}
-    else if($('*:contains("lvl. Competitive: Expert Assassin 2")').children().length > 0){MarkBotProfile();return;}
-    else if($('*:contains("★·.·´¯`·.·★ Thank you for visiting my profile! ★·.·´¯`·.·★")').children().length > 0){MarkBotProfile();return;}
-    else if($('*:contains("[w̲̅][e̲̅][l̲̅][c̲̅][o̲̅][m̲̅][e̲̅] [t̲̅][o̲̅] [m̲̅][y̲̅] [p̲̅][r̲̅][o̲̅][f̲̅][i̲̅][l̲̅]")').children().length > 0){MarkBotProfile();return;}
-    else if($('*:contains("•● W E L C O M E- T O -M Y -P R O F I L E ●•")').children().length > 0){MarkBotProfile();return;}
-    else if($('*:contains("Whats ups, cutie, im litle absent-minded")').children().length > 0){MarkBotProfile();return;}
-    else if($('*:contains("Thank you for visiting my profile.")').children().length > 0){MarkBotProfile();return;}
-    else if($('*:contains("░█░█░█░█▀▀▀░█░░░░█▀▀▀░█▀▀█░█▀█▀█░█▀▀▀░")').children().length > 0){MarkBotProfile();return;}
-    else if($('*:contains("csgo and tf2 gamer")').children().length > 0){MarkBotProfile();return;}
-    else if($('*:contains("tf2 and csgo gamer")').children().length > 0){MarkBotProfile();return;}
-    else if($('*:contains("Hello and welcome to my profile")').children().length > 0){MarkBotProfile();return;}
-    else if($('*:contains("I\'m a 3d artist (now I\'m developing tf2 maps)")').children().length > 0){MarkBotProfile();return;}
-    else if($('*:contains("Rust website manager")').children().length > 0){MarkBotProfile();return;}
-    else if($('*:contains("TF2 HL AMATEUR COMPETITIVE PLAYER")').children().length > 0){MarkBotProfile();return;}
+function checkProfile() {
+    const textChecks = [
+        "𝓦𝒆𝓵𝓬𝓸𝓶𝒆 𝓽𝓸 𝓶𝔂 𝓹𝓻𝓸𝒇𝓲𝓵𝒆",
+        "ᗯᕮᒪᑕOᗰᕮ TO ᗰY ᑭᖇOᖴIᒪᕮ ヅ",
+        "website moderator",
+        "lvl. Competitive: Expert Assassin 2",
+        "★·.·´¯`·.·★ Thank you for visiting my profile! ★·.·´¯`·.·★",
+        "[w̲̅][e̲̅][l̲̅][c̲̅][o̲̅][m̲̅][e̲̅] [t̲̅][o̲̅] [m̲̅][y̲̅] [p̲̅][r̲̅][o̲̅][f̲̅][i̲̅][l̲̅]",
+        "•● W E L C O M E- T O -M Y -P R O F I L E ●•",
+        "Whats ups, cutie, im litle absent-minded",
+        "Thank you for visiting my profile.",
+        "░█░█░█░█▀▀▀░█░░░░█▀▀▀░█▀▀█░█▀█▀█░█▀▀▀░",
+        "csgo and tf2 gamer",
+        "tf2 and csgo gamer",
+        "Hello and welcome to my profile",
+        "I'm a 3d artist (now I'm developing tf2 maps)",
+        "Rust website manager",
+        "TF2 HL AMATEUR COMPETITIVE PLAYER",
+        "Creative Graphic Designer, Illustrator, Motion Graphics, and Video Editing"
+    ];
+
+    for (const text of textChecks) {
+        if ($(`*:contains("${text}")`).children().length > 0) {
+            MarkBotProfile();
+            return;
+        }
+    }
 }
 function MarkBotProfile() {
     $('body.profile_page, div.profile_page').attr('style', 'background-image: none; background-color: #460505; --gradient-left: none; --gradient-right: none; --gradient-background: #460505;')
@@ -56,9 +73,9 @@ function MarkBotProfile() {
     $('#global_header').after(MARKPROFILEBOT);
 }
 
-//---------------------------------
+//----------------------------------
 //-- Hover to See Profile Previews
-//---------------------------------
+//----------------------------------
 waitForKeyElements(`.playerAvatar > a`, HoverPreview, 0);
 function HoverPreview(e) {
     var profilelink = $(e).attr('href');
@@ -67,17 +84,25 @@ function HoverPreview(e) {
     $(varpreviewbox).insertBefore(parent);
     const PREVIEWBOX_CLASS = 'previewbox';
     const HIGHLIGHTED_CLASS = 'highlighted';
+    const LOADED_CLASS = 'loaded';
     var parentblock = $(e).closest('.member_block')
     $(parentblock).mouseover(function() {
-        $(this).children(`.${PREVIEWBOX_CLASS}`).show();
-        $(this).addClass(HIGHLIGHTED_CLASS);
-        const $previewbox = $(this).children(`.${PREVIEWBOX_CLASS}`);
-        const previewboxSrc = $previewbox.attr('data-src');
-        $previewbox.attr('src', previewboxSrc);
+            $(this).children(`.${PREVIEWBOX_CLASS}`).show();
+            $(this).addClass(HIGHLIGHTED_CLASS);
+            const $previewbox = $(this).children(`.${PREVIEWBOX_CLASS}`);
+            const previewboxSrc = $previewbox.attr('data-src');
+        if($(this).hasClass(LOADED_CLASS) == false) {
+            $previewbox.attr('src', previewboxSrc);
+            if (keeploaded == true) {
+                $(this).addClass(LOADED_CLASS);
+            }
+        }
     }).mouseout(function() {
         $(this).children(`.${PREVIEWBOX_CLASS}`).hide();
         $(this).removeClass(HIGHLIGHTED_CLASS);
-        $(this).children(`.${PREVIEWBOX_CLASS}`).removeAttr('src');
+        if (keeploaded == false) {
+            $(this).children(`.${PREVIEWBOX_CLASS}`).removeAttr('src');
+        }
     });
 }
 GM_addStyle(`
@@ -85,15 +110,10 @@ GM_addStyle(`
      .highlighted {background-color: rgba( 84, 133, 183, 0.5);}
 `);
 
-//----------------------------------------------------------------------------------------
-//-- Get the Group Name (Used to restrict the kick list created in a group to that group)
-//----------------------------------------------------------------------------------------
-const url = window.location.href
-const pagepath = url.replace('https://steamcommunity.com','').replace(/membersManage.*$/g,'membersManage')
 
-//---------------------------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------------------------
 //-- Create the empty kick list arrays and check if the kick list cookies exists on page load, if it does turn the cookies into an array
-//---------------------------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------------------------
 var tempuserarray = [];
 var tempusernames = [];
 if($.cookie('KickThesePlayers') == undefined || $.cookie('KickThesePlayers') == ""){
@@ -102,9 +122,9 @@ if($.cookie('KickThesePlayers') == undefined || $.cookie('KickThesePlayers') == 
     tempuserarray = $.cookie('KickThesePlayers').replace('%2C', ',').split(',');
 }
 
-//--------------------------------------
+//---------------------------------------
 //-- Flush and recreate kick list array
-//--------------------------------------
+//---------------------------------------
 function createArrays() {
     tempuserarray = [];
     tempusernames = [];
@@ -114,9 +134,9 @@ function createArrays() {
         tempuserarray = $.cookie('KickThesePlayers').replace('%2C', ',').split(',');
     }
 }
-//---------------------
+//----------------------
 //-- The Kick Menu CSS
-//---------------------
+//----------------------
 GM_addStyle(`
     #KickUserCheckbox {margin-left: 5px;height: 25px;width: 25px;position: absolute;top: 10px;accent-color: #c30000;}
     #KickUserCheckbox:Hover {cursor: pointer;}
@@ -134,9 +154,9 @@ GM_addStyle(`
     .popupCancelButton:hover {background: #7d6f6f;}
 `);
 
-//----------------------------------------------
+//-------------------------------------------------------
 //-- Creates the checkboxes to select users for kicking
-//----------------------------------------------
+//-------------------------------------------------------
 waitForKeyElements(`.groupadmin_header_location`, CreateCheckboxes, 0);
 function CreateCheckboxes() {
     $('.profilelink').each(function(index) {
@@ -157,9 +177,9 @@ function CreateCheckboxes() {
     $("#CheckAllBox").click(function() {$('input[id=KickUserCheckbox]:not([disabled="disabled"])').prop("checked", $(this).prop("checked"));});
     LoadSavedFilters()
 }
-//-------------------------
+//--------------------------
 //-- Creates the kick menu
-//-------------------------
+//--------------------------
 function GetCheckedBoxes() {
     $('#KickUserCheckbox:checked:not([style="accent-color: green;"])').each(function(index) {
         var profile_url = $(this).parents('.member_block').find('img[onclick*=ManageMembers_Kick]').attr('onclick').replace("ManageMembers_Kick( '", '').replace(/', '.*' \);/, "");
@@ -218,9 +238,9 @@ GM_addStyle(`
      .minihighlight {background-color: rgba( 84, 133, 183, 0.5);}
 `);
 
-//-----------------------------------------------------------------------
+//-------------------------------------------------------------
 //-- The action to remove users when clicked in the kick menu
-//-----------------------------------------------------------------------
+//-------------------------------------------------------------
 function RemoveSelectedUser(i) {
     var profile_url = $('img[onclick*=ManageMembers_Kick]:contains(' + i +')').parents('.member_block')
     var userID = tempuserarray.indexOf(i)
@@ -228,9 +248,9 @@ function RemoveSelectedUser(i) {
     tempusernames.splice(userID, 1);
 }
 
-//-----------------------------------------------------------------------
+//------------------------------------------------------------------------
 //-- Save the red checked users to the kick list and close the kick menu
-//-----------------------------------------------------------------------
+//------------------------------------------------------------------------
 function SaveFilters() {
     $('#popuphome').remove();
     $.cookie('KickThesePlayers', tempuserarray, { domain: 'steamcommunity.com', path: pagepath });
@@ -238,17 +258,17 @@ function SaveFilters() {
     LoadSavedFilters()
 }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //-- Close the kick menu without saving the red checked users to the kick list
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 function CancelKick() {
     createArrays()
     $('#popuphome').remove();
 }
 
-//----------------------------------------------------------
+//-----------------------------------------------------------
 //-- Completely erase the kick list and close the kick menu
-//----------------------------------------------------------
+//-----------------------------------------------------------
 function ClearKick() {
     $('#popuphome').remove();
     $.removeCookie('KickThesePlayers', {domain: 'steamcommunity.com', path: pagepath });
@@ -258,17 +278,17 @@ function ClearKick() {
     createArrays()
 }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //-- Save the current selected user kick list and start the startkick function
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 function savestartKick() {
     SaveFilters()
     startkick()
 }
 
-//----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //-- The function that goes through the list and kicks all the selected users
-//----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 function startkick() {
     if($.cookie('KickThesePlayers') == undefined) {return;}
     if($.cookie('KickThesePlayers') == "" ){
@@ -294,9 +314,9 @@ function startkick() {
     }
 }
 
-//----------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------
 //-- Load the saved kick list and check if any users on the current page are marked
-//----------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------
 function LoadSavedFilters() {
     $('#KickUserCheckbox[style="accent-color: green;"]').removeAttr('style').removeAttr('disabled');
     $('#KickUserCheckbox:checked').click();
