@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Google Nightmode
 // @description  Makes Google DarkThemed
-// @version      0.9.3
+// @version      0.9.5
 // @author       Gentle Puppet
 // @include      https://www.google.com/*
 // @icon         https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png
@@ -20,7 +20,11 @@ GM_addStyle(`
     .ifM9O, .WwiUwd, .Mw2I7, .Mw2I7 span.dtviD, .u80vZ .pLfNuf, .nmca, .nmcw, .rl_item_base .title, .mlo-c, .rl_item_base, .jbzYp, .q0OVVc, .lVpIye, .NmQOSc, .Vcnuqf, .HoEOQb, .rl_feature .kxbcl, .H1ccWd{ background: rgb(25, 25, 25) !important; background-color: rgb(25, 25, 25) !important; color: #aaa !important; }
     .s, .ELcVZ{ background: transparent !important; background-color: transparent !important; color: #aaa !important; }
     .MnxrXd, .Fx0PXd, .v5axif, .rbZWke, .klCDjc, .jaf3Yd, .UiRzac, .ZoQ1ac, .Y77G4d, .HtP7nb, .ZEwWe .H3pCR, .ZEwWe .H3pCR b, #foot #navcnt .cur, .MqFglb{ color: white !important; }
-    .sbl1, .dw-sb-cont .dw-sbs{ color: white !important; }
+    .sbl1, .dw-sb-cont .dw-sbs, .p4wth, .VuuXrf{ color: white !important; }
+    .TXwUJf {color: #999da9 !important;}
+    .IiOSLb .rsGxI.Ww4FFb, .Ww4FFb {background-color: #101218 !important;}
+    [selected].YmvwI {color: #e8e8e8 !important;border-bottom: 3px solid #e8e8e8 !important;}
+    .YmvwI {color: #9aa0a6 !important;}
     #searchform{ color: rgb(16, 16, 16) !important; }
     .sbct.sbhl, .gstl_50 .sbsb_d{ background: rgb(32, 32, 32) !important;}
     .jhp input[type="submit"], .sbdd_a input, .gbqfba, .RNNXgb, .aajZCb, .gstl_50 .sbsb_a{ background: rgb(16, 16, 16) !important; color: white !important; border: 1px solid #444 !important; }
