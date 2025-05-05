@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Google Nightmode
 // @description  Makes Google DarkThemed
-// @version      0.9.8
+// @version      0.9.9
 // @author       Gentle Puppet
 // @include      https://www.google.com/*
 // @icon         https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png
@@ -31,14 +31,14 @@ GM_addStyle(`
         .yg51vc, .Cyt8W, .LMMXP, .JolIg, .mDj5wd, .I6TXqe, .MGqjK, .WpKAof:hover, .kLhEKe, .Ywxp6b, .f, .f a:link, html:not(.zAoYTe) .hide-focus-ring,
         .MXl0lf, .cfBJGe, .BlOseb.eSq3C g-fab, .k2Oeod.eSq3C g-fab, .YbqTTb, .dw-sb-cont .dw-sbi, .dw-sb-cont, .kp-blk, .RNNXgb, .gLFyf, .aajZCb, .Lj9fsd,
         .jZWadf, .sfbgg, #gbwa, .gb_Nc, .B7A8m, .p83fR, g-inner-card, .ZINbbc, .zDBTmf > div, .eUrIee, .ZINbbc, .XO51F, #brs .med, .gG0TJc,
-        .m7VU0c, .sect, .rlc__slider, .rlc__slider-page, div.rl_feature {
+        .m7VU0c, .sect, .rlc__slider, .rlc__slider-page, div.rl_feature, .wH6SXe, .BwPElf .toI8Rb, .JMWMJ .LSYTNd {
             background: transparent !important;
             color: #bbb !important;
         }
 
     /* Light Text on Less Darker Background */
-        .ifM9O, .WwiUwd, .Mw2I7, .Mw2I7 span.dtviD, .u80vZ .pLfNuf, .nmca, .nmcw, .rl_item_base .title, .mlo-c,
-        .rl_item_base, .jbzYp, .q0OVVc, .lVpIye, .NmQOSc, .Vcnuqf, .HoEOQb, .rl_feature .kxbcl, .H1ccWd, .IiOSLb .rsGxI.Ww4FFb, .Ww4FFb, .vIifob {
+        .k4o2Hc, .qyKxnc.FnEtTd .srrRv, .ifM9O, .WwiUwd, .Mw2I7, .Mw2I7 span.dtviD, .u80vZ .pLfNuf, .nmca, .nmcw, .rl_item_base .title, .mlo-c,
+        .rl_item_base, .jbzYp, .q0OVVc, .lVpIye, .NmQOSc, .Vcnuqf, .HoEOQb, .rl_feature .kxbcl, .H1ccWd, .IiOSLb .rsGxI.Ww4FFb, .Ww4FFb, .vIifob, .GKS7s, .GKS7s .FMKtTb, .GKS7s .RWhoyd.mol54e {
             background: rgb(25, 25, 25) !important;
             color: #aaa !important;
         }
@@ -61,9 +61,12 @@ GM_addStyle(`
         .RDmXvc {
             background-image: linear-gradient(transparent 0px, #101010 52px, #101010 80px) !important;
         }
+        .F9Idpe {
+            background-image: linear-gradient(to right, transparent 0px, #101010 52px, #101010 80px) !important;
+        }
 
     /* Link Colors */
-        .w8qArf .fl, .dyjrff, .K8WCoe, .OZ9ddf .Fzsovc, .mNme1d, a:link, .w, #prs a:visited, #prs a:active, .q:active, .q:visited, .kl:active, .tbotu, .g0F6u, .KwU3F, .xSQxL {
+        .indIKd, .w8qArf .fl, .dyjrff, .K8WCoe, .OZ9ddf .Fzsovc, .mNme1d, a:link, .w, #prs a:visited, #prs a:active, .q:active, .q:visited, .kl:active, .tbotu, .g0F6u, .KwU3F, .xSQxL, .BwPElf .ptes9b {
             color: #2c67ef !important;
         }
 
