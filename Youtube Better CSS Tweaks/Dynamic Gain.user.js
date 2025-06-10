@@ -14,11 +14,11 @@ if (window.location.href.includes("watch?v=")) {
     const targetVolume = 50,           // Target loudness level (higher = louder output gain)
           sampleCount = 150,           // Number of samples taken for initial volume analysis
           maxgain = 2,                 // Maximum gain multiplier allowed (to avoid distortion)
-          dynamicSampleCount = 150,    // Samples taken during dynamic resampling (every X seconds)
+          dynamicSampleCount = 50,    // Samples taken during dynamic resampling (every X seconds)
           dynamicSampleInterval = 100, // Time (ms) between each dynamic sample
-          resampleEvery = 10000,       // Time (ms) between dynamic gain adjustments
+          resampleEvery = 5000,       // Time (ms) between dynamic gain adjustments
           minVolumeThreshold = 20,     // Skip gain adjustment if average volume is below this (e.g., during silence)
-          gainChangeThreshold = 0.25,  // Only apply new gain if change is greater than this (avoids micro adjustments)
+          gainChangeThreshold = 0.35,  // Only apply new gain if change is greater than this (avoids micro adjustments)
           shortSampleCount = 100,      // Samples taken after changing the volume for resampling
           volumeChangeDelay = 2500;    // Time (ms) to wait before resampling after volume change
     // CONFIGURATION — You can tweak these to suit your needs
