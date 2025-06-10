@@ -11,12 +11,20 @@ This is a collection of userscripts that tweak and add a few things to Youtube.
   
 <br><br>
 
-## [Install Userscript: Simple Ad Skipper](https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Youtube%20Better%20CSS%20Tweaks/Friendly%20Ad%20Block.user.js)
-* This script waits for an ad to start playing then it skips to the last 0.1 seconds of the ad and then clicks the skip button if it exists.
-* Also hides various static ads and banners.
-  - This script doesn't intecept or block ads so it isn't detected since the ads still technically play.
-  - It does work on chrome, but I do not guarantee that it works on other platforms.
-  
+## [Install Userscript: Dynamic Gain](https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/refs/heads/main/Youtube%20Better%20CSS%20Tweaks/Dynamic%20Gain.user.js)
+Are you tired of some youtube videos being way too quiet, even at 100% volume?
+* This script automatically boosts quiet YouTube videos or lowers loud videos by sampling the average volume and adjusting the gain over a few seconds.
+* It samples the video's audio to calculate gain multiplier and continuously re-adjusts during playback if needed.
+  - Displays the current gain next to the current time on the playback overlay.
+  - Works even if the YouTube volume is manually changed.
+  - Handles pausing and playing and won't resample while the video is paused.
+  - Gain is smooth and dynamic, so it avoids volume spikes or clipping.
+
+![image](https://github.com/user-attachments/assets/4309a419-6bc5-44f9-a116-6c6ff4dbc54e)
+![image](https://github.com/user-attachments/assets/91e5bec8-df6a-4399-976e-c994e887c8b2)
+![image](https://github.com/user-attachments/assets/6e72871d-f33c-4505-bfe7-0e1903ca891d)
+
+
 <br><br>
   
 ## [Install Userscript: Video Progress Trackers](https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Youtube%20Better%20CSS%20Tweaks/Video%20Progress%20Trackers.user.js)
