@@ -1,7 +1,8 @@
 // ==UserScript==
 // @name         Youtube Gentle's Auto Gain
 // @author       GentlePuppet
-// @version      1.1.0
+// @version      1.1.1
+// @description  This script automatically boosts quiet YouTube videos or lowers loud videos by sampling the average volume and adjusting the gain over a few seconds.
 // @include      https://www.youtube.com/*
 // @icon         https://www.youtube.com/s/desktop/1eca3218/img/favicon_144.png
 // @updateURL    https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Youtube%20Hide%20Watched%20Videos/Dynamic%20Gain.user.js
@@ -16,7 +17,7 @@ if (window.location.href.includes("watch?v=")) {
         sampleCount: 100,            // Number of samples taken for volume analysis
         maxGain: 2,                 // Maximum gain multiplier allowed (to avoid distortion)
         sampleInterval: 100,        // Time (ms) between each sample
-        resampleEvery: 2500,        // Time (ms) between dynamic gain adjustments
+        resampleEvery: 5000,        // Time (ms) between dynamic gain adjustments
         minVolumeThreshold: 20,     // Skip gain adjustment if average volume is below this (e.g., during silence)
         gainChangeThreshold: 0.35,  // Only apply new gain if change is greater than this (avoids micro adjustments)
         volumeChangeDelay: 2500     // Time (ms) to wait before resampling after volume change
@@ -64,10 +65,17 @@ if (window.location.href.includes("watch?v=")) {
         };
 
         // Overlay
-        const overlay = document.createElement("div");
-        overlay.className = "boost-overlay";
-        overlay.style.cssText = `margin-left:8px;display:inline-block;text-shadow:-1px -1px 2px #000,1px -1px 2px #000,-1px 1px 2px #000,1px 1px 2px #000;`;
-        document.querySelector('.ytp-time-contents')?.appendChild(overlay);
+        if (!document.querySelector('.boost-overlay')) {
+            const overlay = document.createElement("div");
+            overlay.className = "boost-overlay";
+            overlay.style.cssText = `height:47px;width:107px;margin-left:8px;display:inline-block;text-shadow:-1px -1px 2px #000,1px -1px 2px #000,-1px 1px 2px #000,1px 1px 2px #000;pointer-events:auto;`;
+            overlay.style.fontFamily = 'monospace';
+            document.querySelector('.ytp-time-contents')?.appendChild(overlay);
+            overlay.textContent = `🔊 Auto Gain: ${gainNode.gain.value.toFixed(2)}×`;
+            const style = document.createElement('style');
+            style.textContent = `.boost-overlay[data-tooltip]:hover::after {content: attr(data-tooltip);margin-left:-107px;height:47px;width:107px;position: fixed;background: rgba(0, 0, 0, 0.75);color: white;padding: 4px 8px;border-radius: 4px;white-space: nowrap;font-size: 12px;z-index: 9999;}`;
+            document.head.appendChild(style);
+        }
 
         let isPaused = video.paused;
         video.addEventListener("pause", () => { isPaused = true; });
@@ -77,52 +85,59 @@ if (window.location.href.includes("watch?v=")) {
         let volumeChangeTimeout;
         video.addEventListener("volumechange", () => {
             clearTimeout(volumeChangeTimeout);
-            volumeChangeTimeout = setTimeout(() => { forceNextAdjustment = true; }, config.volumeChangeDelay);
+            volumeChangeTimeout = setTimeout(() => config.volumeChangeDelay);
         });
 
-        let forceNextAdjustment = true;
         let prevAvgVolume = null;
+        const spinnerChars = ['╴', '╯', '╵', '╰', '╶', '╭', '╻', '╮'];
+        const spinnerChars2 = ['◴ ', '◷ ', '◶ ', '◵ '];
+
+
+        let spinnerIndex = 0;
 
         async function gainAdjustmentLoop() {
             while (true) {
                 if (isPaused) {
-                    await sleep(config.resampleEvery);
+                    await sleep(500);
                     continue;
                 }
 
                 let volumeSum = 0;
-                const samples = forceNextAdjustment ? config.sampleCount * 2 : config.sampleCount;
-
-                for (let i = 0; i < samples;) {
+                let overlay = document.querySelector('.boost-overlay')
+                console.log("Starting sampling loop");
+                for (let i = 0; i <= config.sampleCount - 2;) {
                     if (isPaused) {
-                        await sleep(500); // Wait a bit before checking again
-                        continue; // Don't increment `i`, retry this iteration
+                        await sleep(500);
+                        continue;
                     }
 
                     volumeSum += getAverageVolume();
-                    i++; // Only increment if not paused
+                    i++;
+
+                    overlay.textContent = `${spinnerChars2[spinnerIndex % spinnerChars2.length]} Auto Gain: ${gainNode.gain.value.toFixed(2)}×`;
+                    overlay.setAttribute("data-tooltip", `(${i + 1}/${config.sampleCount}) Resampling...`);
+                    spinnerIndex++;
                     await sleep(config.sampleInterval);
                 }
+                overlay.setAttribute("data-tooltip", `(${config.sampleCount}/${config.sampleCount}) Resampled`);
 
-                const avgVolume = volumeSum / samples;
+                const avgVolume = volumeSum / config.sampleCount;
                 if (avgVolume < config.minVolumeThreshold) {
-                    // too quiet to act on
+                    overlay.textContent = `🔊 Auto Gain: ${gainNode.gain.value.toFixed(2)}×`;
                 } else {
                     const volumeFactor = Math.max(video.volume, 0.1);
                     const suggestedGain = Math.min((config.targetVolume * volumeFactor) / avgVolume, config.maxGain);
                     const currentGain = gainNode.gain.value;
-
-                    if (forceNextAdjustment || Math.abs(currentGain - suggestedGain) > config.gainChangeThreshold) {
-                        gainNode.gain.setTargetAtTime(suggestedGain, audioCtx.currentTime, 0.5);
+                    if (Math.abs(currentGain - suggestedGain) > config.gainChangeThreshold) {
                         overlay.textContent = `🔊 Auto Gain: ${suggestedGain.toFixed(2)}×`;
+                        gainNode.gain.setTargetAtTime(suggestedGain, audioCtx.currentTime, 0.5);
+                    } else {
+                        overlay.textContent = `🔊 Auto Gain: ${gainNode.gain.value.toFixed(2)}×`;
                     }
                 }
-
-                forceNextAdjustment = false;
                 await sleep(config.resampleEvery);
             }
         }
-
         gainAdjustmentLoop();
     }
 }
