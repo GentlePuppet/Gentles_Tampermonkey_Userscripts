@@ -20,7 +20,6 @@ Are you tired of some youtube videos being way too quiet, even at 100% volume?
   - Handles pausing and playing and won't resample while the video is paused.
   - Gain is smooth and dynamic, so it avoids volume spikes or clipping.
 
-![image](https://github.com/user-attachments/assets/4309a419-6bc5-44f9-a116-6c6ff4dbc54e)
 ![image](https://github.com/user-attachments/assets/91e5bec8-df6a-4399-976e-c994e887c8b2)
 ![image](https://github.com/user-attachments/assets/6e72871d-f33c-4505-bfe7-0e1903ca891d)
 
