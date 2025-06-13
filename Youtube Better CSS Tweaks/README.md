@@ -16,9 +16,12 @@ Are you tired of some youtube videos being way too quiet, even at 100% volume?
 * This script automatically boosts quiet YouTube videos or lowers loud videos by getting the content loudness and adjusting the gain to match the target volume in the config.
   - When a video loads it opens the "stats for nerds" panel for a second to collect the current content loudness for adjustment.
   - Displays the adjusted gain next to the current time on the playback overlay.
-  - Includes an option to enable a compressor to avoid clipping (Enabled by default in the config)
+  - Includes an option to enable a compressor to avoid clipping (Disabled by default in the config)
+  - Clicking the overlay opens the config panel.
 
-![image](https://github.com/user-attachments/assets/765659dc-f1be-4dbd-8a28-1c65ee02eb20)
+![image](https://github.com/user-attachments/assets/4050ac57-4a23-494d-9b80-61f3785966b9)
+![image](https://github.com/user-attachments/assets/a2d30fd9-f104-4327-9896-e4aa2cbb78a9)
+
 
 <br><br>
   
