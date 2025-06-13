@@ -8,6 +8,8 @@ This is a collection of userscripts that tweak and add a few things to Youtube.
 * [Get Tampermonkey for Firefox](https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/)
 * [Get Tampermonkey for Opera](https://addons.opera.com/en/extensions/details/tampermonkey-beta/)
 * [Get Tampermonkey for Safari](https://apps.apple.com/us/app/tampermonkey/id1482490089?mt=12)
+
+If you do have a userscript extension then clicking on any of the "Install Userscript" links below will prompt you with the install confirmation.
   
 <br><br>
 
