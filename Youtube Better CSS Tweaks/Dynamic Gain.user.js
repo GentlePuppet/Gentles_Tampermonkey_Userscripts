@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         Youtube Gentle's Auto Gain
 // @author       GentlePuppet
-// @author       Special Thanks to this old extension I found and adapted some of their javascript: https://github.com/Kelvin-Ng/youtube-volume-normalizer
-// @version      2.0
+// @version      2.1
 // @description  This script automatically boosts quiet YouTube videos or lowers loud videos by automatically adjusting audio gain with smoothing.
+// @author       Special Thanks to this old extension I found and adapted some of their javascript: https://github.com/Kelvin-Ng/youtube-volume-normalizer
 // @include      https://www.youtube.com/*
 // @icon         https://www.youtube.com/s/desktop/1eca3218/img/favicon_144.png
 // @updateURL    https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Youtube%20Hide%20Watched%20Videos/Dynamic%20Gain.user.js
@@ -13,9 +13,10 @@
 if (window.location.href.includes("watch?v=")) {
 
     const config = {
-        targetLoudnessDb: 0,         // Desired loudness level in dB (higher = louder)
+        targetLoudnessDb: -3,         // Desired loudness level in dB (higher = louder)
         maxGain: 2,                   // Maximum gain multiplier allowed
         gainSmoothingTime: 0.5,       // Seconds for smoothing gain changes
+        compressorEnabled: true,      // Choose whether to enable/disable the compressor (true/false)
     };
 
     const audioCtx = new AudioContext();
@@ -82,8 +83,14 @@ if (window.location.href.includes("watch?v=")) {
         // Create and connect new audio nodes
         const source = audioCtx.createMediaElementSource(video);
         currentSource = source;
-        source.connect(compressor);
-        compressor.connect(gainNode);
+
+        if (config.compressorEnabled) {
+            source.connect(compressor);
+            compressor.connect(gainNode);
+        } else {
+            source.connect(gainNode);
+        }
+
         gainNode.connect(audioCtx.destination);
 
         // Create or update overlay
