@@ -13,16 +13,12 @@ This is a collection of userscripts that tweak and add a few things to Youtube.
 
 ## [Install Userscript: Dynamic Gain](https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/refs/heads/main/Youtube%20Better%20CSS%20Tweaks/Dynamic%20Gain.user.js)
 Are you tired of some youtube videos being way too quiet, even at 100% volume?
-* This script automatically boosts quiet YouTube videos or lowers loud videos by sampling the average volume and adjusting the gain over a few seconds.
-* It samples the video's audio to calculate gain multiplier and continuously re-adjusts during playback if needed.
-  - Displays the current gain next to the current time on the playback overlay.
-  - Works even if the YouTube volume is manually changed.
-  - Handles pausing and playing and won't resample while the video is paused.
-  - Gain is smooth and dynamic, so it avoids volume spikes or clipping.
+* This script automatically boosts quiet YouTube videos or lowers loud videos by getting the content loudness and adjusting the gain to match the target volume in the config.
+  - When a video loads it opens the "stats for nerds" panel for a second to collect the current content loudness for adjustment.
+  - Displays the adjusted gain next to the current time on the playback overlay.
+  - Includes an option to enable a compressor to avoid clipping (Enabled by default in the config)
 
-![image](https://github.com/user-attachments/assets/91e5bec8-df6a-4399-976e-c994e887c8b2)
-![image](https://github.com/user-attachments/assets/6e72871d-f33c-4505-bfe7-0e1903ca891d)
-
+![image](https://github.com/user-attachments/assets/765659dc-f1be-4dbd-8a28-1c65ee02eb20)
 
 <br><br>
   
