@@ -4,12 +4,17 @@
 // @version      2.4
 // @description  This script automatically boosts quiet YouTube videos or lowers loud videos by automatically adjusting audio gain with smoothing.
 // @author       Special Thanks to this old extension I found and adapted some of their javascript: https://github.com/Kelvin-Ng/youtube-volume-normalizer
+// @grant        GM_addStyle
 // @include      https://www.youtube.com/*
 // @icon         https://www.youtube.com/s/desktop/1eca3218/img/favicon_144.png
 // @updateURL    https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Youtube%20Hide%20Watched%20Videos/Dynamic%20Gain.user.js
 // @downloadURL  https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Youtube%20Hide%20Watched%20Videos/Dynamic%20Gain.user.js
 // ==/UserScript==
 
+// Create css style to temporarily hide the stats for nerds while getting the content loudness
+GM_addStyle(`
+    .auto-gain {display: none;}
+`);
 
 // Listen for dynamic navigation changes (SPA routing)
 window.addEventListener("yt-navigate-finish", () => {
@@ -89,8 +94,8 @@ function initOnWatchPage() {
         statsButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
         const closeButton = await waitForSelector('.html5-video-info-panel-close');
         const panelContent = await waitForSelector('.html5-video-info-panel-content');
-        panelContent.style.display = 'none';
-        closeButton.style.display = 'none';
+        closeButton.classList.add('auto-gain')
+        panelContent.classList.add('auto-gain')
         const loudnessSpan = await waitForXpath('div[4]/span', panelContent);
         await new Promise(res => setTimeout(res, 100));
         const text = loudnessSpan.innerText;
@@ -100,8 +105,8 @@ function initOnWatchPage() {
             dB = parseFloat(match[1]);
         }
         closeButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-        panelContent.removeProperty('display');
-        closeButton.removeProperty('display');
+        panelContent.classList.remove('auto-gain')
+        closeButton.classList.remove('auto-gain')
         return dB;
     }
 
