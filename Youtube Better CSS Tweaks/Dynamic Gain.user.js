@@ -255,7 +255,6 @@ function initOnWatchPage() {
                 }
                 config[key] = value;
                 saveConfigToCookie();
-                console.log(`Config updated: ${key} = ${value}`);
             });
 
             if (type === 'checkbox') {
@@ -318,7 +317,7 @@ function initOnWatchPage() {
             const dB = await openStatsPanelAndGetDb();
 
             // If the previous function returns null, then stop
-            if (dB == null) {overlay.textContent = `🔊 Gain: Default DRC Active`;return;}
+            if (dB == null) {overlay.textContent = `🔊 Gain: DRC Active`;return;}
 
             // Display the raw loudness on the overlay (This all happens so fast that you'll likely never see this)
             overlay.textContent = `🔊 Gain: Content Loudness: ${dB} dB`;
