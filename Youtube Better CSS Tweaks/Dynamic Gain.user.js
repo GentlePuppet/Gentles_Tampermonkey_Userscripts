@@ -1,15 +1,20 @@
 // ==UserScript==
 // @name         Youtube Gentle's Auto Gain
 // @author       GentlePuppet
-// @version      2.3
+// @version      2.4
 // @description  This script automatically boosts quiet YouTube videos or lowers loud videos by automatically adjusting audio gain with smoothing.
 // @author       Special Thanks to this old extension I found and adapted some of their javascript: https://github.com/Kelvin-Ng/youtube-volume-normalizer
+// @grant        GM_addStyle
 // @include      https://www.youtube.com/*
 // @icon         https://www.youtube.com/s/desktop/1eca3218/img/favicon_144.png
 // @updateURL    https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Youtube%20Hide%20Watched%20Videos/Dynamic%20Gain.user.js
 // @downloadURL  https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Youtube%20Hide%20Watched%20Videos/Dynamic%20Gain.user.js
 // ==/UserScript==
 
+// Create css style to temporarily hide the stats for nerds while getting the content loudness
+GM_addStyle(`
+    .auto-gain {display: none;}
+`);
 
 // Listen for dynamic navigation changes (SPA routing)
 window.addEventListener("yt-navigate-finish", () => {
@@ -22,7 +27,6 @@ window.addEventListener("yt-navigate-finish", () => {
 initOnWatchPage();
 
 function initOnWatchPage() {
-    loadConfigFromCookie();
     // Create the config
     const config = {
         targetLoudnessDb: -3,         // Desired loudness level in dB (higher = louder)
@@ -90,6 +94,8 @@ function initOnWatchPage() {
         statsButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
         const closeButton = await waitForSelector('.html5-video-info-panel-close');
         const panelContent = await waitForSelector('.html5-video-info-panel-content');
+        closeButton.classList.add('auto-gain')
+        panelContent.classList.add('auto-gain')
         const loudnessSpan = await waitForXpath('div[4]/span', panelContent);
         await new Promise(res => setTimeout(res, 100));
         const text = loudnessSpan.innerText;
@@ -99,6 +105,8 @@ function initOnWatchPage() {
             dB = parseFloat(match[1]);
         }
         closeButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+        panelContent.classList.remove('auto-gain')
+        closeButton.classList.remove('auto-gain')
         return dB;
     }
 
@@ -125,6 +133,7 @@ function initOnWatchPage() {
 
     // --------------------------
     // --- Helper Functions ---
+
     if (!window.location.href.includes("watch?v=")) return;
     if (window.hasRunGainScript) return; // Prevent duplicate runs
     window.hasRunGainScript = true;
@@ -288,7 +297,7 @@ function initOnWatchPage() {
             const dB = await openStatsPanelAndGetDb();
 
             // If the previous function fails try it again after a second
-            if (dB == null) {setTimeout(updateGainFromStats, 1000);return;}
+            if (dB == null) {setTimeout(updateGainFromStats, 5000);return;}
 
             // Display the raw loudness on the overlay (This all happens so fast that you'll likely never see this)
             overlay.textContent = `🔊 Gain: Content Loudness: ${dB} dB`;
@@ -310,10 +319,9 @@ function initOnWatchPage() {
             } else {
                 overlay.textContent = `🔊 Gain: No Gain`;
             }
-
-            // Add an eventlister to the page so the final step is re-run everytime the page changes (new video loads) so the gain can be adjusted (for the new video)
-            window.addEventListener("yt-page-data-updated", () => setTimeout(updateGainFromStats, 500));
         }
+        // Add an eventlister to the page so the final step is re-run everytime the page changes (new video loads) so the gain can be adjusted (for the new video)
+        window.addEventListener("yt-page-data-updated", () => setTimeout(updateGainFromStats, 500));
 
         // FInally actually run the final step function
         updateGainFromStats();
