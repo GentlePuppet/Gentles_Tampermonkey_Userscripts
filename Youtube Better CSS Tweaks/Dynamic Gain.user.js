@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Youtube Gentle's Auto Gain
 // @author       GentlePuppet
-// @version      2.4
+// @version      2.5
 // @description  This script automatically boosts quiet YouTube videos or lowers loud videos by automatically adjusting audio gain with smoothing.
 // @author       Special Thanks to this old extension I found and adapted some of their javascript: https://github.com/Kelvin-Ng/youtube-volume-normalizer
 // @grant        GM_addStyle
@@ -10,8 +10,6 @@
 // @updateURL    https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Youtube%20Hide%20Watched%20Videos/Dynamic%20Gain.user.js
 // @downloadURL  https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Youtube%20Hide%20Watched%20Videos/Dynamic%20Gain.user.js
 // ==/UserScript==
-
-// Create css style to temporarily hide the stats for nerds while getting the content loudness
 GM_addStyle(`
     .auto-gain {display: none;}
 `);
@@ -33,6 +31,7 @@ function initOnWatchPage() {
         maxGain: 2,                   // Maximum gain multiplier allowed
         gainSmoothingTime: 0.5,       // Seconds for smoothing gain changes
         compressorEnabled: false,     // Choose whether to enable/disable the compressor (true/false)
+        ignoreDRC: false,             // Choose wheater to ignore youtube's DRC (Dynamic Range Compression)
     };
 
     // Setup AudioContext and audio nodes
@@ -99,6 +98,14 @@ function initOnWatchPage() {
         const loudnessSpan = await waitForXpath('div[4]/span', panelContent);
         await new Promise(res => setTimeout(res, 100));
         const text = loudnessSpan.innerText;
+        const hasDRC = text.includes("DRC");
+        if (hasDRC && !config.ignoreDRC) {
+            closeButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+            panelContent.classList.remove('auto-gain');
+            closeButton.classList.remove('auto-gain');
+            gainNode.gain.value = 1;
+            return null;  // Signal to skip gain correction
+        }
         const match = text.match(/content loudness\s*(-?\d+(\.\d+)?)\s*dB/i);
         let dB = 0;
         if (match) {
@@ -263,6 +270,7 @@ function initOnWatchPage() {
         createInput("🔊 Max Gain:", "maxGain");
         createInput("⏱ Smoothing Time (s):", "gainSmoothingTime");
         createInput("🎛 Enable Compressor", "compressorEnabled", "checkbox");
+        createInput("🚫 Ignore DRC", "ignoreDRC", "checkbox");
 
         // Toggle box visibility when clicking the overlay
         overlay.addEventListener("click", () => {
@@ -296,8 +304,8 @@ function initOnWatchPage() {
             // Open the stats for nerds and get the content loudness dB level
             const dB = await openStatsPanelAndGetDb();
 
-            // If the previous function fails try it again after a second
-            if (dB == null) {setTimeout(updateGainFromStats, 5000);return;}
+            // If the previous function returns null, then stop
+            if (dB == null) {overlay.textContent = `🔊 Gain: Default DRC Active`;return;}
 
             // Display the raw loudness on the overlay (This all happens so fast that you'll likely never see this)
             overlay.textContent = `🔊 Gain: Content Loudness: ${dB} dB`;
