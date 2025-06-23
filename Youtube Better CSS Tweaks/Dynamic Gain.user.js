@@ -227,17 +227,19 @@ function initOnWatchPage() {
         closeButton.addEventListener("click", () => {configBox.style.display = "none"; updateGainFromStats()}); configBox.addEventListener("click", e => {e.stopPropagation();});
 
         // Utility: Create labeled input row
-        function createInput(labelText, key, type = 'number', step = 'any') {
+        function createInput(labelText, key, type = 'number', step = 'any', tooltip = '') {
             const container = document.createElement('div');
             const label = document.createElement('label');
             const input = document.createElement('input');
 
             label.textContent = labelText;
             label.style.marginRight = "6px";
+            label.title = tooltip;  // Add tooltip to the label
             input.type = type;
             input.value = config[key];
             input.step = step;
             input.style.width = "80px";
+            input.title = tooltip;  // Optional: Also add tooltip to input itself
 
             input.addEventListener('change', () => {
                 let value;
@@ -265,12 +267,23 @@ function initOnWatchPage() {
             configBox.appendChild(container);
         }
 
+
         // Add input fields to the config box
-        createInput("🎚 Target Loudness (dB):", "targetLoudnessDb");
-        createInput("🔊 Max Gain:", "maxGain");
-        createInput("⏱ Smoothing Time (s):", "gainSmoothingTime");
-        createInput("🎛 Enable Compressor", "compressorEnabled", "checkbox");
-        createInput("🚫 Ignore DRC", "ignoreDRC", "checkbox");
+        createInput("🎚 Target Loudness (dB):", "targetLoudnessDb", 'number', 'any',
+                    "Target loudness level (in decibels) you'd like videos normalized to.\nE.g., -3 dB makes quiet videos louder.");
+
+        createInput("🔊 Max Gain:", "maxGain", 'number', 'any',
+                    "Maximum allowed volume boost multiplier.\nPrevents very quiet videos from becoming excessively loud.");
+
+        createInput("⏱ Smoothing Time (s):", "gainSmoothingTime", 'number', 'any',
+                    "Time in seconds to smoothly transition gain changes.\nAvoids sudden volume jumps when adjusting the gain.");
+
+        createInput("🎛 Enable Compressor", "compressorEnabled", "checkbox", '',
+                    "Enable a dynamic range compressor to even out loud and soft parts.\nUseful for videos with inconsistent audio.");
+
+        createInput("🚫 Ignore DRC", "ignoreDRC", "checkbox", '',
+                    "Ignore YouTube's built-in Dynamic Range Compression.\nIgnoring tends to make videos louder than expected when YouTube is already dampening loudness.");
+
 
         // Toggle box visibility when clicking the overlay
         overlay.addEventListener("click", () => {
