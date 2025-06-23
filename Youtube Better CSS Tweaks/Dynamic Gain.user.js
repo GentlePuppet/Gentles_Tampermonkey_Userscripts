@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Youtube Gentle's Auto Gain
 // @author       GentlePuppet
-// @version      2.4
+// @version      2.5
 // @description  This script automatically boosts quiet YouTube videos or lowers loud videos by automatically adjusting audio gain with smoothing.
 // @author       Special Thanks to this old extension I found and adapted some of their javascript: https://github.com/Kelvin-Ng/youtube-volume-normalizer
 // @grant        GM_addStyle
@@ -10,11 +10,50 @@
 // @updateURL    https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Youtube%20Hide%20Watched%20Videos/Dynamic%20Gain.user.js
 // @downloadURL  https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Youtube%20Hide%20Watched%20Videos/Dynamic%20Gain.user.js
 // ==/UserScript==
-
-// Create css style to temporarily hide the stats for nerds while getting the content loudness
 GM_addStyle(`
-    .auto-gain {display: none;}
+    .auto-gain {
+        display: none;
+    }
+    .toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 46px;
+        height: 24px;
+        vertical-align: middle;
+    }
+    .toggle-switch input {
+        display: none;
+    }
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #777;
+        transition: 0.3s;
+        border-radius: 24px;
+    }
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 18px;
+        width: 18px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: 0.3s;
+        border-radius: 50%;
+    }
+    .toggle-switch input:checked + .slider {
+        background-color: #3fa34d;
+    }
+    .toggle-switch input:checked + .slider:before {
+        transform: translateX(22px);
+    }
 `);
+
 
 // Listen for dynamic navigation changes (SPA routing)
 window.addEventListener("yt-navigate-finish", () => {
@@ -33,6 +72,7 @@ function initOnWatchPage() {
         maxGain: 2,                   // Maximum gain multiplier allowed
         gainSmoothingTime: 0.5,       // Seconds for smoothing gain changes
         compressorEnabled: false,     // Choose whether to enable/disable the compressor (true/false)
+        ignoreDRC: false,             // Choose wheater to ignore youtube's DRC (Dynamic Range Compression)
     };
 
     // Setup AudioContext and audio nodes
@@ -99,6 +139,14 @@ function initOnWatchPage() {
         const loudnessSpan = await waitForXpath('div[4]/span', panelContent);
         await new Promise(res => setTimeout(res, 100));
         const text = loudnessSpan.innerText;
+        const hasDRC = text.includes("DRC");
+        if (hasDRC && !config.ignoreDRC) {
+            closeButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+            panelContent.classList.remove('auto-gain');
+            closeButton.classList.remove('auto-gain');
+            gainNode.gain.value = 1;
+            return null;  // Signal to skip gain correction
+        }
         const match = text.match(/content loudness\s*(-?\d+(\.\d+)?)\s*dB/i);
         let dB = 0;
         if (match) {
@@ -208,7 +256,20 @@ function initOnWatchPage() {
         }
 
         // Create the hidden config panel
-        const configBox = document.createElement("div"); configBox.style.cssText = `position: absolute; background: rgba(0,0,0,0.9); color: white; padding: 10px; border-radius: 6px; z-index: 9999; font-size: 13px; display: none; flex-direction: column; gap: 8px; max-width: 260px;`;
+        const configBox = document.createElement("div"); configBox.style.cssText = `
+        position: absolute;
+        background: rgba(28, 28, 28, .9);
+        text-shadow: 0 0 2px rgba(0, 0, 0, .5);
+        transition: opacity .1s cubic-bezier(0,0,.2,1);
+        color: white;
+        padding: 10px;
+        border-radius: 6px;
+        z-index: 9999;
+        font-size: 13px;
+        display: none;
+        flex-direction:
+        column; gap: 8px;
+        max-width: 260px;`;
         document.body.appendChild(configBox);
 
         const headerRow = document.createElement('div'); headerRow.style.display = 'flex'; headerRow.style.justifyContent = 'space-between'; headerRow.style.alignItems = 'center';
@@ -220,49 +281,85 @@ function initOnWatchPage() {
         closeButton.addEventListener("click", () => {configBox.style.display = "none"; updateGainFromStats()}); configBox.addEventListener("click", e => {e.stopPropagation();});
 
         // Utility: Create labeled input row
-        function createInput(labelText, key, type = 'number', step = 'any') {
+        function createInput(labelText, key, type = 'number', step = 'any', tooltip = '') {
             const container = document.createElement('div');
+            container.style.display = 'flex';
+            container.style.alignItems = 'center';
+            container.style.justifyContent = 'space-between';
+
             const label = document.createElement('label');
-            const input = document.createElement('input');
-
             label.textContent = labelText;
-            label.style.marginRight = "6px";
-            input.type = type;
-            input.value = config[key];
-            input.step = step;
-            input.style.width = "80px";
+            label.style.marginRight = "10px";
+            label.style.flex = "1";
+            label.title = tooltip;
 
-            input.addEventListener('change', () => {
-                let value;
-                if (type === 'checkbox') {
-                    value = input.checked;
-                } else {
-                    value = parseFloat(input.value);
+            if (type === 'checkbox') {
+                // Create toggle switch
+                const toggleContainer = document.createElement('label');
+                toggleContainer.className = 'toggle-switch';
+                toggleContainer.title = tooltip;
+
+                const input = document.createElement('input');
+                input.type = 'checkbox';
+                input.checked = config[key];
+
+                const slider = document.createElement('span');
+                slider.className = 'slider';
+
+                input.addEventListener('change', () => {
+                    config[key] = input.checked;
+                    saveConfigToCookie();
+                    console.log(`Config updated: ${key} = ${input.checked}`);
+                });
+
+                toggleContainer.appendChild(input);
+                toggleContainer.appendChild(slider);
+                container.appendChild(label);
+                container.appendChild(toggleContainer);
+            } else {
+                // Regular number input
+                const input = document.createElement('input');
+                input.type = type;
+                input.value = config[key];
+                input.step = step;
+                input.style.width = "80px";
+                input.title = tooltip;
+
+                input.addEventListener('change', () => {
+                    let value = parseFloat(input.value);
                     if (isNaN(value)) {
-                        value = config[key]; // revert to old value on invalid input
+                        value = config[key];
                         input.value = value;
                         return;
                     }
-                }
-                config[key] = value;
-                saveConfigToCookie();
-                console.log(`Config updated: ${key} = ${value}`);
-            });
+                    config[key] = value;
+                    saveConfigToCookie();
+                    console.log(`Config updated: ${key} = ${value}`);
+                });
 
-            if (type === 'checkbox') {
-                input.checked = config[key];
+                container.appendChild(label);
+                container.appendChild(input);
             }
 
-            container.appendChild(label);
-            container.appendChild(input);
             configBox.appendChild(container);
         }
 
         // Add input fields to the config box
-        createInput("🎚 Target Loudness (dB):", "targetLoudnessDb");
-        createInput("🔊 Max Gain:", "maxGain");
-        createInput("⏱ Smoothing Time (s):", "gainSmoothingTime");
-        createInput("🎛 Enable Compressor", "compressorEnabled", "checkbox");
+        createInput("Target Loudness (dB):", "targetLoudnessDb", 'number', 'any',
+                    "Target loudness level (in decibels) you'd like videos normalized to.");
+
+        createInput("Max Gain:", "maxGain", 'number', 'any',
+                    "Maximum allowed volume boost multiplier.\nPrevents very quiet videos from becoming excessively loud.");
+
+        createInput("Smoothing Time (s):", "gainSmoothingTime", 'number', 'any',
+                    "Time in seconds to smoothly transition gain changes.\nAvoids sudden volume jumps when adjusting the gain.");
+
+        createInput("Enable Compressor", "compressorEnabled", "checkbox", '',
+                    "Enable a dynamic range compressor to even out loud and soft parts.\nUseful for videos with inconsistent audio.");
+
+        createInput("Ignore DRC", "ignoreDRC", "checkbox", '',
+                    "Ignore YouTube's built-in Dynamic Range Compression.\nIgnoring tends to make videos louder than expected when YouTube is already dampening loudness.");
+
 
         // Toggle box visibility when clicking the overlay
         overlay.addEventListener("click", () => {
@@ -296,8 +393,8 @@ function initOnWatchPage() {
             // Open the stats for nerds and get the content loudness dB level
             const dB = await openStatsPanelAndGetDb();
 
-            // If the previous function fails try it again after a second
-            if (dB == null) {setTimeout(updateGainFromStats, 5000);return;}
+            // If the previous function returns null, then stop
+            if (dB == null) {overlay.textContent = `🔊 Gain: DRC Active`;return;}
 
             // Display the raw loudness on the overlay (This all happens so fast that you'll likely never see this)
             overlay.textContent = `🔊 Gain: Content Loudness: ${dB} dB`;
