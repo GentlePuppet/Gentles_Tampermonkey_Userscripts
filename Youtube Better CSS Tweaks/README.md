@@ -22,7 +22,8 @@ Are you tired of some youtube videos being way too quiet, even at 100% volume?
   - Clicking the overlay opens the config panel.
 
 ![image](https://github.com/user-attachments/assets/4050ac57-4a23-494d-9b80-61f3785966b9)
-![image](https://github.com/user-attachments/assets/a2d30fd9-f104-4327-9896-e4aa2cbb78a9)
+![image](https://github.com/user-attachments/assets/bdb8eb06-f327-406c-9a28-bf345c94fdf4)
+
 
 
 <br><br>
