@@ -11,8 +11,49 @@
 // @downloadURL  https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Youtube%20Hide%20Watched%20Videos/Dynamic%20Gain.user.js
 // ==/UserScript==
 GM_addStyle(`
-    .auto-gain {display: none;}
+    .auto-gain {
+        display: none;
+    }
+    .toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 46px;
+        height: 24px;
+        vertical-align: middle;
+    }
+    .toggle-switch input {
+        display: none;
+    }
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #777;
+        transition: 0.3s;
+        border-radius: 24px;
+    }
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 18px;
+        width: 18px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: 0.3s;
+        border-radius: 50%;
+    }
+    .toggle-switch input:checked + .slider {
+        background-color: #3fa34d;
+    }
+    .toggle-switch input:checked + .slider:before {
+        transform: translateX(22px);
+    }
 `);
+
 
 // Listen for dynamic navigation changes (SPA routing)
 window.addEventListener("yt-navigate-finish", () => {
@@ -215,7 +256,20 @@ function initOnWatchPage() {
         }
 
         // Create the hidden config panel
-        const configBox = document.createElement("div"); configBox.style.cssText = `position: absolute; background: rgba(0,0,0,0.9); color: white; padding: 10px; border-radius: 6px; z-index: 9999; font-size: 13px; display: none; flex-direction: column; gap: 8px; max-width: 260px;`;
+        const configBox = document.createElement("div"); configBox.style.cssText = `
+        position: absolute;
+        background: rgba(28, 28, 28, .9);
+        text-shadow: 0 0 2px rgba(0, 0, 0, .5);
+        transition: opacity .1s cubic-bezier(0,0,.2,1);
+        color: white;
+        padding: 10px;
+        border-radius: 6px;
+        z-index: 9999;
+        font-size: 13px;
+        display: none;
+        flex-direction:
+        column; gap: 8px;
+        max-width: 260px;`;
         document.body.appendChild(configBox);
 
         const headerRow = document.createElement('div'); headerRow.style.display = 'flex'; headerRow.style.justifyContent = 'space-between'; headerRow.style.alignItems = 'center';
@@ -229,58 +283,81 @@ function initOnWatchPage() {
         // Utility: Create labeled input row
         function createInput(labelText, key, type = 'number', step = 'any', tooltip = '') {
             const container = document.createElement('div');
+            container.style.display = 'flex';
+            container.style.alignItems = 'center';
+            container.style.justifyContent = 'space-between';
+
             const label = document.createElement('label');
-            const input = document.createElement('input');
-
             label.textContent = labelText;
-            label.style.marginRight = "6px";
-            label.title = tooltip;  // Add tooltip to the label
-            input.type = type;
-            input.value = config[key];
-            input.step = step;
-            input.style.width = "80px";
-            input.title = tooltip;  // Optional: Also add tooltip to input itself
+            label.style.marginRight = "10px";
+            label.style.flex = "1";
+            label.title = tooltip;
 
-            input.addEventListener('change', () => {
-                let value;
-                if (type === 'checkbox') {
-                    value = input.checked;
-                } else {
-                    value = parseFloat(input.value);
+            if (type === 'checkbox') {
+                // Create toggle switch
+                const toggleContainer = document.createElement('label');
+                toggleContainer.className = 'toggle-switch';
+                toggleContainer.title = tooltip;
+
+                const input = document.createElement('input');
+                input.type = 'checkbox';
+                input.checked = config[key];
+
+                const slider = document.createElement('span');
+                slider.className = 'slider';
+
+                input.addEventListener('change', () => {
+                    config[key] = input.checked;
+                    saveConfigToCookie();
+                    console.log(`Config updated: ${key} = ${input.checked}`);
+                });
+
+                toggleContainer.appendChild(input);
+                toggleContainer.appendChild(slider);
+                container.appendChild(label);
+                container.appendChild(toggleContainer);
+            } else {
+                // Regular number input
+                const input = document.createElement('input');
+                input.type = type;
+                input.value = config[key];
+                input.step = step;
+                input.style.width = "80px";
+                input.title = tooltip;
+
+                input.addEventListener('change', () => {
+                    let value = parseFloat(input.value);
                     if (isNaN(value)) {
-                        value = config[key]; // revert to old value on invalid input
+                        value = config[key];
                         input.value = value;
                         return;
                     }
-                }
-                config[key] = value;
-                saveConfigToCookie();
-            });
+                    config[key] = value;
+                    saveConfigToCookie();
+                    console.log(`Config updated: ${key} = ${value}`);
+                });
 
-            if (type === 'checkbox') {
-                input.checked = config[key];
+                container.appendChild(label);
+                container.appendChild(input);
             }
 
-            container.appendChild(label);
-            container.appendChild(input);
             configBox.appendChild(container);
         }
 
-
         // Add input fields to the config box
-        createInput("🎚 Target Loudness (dB):", "targetLoudnessDb", 'number', 'any',
-                    "Target loudness level (in decibels) you'd like videos normalized to.\nE.g., -3 dB makes quiet videos louder.");
+        createInput("Target Loudness (dB):", "targetLoudnessDb", 'number', 'any',
+                    "Target loudness level (in decibels) you'd like videos normalized to.");
 
-        createInput("🔊 Max Gain:", "maxGain", 'number', 'any',
+        createInput("Max Gain:", "maxGain", 'number', 'any',
                     "Maximum allowed volume boost multiplier.\nPrevents very quiet videos from becoming excessively loud.");
 
-        createInput("⏱ Smoothing Time (s):", "gainSmoothingTime", 'number', 'any',
+        createInput("Smoothing Time (s):", "gainSmoothingTime", 'number', 'any',
                     "Time in seconds to smoothly transition gain changes.\nAvoids sudden volume jumps when adjusting the gain.");
 
-        createInput("🎛 Enable Compressor", "compressorEnabled", "checkbox", '',
+        createInput("Enable Compressor", "compressorEnabled", "checkbox", '',
                     "Enable a dynamic range compressor to even out loud and soft parts.\nUseful for videos with inconsistent audio.");
 
-        createInput("🚫 Ignore DRC", "ignoreDRC", "checkbox", '',
+        createInput("Ignore DRC", "ignoreDRC", "checkbox", '',
                     "Ignore YouTube's built-in Dynamic Range Compression.\nIgnoring tends to make videos louder than expected when YouTube is already dampening loudness.");
 
 
