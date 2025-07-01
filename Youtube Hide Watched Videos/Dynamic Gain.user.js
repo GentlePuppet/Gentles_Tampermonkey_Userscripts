@@ -1,4 +1,8 @@
 // ==UserScript==
+//
+// Please check for an update, I had the wrong update url.
+// This file is temporary and will be deleted in a few days.
+//
 // @name         Youtube Gentle's Auto Gain
 // @author       GentlePuppet
 // @version      2.5.5
@@ -10,6 +14,3 @@
 // @updateURL    https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/refs/heads/main/Youtube%20Better%20CSS%20Tweaks/Dynamic%20Gain.user.js
 // @downloadURL  https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/refs/heads/main/Youtube%20Better%20CSS%20Tweaks/Dynamic%20Gain.user.js
 // ==/UserScript==
-
-// Please check for an update, I had the wrong update url.
-// This file is temporary and will be deleted in a few days.
