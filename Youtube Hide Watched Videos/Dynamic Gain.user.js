@@ -1,13 +1,9 @@
 // ==UserScript==
-//
-// Please check for an update, I had the wrong update url.
-// This file is temporary and will be deleted in a few days.
-//
 // @name         Youtube Gentle's Auto Gain
 // @author       GentlePuppet
 // @version      2.5.5
-// @description  This script automatically boosts quiet YouTube videos or lowers loud videos by automatically adjusting audio gain with smoothing.
-// @author       Special Thanks to this old extension I found and adapted some of their javascript: https://github.com/Kelvin-Ng/youtube-volume-normalizer
+// @description  Please check for an update, I had the wrong update url.
+// @author       This file is temporary and will be deleted in a few days.
 // @grant        GM_addStyle
 // @include      https://www.youtube.com/*
 // @icon         https://www.youtube.com/s/desktop/1eca3218/img/favicon_144.png
