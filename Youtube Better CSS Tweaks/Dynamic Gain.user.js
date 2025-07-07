@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Youtube Gentle's Auto Gain
 // @author       GentlePuppet
-// @version      2.6
+// @version      2.6.1
 // @description  This script automatically boosts quiet YouTube videos or lowers loud videos by automatically adjusting audio gain with smoothing.
 // @author       Special Thanks to this old extension I found and adapted some of their javascript: https://github.com/Kelvin-Ng/youtube-volume-normalizer
 // @grant        GM_addStyle
@@ -357,8 +357,8 @@ function initOnWatchPage() {
         createInput("Enable Compressor", "compressorEnabled", "checkbox", '',
                     "Enable a dynamic range compressor to even out loud and soft parts.\nUseful for videos with inconsistent audio.");
 
-        createInput("Ignore DRC", "ignoreDRC", "checkbox", '',
-                    "Ignore YouTube's built-in Dynamic Range Compression.\nIgnoring tends to make videos louder than expected when YouTube is already dampening loudness.");
+        createInput("Ignore Stable Volume", "ignoreDRC", "checkbox", '',
+                    "Ignore YouTube's built-in Dynamic Range Compression when avalible.\nIgnoring tends to make videos louder than expected when Stable Volume is enabled.");
 
 
         // Toggle box visibility when clicking the overlay
@@ -394,7 +394,7 @@ function initOnWatchPage() {
             const dB = await openStatsPanelAndGetDb();
 
             // If the previous function returns null, then stop
-            if (dB == null) {overlay.textContent = `🔊 Gain: DRC Active`;return;}
+            if (dB == null) {overlay.textContent = `🔊 Gain: Stable Volume Active`;return;}
 
             // Display the raw loudness on the overlay (This all happens so fast that you'll likely never see this)
             overlay.textContent = `🔊 Gain: Content Loudness: ${dB} dB`;
