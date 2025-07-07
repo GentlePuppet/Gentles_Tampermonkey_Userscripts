@@ -20,11 +20,13 @@ Are you tired of some youtube videos being way too quiet, even at 100% volume?
   - Displays the adjusted gain next to the current time on the playback overlay.
   - Includes an option to enable a compressor to avoid clipping. (Disabled by default in the config)
   - Includes an option to ignore youtube's Stable Volume (DRC) when avalible. (Disabled by default since it makes videos unexpectidly louder than wanted)
+      - (Hover over options in the panel to view a description of each.)
   - Clicking the overlay opens and closes the config panel.
   - Closing the config panel updates the gain automatically.
 
 ![image](https://github.com/user-attachments/assets/4050ac57-4a23-494d-9b80-61f3785966b9)
-![image](https://github.com/user-attachments/assets/bdb8eb06-f327-406c-9a28-bf345c94fdf4)
+![image](https://github.com/user-attachments/assets/434b55aa-98ba-45f1-b439-70120c5859ff)
+
 
 
 
