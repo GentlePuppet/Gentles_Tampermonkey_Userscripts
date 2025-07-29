@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Youtube Hide Watched Videos
 // @author       GentlePuppet
-// @version      1.5
+// @version      1.6
 // @match        https://www.youtube.com/*
 // @icon         https://www.youtube.com/s/desktop/1eca3218/img/favicon_144.png
 // @require      https://code.jquery.com/jquery-3.7.1.min.js
@@ -50,20 +50,27 @@ window.addEventListener("yt-page-data-updated", function(e) {
             const selectorMap = [
                 "ytd-grid-video-renderer",
                 "ytd-compact-video-renderer",
-                "ytd-rich-item-renderer"
+                "ytd-rich-item-renderer",
+                "yt-lockup-view-model"
             ];
             const shouldHide = getHideWatchedPref() === '1';
 
             let hiddenCount = 0;
             let shownCount = 0;
 
-            // Mark videos as watched (adds class only once)
-            $('div[id="progress"]').each(function () {
-                const video = $(this).parents(selectorMap.join(',')).first();
-                if (video.length > 0) {
-                    video.addClass('Watched_Video');
-                }
-            });
+            // Helper to mark videos as watched
+            function markWatched(selector) {
+                $(selector).each(function () {
+                    const video = $(this).parents(selectorMap.join(',')).first();
+                    if (video.length > 0) {
+                        video.addClass('Watched_Video');
+                    }
+                });
+            }
+
+            // Mark watched videos using both types of progress bars
+            markWatched('div[id="progress"][style*="width: 100%"]');
+            markWatched('div[class*="WatchedProgressBar"][style*="width: 100%"]');
 
             // Hide or show based on current toggle state
             $('.Watched_Video').each(function () {
