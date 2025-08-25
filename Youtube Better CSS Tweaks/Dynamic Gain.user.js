@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Youtube Gentle's Auto Gain
 // @author       GentlePuppet
-// @version      2.6.1
+// @version      2.7
 // @description  This script automatically boosts quiet YouTube videos or lowers loud videos by automatically adjusting audio gain with smoothing.
 // @author       Special Thanks to this old extension I found and adapted some of their javascript: https://github.com/Kelvin-Ng/youtube-volume-normalizer
 // @grant        GM_addStyle
@@ -195,6 +195,7 @@ function initOnWatchPage() {
         let video = null;
         let currentSource = null;
         let currentVideo = null;
+        let gainDisabled = false;
 
         // A short loop to check for the video element
         for (let i = 0; i < 10; i++) {
@@ -208,6 +209,7 @@ function initOnWatchPage() {
 
         // Save the found video as the current video to adjust the gain for
         currentVideo = video;
+        gainDisabled = false;
 
         // Wait for video to play or be ready to play
         if (video.paused || video.readyState < 3) {
@@ -216,8 +218,6 @@ function initOnWatchPage() {
                 resolve();
             }));
         }
-
-        // Create the audio Nodes
 
         // Create the audio Nodes
         function setupAudioGraph(video) {
@@ -360,6 +360,30 @@ function initOnWatchPage() {
         createInput("Ignore Stable Volume", "ignoreDRC", "checkbox", '',
                     "Ignore YouTube's built-in Dynamic Range Compression when avalible.\nIgnoring tends to make videos louder than expected when Stable Volume is enabled.");
 
+        // Disable Gain Toggle for current video
+        const disableGainBtn = document.createElement('button');
+        disableGainBtn.textContent = "Disable Gain (Current Video)";
+        disableGainBtn.style.cssText = `
+                    background: #444;
+                    color: white;
+                    border: none;
+                    padding: 5px 10px;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    `;
+        disableGainBtn.addEventListener('click', () => {
+            gainDisabled = !gainDisabled;
+            if (gainDisabled) {
+                gainNode.gain.value = 1;
+                overlay.textContent = "🔇 Gain Disabled";
+                disableGainBtn.textContent = "Enable Gain (Current Video)";
+            } else {
+                updateGainFromStats();
+                disableGainBtn.textContent = "Disable Gain (Current Video)";
+            }
+        });
+        configBox.appendChild(disableGainBtn);
+
 
         // Toggle box visibility when clicking the overlay
         overlay.addEventListener("click", () => {
@@ -387,6 +411,11 @@ function initOnWatchPage() {
 
         // This function gets the content loudness and applies adjusted gain in dB
         async function updateGainFromStats() {
+            if (gainDisabled) {
+                overlay.textContent = "🔇 Gain Disabled";
+                return;
+            }
+
             // Reset the overlay text
             overlay.textContent = `🔊 Gain: Loading...`;
 
