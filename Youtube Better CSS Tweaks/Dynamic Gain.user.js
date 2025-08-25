@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Youtube Gentle's Auto Gain
 // @author       GentlePuppet
-// @version      2.7
+// @version      2.7.1
 // @description  This script automatically boosts quiet YouTube videos or lowers loud videos by automatically adjusting audio gain with smoothing.
 // @author       Special Thanks to this old extension I found and adapted some of their javascript: https://github.com/Kelvin-Ng/youtube-volume-normalizer
 // @grant        GM_addStyle
@@ -90,38 +90,46 @@ function initOnWatchPage() {
     // --- Helper Functions ---
     // --------------------------
 
-    // Wait for an element using a CSS selector
+    // Global store of pending selectors and XPaths
+    const pendingWaits = new Map();
+
+    // Single global MutationObserver for both waitfor helpers
+    const globalObserver = new MutationObserver(() => {
+        for (const [id, waiter] of pendingWaits.entries()) {
+            if (waiter.check()) {
+                waiter.resolve(waiter.result());
+                pendingWaits.delete(id);
+            }
+        }
+    });
+    globalObserver.observe(document.body, { childList: true, subtree: true });
+
+    // Wait for CSS selector
     function waitForSelector(selector) {
         return new Promise(resolve => {
             const el = document.querySelector(selector);
             if (el) return resolve(el);
-            const observer = new MutationObserver(() => {
-                const el = document.querySelector(selector);
-                if (el) {
-                    resolve(el);
-                    observer.disconnect();
-                }
+            const id = Symbol();
+            pendingWaits.set(id, {
+                check: () => document.querySelector(selector),
+                result: () => document.querySelector(selector),
+                resolve
             });
-            observer.observe(document.body, { childList: true, subtree: true });
         });
     }
 
-    // Wait for an element using an XPath expression
+    // Wait for XPath
     function waitForXpath(xpath, context = document) {
         return new Promise(resolve => {
-            function check() {
-                const result = document.evaluate(xpath, context, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-                if (result) {
-                    resolve(result);
-                    return true;
-                }
-                return false;
-            }
-            if (check()) return;
-            const observer = new MutationObserver(() => {
-                if (check()) observer.disconnect();
+            const evalResult = () => document.evaluate(xpath, context, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+            const found = evalResult();
+            if (found) return resolve(found);
+            const id = Symbol();
+            pendingWaits.set(id, {
+                check: evalResult,
+                result: evalResult,
+                resolve
             });
-            observer.observe(document.body, { childList: true, subtree: true });
         });
     }
 
@@ -163,7 +171,16 @@ function initOnWatchPage() {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    // Cookie utilities for saving/loading config
+    // Utility to prevent multiple events firing close together
+    function debounce(fn, delay) {
+        let timer = null;
+        return (...args) => {
+            clearTimeout(timer);
+            timer = setTimeout(() => fn(...args), delay);
+        };
+    }
+
+    // Cookie utilities for saving/loading config settings
     function saveConfigToCookie() {
         document.cookie = `gainConfig=${encodeURIComponent(JSON.stringify(config))}; path=/; max-age=31536000`;
     }
@@ -254,6 +271,17 @@ function initOnWatchPage() {
             overlay.style.cssText = `height:47px;width:fit-content;margin-left:8px;display:inline-block;text-shadow:-1px -1px 2px #000,1px -1px 2px #000,-1px 1px 2px #000,1px 1px 2px #000;z-index:999;pointer-events:auto;`;
             document.querySelector('.ytp-time-contents')?.appendChild(overlay);
         }
+        // Create text update function for the overlay
+        overlay.setOverlayText = (function() {
+            let lastText = '';
+            return function(text) {
+                if (text === lastText) return;
+                lastText = text;
+                requestAnimationFrame(() => {
+                    this.textContent = text;
+                });
+            };
+        })();
 
         // Create the hidden config panel
         const configBox = document.createElement("div"); configBox.style.cssText = `
@@ -278,7 +306,7 @@ function initOnWatchPage() {
 
         headerRow.appendChild(headerTitle); headerRow.appendChild(closeButton); configBox.appendChild(headerRow);
 
-        closeButton.addEventListener("click", () => {configBox.style.display = "none"; updateGainFromStats()}); configBox.addEventListener("click", e => {e.stopPropagation();});
+        closeButton.addEventListener("click", () => {configBox.style.display = "none"; debouncedUpdateGain()}); configBox.addEventListener("click", e => {e.stopPropagation();});
 
         // Utility: Create labeled input row
         function createInput(labelText, key, type = 'number', step = 'any', tooltip = '') {
@@ -360,7 +388,7 @@ function initOnWatchPage() {
         createInput("Ignore Stable Volume", "ignoreDRC", "checkbox", '',
                     "Ignore YouTube's built-in Dynamic Range Compression when avalible.\nIgnoring tends to make videos louder than expected when Stable Volume is enabled.");
 
-        // Disable Gain Toggle for current video
+        // Toggle to Disable Gain for the current video
         const disableGainBtn = document.createElement('button');
         disableGainBtn.textContent = "Disable Gain (Current Video)";
         disableGainBtn.style.cssText = `
@@ -375,10 +403,10 @@ function initOnWatchPage() {
             gainDisabled = !gainDisabled;
             if (gainDisabled) {
                 gainNode.gain.value = 1;
-                overlay.textContent = "🔇 Gain Disabled";
+                overlay.setOverlayText("🔇 Gain Disabled");
                 disableGainBtn.textContent = "Enable Gain (Current Video)";
             } else {
-                updateGainFromStats();
+                debouncedUpdateGain();
                 disableGainBtn.textContent = "Disable Gain (Current Video)";
             }
         });
@@ -407,26 +435,27 @@ function initOnWatchPage() {
         });
 
         // Set the overlay text
-        overlay.textContent = `🔊 Gain: Loading...`;
+        overlay.setOverlayText(`🔊 Gain: Loading...`);
 
         // This function gets the content loudness and applies adjusted gain in dB
+        const debouncedUpdateGain = debounce(updateGainFromStats, 250);
         async function updateGainFromStats() {
             if (gainDisabled) {
-                overlay.textContent = "🔇 Gain Disabled";
+                overlay.setOverlayText("🔇 Gain Disabled");
                 return;
             }
 
             // Reset the overlay text
-            overlay.textContent = `🔊 Gain: Loading...`;
+            overlay.setOverlayText(`🔊 Gain: Loading...`);
 
             // Open the stats for nerds and get the content loudness dB level
             const dB = await openStatsPanelAndGetDb();
 
             // If the previous function returns null, then stop
-            if (dB == null) {overlay.textContent = `🔊 Gain: Stable Volume Active`;return;}
+            if (dB == null) {overlay.setOverlayText(`🔊 Gain: Stable Volume Active`);return;}
 
             // Display the raw loudness on the overlay (This all happens so fast that you'll likely never see this)
-            overlay.textContent = `🔊 Gain: Content Loudness: ${dB} dB`;
+            overlay.setOverlayText(`🔊 Gain: Content Loudness: ${dB} dB`);
 
             // Do the adjustment math
             let gainTarget = Math.pow(10, (config.targetLoudnessDb - dB) / 20);
@@ -441,15 +470,15 @@ function initOnWatchPage() {
 
             // Update the overlay text with the adjusted gain
             if (dB != config.targetLoudnessDb) {
-                overlay.textContent = `🔊 Gain: ${sign}${gainDiffDb.toFixed(2)} dB`;
+                overlay.setOverlayText(`🔊 Gain: ${sign}${gainDiffDb.toFixed(2)} dB`);
             } else {
-                overlay.textContent = `🔊 Gain: No Gain`;
+                overlay.setOverlayText(`🔊 Gain: No Gain`);
             }
         }
         // Add an eventlister to the page so the final step is re-run everytime the page changes (new video loads) so the gain can be adjusted (for the new video)
         window.addEventListener("yt-page-data-updated", () => setTimeout(updateGainFromStats, 500));
 
-        // FInally actually run the final step function
+        // Finally actually run the final step function
         updateGainFromStats();
     }
 }
