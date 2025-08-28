@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Steam Group Mass Kicker Script
-// @version      8.0
+// @version      8.1
 // @author       GentlePuppet
 // @description	 Mass Kick Users From Steam Yer Group
 // @match        https://steamcommunity.com/groups/*
@@ -108,13 +108,14 @@ const pagepath = url.replace('https://steamcommunity.com','').replace(/membersMa
 //-- Mark Sussy Profile Pages with specific about me sections that match these filters
 //--------------------------------------------------------------------------------------
 // Wait for the users profile about me section to load, then run the profile duplicate filter
-waitForKeyElements('.profile_header_summary', checkProfile, 0);
-function checkProfile(e) {
-    const aboutSection = $('.profile_header_summary');
+waitForKeyElements('.profile_summary', checkProfile, 0);
+function checkProfile() {
+    const aboutSection = $('.profile_summary');
+    const aboutText = aboutSection.text();
 
     for (const text of textChecks) {
-        if (e.includes(text)) {
-            e.highlight(text);
+        if (aboutText.includes(text)) {
+            aboutSection.highlight(text);
             MarkBotProfile();
             return;
         }
@@ -306,6 +307,8 @@ function CreateCheckboxes() {
     $("#CheckAllBox").click(function() {$('input[id=KickUserCheckbox]:not([disabled="disabled"])').prop("checked", $(this).prop("checked"));});
     LoadSavedFilters()
 }
+
+
 //--------------------------
 //-- Creates the kick menu
 //--------------------------
