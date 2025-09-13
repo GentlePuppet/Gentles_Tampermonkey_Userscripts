@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Youtube Gentle's Auto Gain
 // @author       GentlePuppet
-// @version      2.7.1
+// @version      2.7.2
 // @description  This script automatically boosts quiet YouTube videos or lowers loud videos by automatically adjusting audio gain with smoothing.
 // @author       Special Thanks to this old extension I found and adapted some of their javascript: https://github.com/Kelvin-Ng/youtube-volume-normalizer
 // @grant        GM_addStyle
@@ -66,6 +66,8 @@ window.addEventListener("yt-navigate-finish", () => {
 initOnWatchPage();
 
 function initOnWatchPage() {
+    const debug = false
+					  
     // Create the config
     const config = {
         targetLoudnessDb: -3,         // Desired loudness level in dB (higher = louder)
@@ -106,6 +108,8 @@ function initOnWatchPage() {
 
     // Wait for CSS selector
     function waitForSelector(selector) {
+        if (debug) console.log("Waiting for Selector: " + selector)
+																   
         return new Promise(resolve => {
             const el = document.querySelector(selector);
             if (el) return resolve(el);
@@ -120,6 +124,8 @@ function initOnWatchPage() {
 
     // Wait for XPath
     function waitForXpath(xpath, context = document) {
+        if (debug) console.log("Waiting for XPath: " + xpath)
+															 
         return new Promise(resolve => {
             const evalResult = () => document.evaluate(xpath, context, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
             const found = evalResult();
@@ -135,10 +141,12 @@ function initOnWatchPage() {
 
     // Opens Stats for Nerds panel, parses the content loudness dB value, then closes it again
     async function openStatsPanelAndGetDb() {
+        if (debug) console.log("OpenStatsPanel")
+												
         const videoPlayer = await waitForSelector('#movie_player');
         videoPlayer.dispatchEvent(new MouseEvent('contextmenu', { bubbles: true }));
         const menu = await waitForSelector('.ytp-contextmenu');
-        const statsButton = await waitForXpath('div/div/div[6]', menu);
+        const statsButton = await waitForXpath(".//div[@class='ytp-menuitem-label' and normalize-space(text())='Stats for nerds']", menu);
         statsButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
         const closeButton = await waitForSelector('.html5-video-info-panel-close');
         const panelContent = await waitForSelector('.html5-video-info-panel-content');
@@ -149,6 +157,7 @@ function initOnWatchPage() {
         const text = loudnessSpan.innerText;
         const hasDRC = text.includes("DRC");
         if (hasDRC && !config.ignoreDRC) {
+												 
             closeButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
             panelContent.classList.remove('auto-gain');
             closeButton.classList.remove('auto-gain');
@@ -158,6 +167,7 @@ function initOnWatchPage() {
         const match = text.match(/content loudness\s*(-?\d+(\.\d+)?)\s*dB/i);
         let dB = 0;
         if (match) {
+											  
             dB = parseFloat(match[1]);
         }
         closeButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
@@ -169,6 +179,8 @@ function initOnWatchPage() {
     // Pause the script for a time
     function sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
+        if (debug) console.log("Sleeping: " + ms)
+												 
     }
 
     // Utility to prevent multiple events firing close together
@@ -209,6 +221,8 @@ function initOnWatchPage() {
 
     // Main logic to hook into the video and apply audio gain dynamically
     async function boostAudio() {
+        if (debug) console.log("Begin boostAudio")
+												  
         let video = null;
         let currentSource = null;
         let currentVideo = null;
@@ -222,7 +236,7 @@ function initOnWatchPage() {
         }
 
         // If the video fails to be found then restart and try again (just a backup, shouldn't really be needed)
-        if (!video || video === currentVideo) {return setTimeout(boostAudio, 1000);}
+        if (!video || video === currentVideo) {if (debug) console.log("Video Missing"); setTimeout(boostAudio, 1000); return}
 
         // Save the found video as the current video to adjust the gain for
         currentVideo = video;
@@ -241,6 +255,8 @@ function initOnWatchPage() {
             // Disconnect existing source if any
             if (currentSource) {
                 currentSource.disconnect();
+                if (debug) console.log("Disconnected Source")
+															 
             }
 
             // Create new source
@@ -254,8 +270,12 @@ function initOnWatchPage() {
             if (config.compressorEnabled) {
                 source.connect(compressor);
                 compressor.connect(gainNode);
+                if (debug) console.log("Connected Compressor")
+															  
             } else {
                 source.connect(gainNode);
+                if (debug) console.log("Connected Gain")
+														
             }
 
             // Plug the gained audio back into the audio output
@@ -270,6 +290,7 @@ function initOnWatchPage() {
             overlay.className = "boost-overlay";
             overlay.style.cssText = `height:47px;width:fit-content;margin-left:8px;display:inline-block;text-shadow:-1px -1px 2px #000,1px -1px 2px #000,-1px 1px 2px #000,1px 1px 2px #000;z-index:999;pointer-events:auto;`;
             document.querySelector('.ytp-time-contents')?.appendChild(overlay);
+													 
         }
         // Create text update function for the overlay
         overlay.setOverlayText = (function() {
@@ -285,6 +306,7 @@ function initOnWatchPage() {
 
         // Create the hidden config panel
         const configBox = document.createElement("div"); configBox.style.cssText = `
+								   
         position: absolute;
         background: rgba(28, 28, 28, .9);
         text-shadow: 0 0 2px rgba(0, 0, 0, .5);
@@ -299,6 +321,7 @@ function initOnWatchPage() {
         column; gap: 8px;
         max-width: 260px;`;
         document.body.appendChild(configBox);
+													  
 
         const headerRow = document.createElement('div'); headerRow.style.display = 'flex'; headerRow.style.justifyContent = 'space-between'; headerRow.style.alignItems = 'center';
         const headerTitle = document.createElement('div'); headerTitle.textContent = 'Gain Settings'; headerTitle.style.fontWeight = 'bold';
@@ -440,6 +463,8 @@ function initOnWatchPage() {
         // This function gets the content loudness and applies adjusted gain in dB
         const debouncedUpdateGain = debounce(updateGainFromStats, 250);
         async function updateGainFromStats() {
+            if (debug) console.log("Begin updateGain")
+													  
             if (gainDisabled) {
                 overlay.setOverlayText("🔇 Gain Disabled");
                 return;
@@ -447,8 +472,12 @@ function initOnWatchPage() {
 
             // Reset the overlay text
             overlay.setOverlayText(`🔊 Gain: Loading...`);
+            if (debug) console.log("Gain Loading")
+												  
 
             // Open the stats for nerds and get the content loudness dB level
+            if (debug) console.log("Await DB")
+											  
             const dB = await openStatsPanelAndGetDb();
 
             // If the previous function returns null, then stop
