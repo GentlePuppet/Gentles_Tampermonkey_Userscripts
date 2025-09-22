@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Youtube Hide Watched Videos
 // @author       GentlePuppet
-// @version      1.6
+// @version      1.7
 // @match        https://www.youtube.com/*
 // @icon         https://www.youtube.com/s/desktop/1eca3218/img/favicon_144.png
 // @require      https://code.jquery.com/jquery-3.7.1.min.js
@@ -14,7 +14,8 @@
 GM_addStyle(`
     .WatchedVideoButton {height: 30px;margin: auto;align-self: normal !important;color: var(--yt-spec-text-primary) !important;overflow: hidden !important;font-family: "Roboto","Arial",sans-serif !important;font-size: 1.4rem !important;line-height: 2rem !important;font-weight: 400 !important;background: #383838 !important;border: black 1px solid;cursor: pointer;text-shadow: 1px 1px 3px black;}
     .WatchedVideoButton:hover {background: #595959 !important;}
-    .WatchedVideosNumberlabel {padding: 0px 5px 0px 5px;color: var(--yt-spec-text-primary) !important; background: #720586 !important; border: black 1px solid; height: 28px;margin: auto;align-self: normal; text-shadow: 1px 1px 3px black;font-family: "Roboto","Arial",sans-serif !important;font-size: 1.4rem !important; line-height: 28px !important;letter-spacing: var(--ytd-subheadline-link_-_letter-spacing) !important;}.Watched_Video_Shown {Opacity: 80%; background: #271b38; border: 2px #004eff solid; padding: 5px; }
+    .WatchedVideosNumberlabel {padding: 0px 5px 0px 5px;color: var(--yt-spec-text-primary) !important; background: #720586 !important; border: black 1px solid; height: 28px;margin: auto;align-self: normal; text-shadow: 1px 1px 3px black;font-family: "Roboto","Arial",sans-serif !important;font-size: 1.4rem !important; line-height: 28px !important;letter-spacing: var(--ytd-subheadline-link_-_letter-spacing) !important;}
+    .Watched_Video_Shown {Opacity: 80%; background: #271b38; border: 2px #004eff solid; padding: 5px; }
     .Watched_Video_Shown > div > ytd-thumbnail {Opacity: 40%; }
     .Watched_Video_Hidden {Opacity: 80%; background: #271b38; border: 2px #004eff solid; padding: 5px; }
     .Watched_Video_Hidden > div > ytd-thumbnail {Opacity: 40%; }
@@ -22,6 +23,7 @@ GM_addStyle(`
     paper-spinner.ytd-continuation-item-renderer {display: none !important; margin: 0px !important;}
     .ytp-spinner {display: none !important;}
     #columns.ytd-watch-flexy {overflow: hidden !important;}
+    ytd-rich-item-renderer {background: #00000000; border: 2px #00000000 solid; padding: 5px;}
 `);
 
 window.addEventListener("yt-page-data-updated", function(e) {
@@ -41,17 +43,13 @@ window.addEventListener("yt-page-data-updated", function(e) {
         }
 
         // Set Cookie
-        function setHideWatchedPref(value) {
-            document.cookie = `hidewatchedvideos=${value}; path=/; domain=.youtube.com; max-age=604800`;
-        }
+        function setHideWatchedPref(value) {document.cookie = `hidewatchedvideos=${value}; path=/; domain=.youtube.com; max-age=604800`;}
 
         // Hide Watched Videos
         function handleNewVideos() {
             const selectorMap = [
-                "ytd-grid-video-renderer",
-                "ytd-compact-video-renderer",
-                "ytd-rich-item-renderer",
-                "yt-lockup-view-model"
+                ".ytd-rich-grid-renderer",   // Subs page, Channels page, and Home page
+                ".ytd-item-section-renderer" // Recommended sidebar list
             ];
             const shouldHide = getHideWatchedPref() === '1';
 
@@ -62,6 +60,15 @@ window.addEventListener("yt-page-data-updated", function(e) {
             function markWatched(selector) {
                 $(selector).each(function () {
                     const video = $(this).parents(selectorMap.join(',')).first();
+
+                    // Find the page container that this video belongs to
+                    const pageContainer = video.closest('ytd-browse[page-subtype]');
+
+                    // Skip if the page container is hidden (not the active page)
+                    if (pageContainer.length && pageContainer.attr('hidden') !== undefined) {
+                        return;
+                    }
+
                     if (video.length > 0) {
                         video.addClass('Watched_Video');
                     }
@@ -73,21 +80,28 @@ window.addEventListener("yt-page-data-updated", function(e) {
             markWatched('div[class*="WatchedProgressBar"][style*="width: 100%"]');
 
             // Hide or show based on current toggle state
-            $('.Watched_Video').each(function () {
+            $('.Watched_Video').each(function() {
+                const pageContainer = $(this).closest('ytd-browse[page-subtype]');
+                if (pageContainer.length && pageContainer.attr('hidden') !== undefined) {
+                    return; // Ignore videos from hidden pages
+                }
+
                 if (shouldHide) {
-                    $(this).hide().attr("class", "Watched_Video Watched_Video_Hidden");
+                    $(this).removeClass('Watched_Video_Shown');
+                    $(this).addClass('Watched_Video_Hidden');
+                    $(this).hide();
                     hiddenCount++;
                 } else {
-                    $(this).show().attr("class", "Watched_Video Watched_Video_Shown");
+                    $(this).removeClass('Watched_Video_Hidden');
+                    $(this).addClass('Watched_Video_Shown');
+                    $(this).show();
                     shownCount++;
                 }
             });
 
             $("#WatchedVideosNumber").text(hiddenCount + shownCount);
         }
-        setInterval(function() {
-            handleNewVideos();
-        },2500);
+        setInterval(function() {handleNewVideos()},2500);
 
         // Create Watched Videos Number Counter
         waitForKeyElements ('#start.ytd-masthead', CreateHiddenVideosCounter, 0);
