@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Youtube Hide Watched Videos
 // @author       GentlePuppet
-// @version      1.7
+// @version      1.8
 // @match        https://www.youtube.com/*
 // @icon         https://www.youtube.com/s/desktop/1eca3218/img/favicon_144.png
 // @require      https://code.jquery.com/jquery-3.7.1.min.js
@@ -27,26 +27,26 @@ GM_addStyle(`
 `);
 
 window.addEventListener("yt-page-data-updated", function(e) {
-    // $("#WatchedVideosNumber").text("0");
-    if(window.location.href.indexOf("playlist") == -1 || window.location.href.indexOf("history") == -1) {
-        // Check Cookie
-        function getHideWatchedPref() {
-            const cookies = document.cookie.split('; ');
-            const cookie = cookies.find(row => row.startsWith('hidewatchedvideos='));
+    // Check Cookie
+    function getHideWatchedPref() {
+        const cookies = document.cookie.split('; ');
+        const cookie = cookies.find(row => row.startsWith('hidewatchedvideos='));
 
-            if (!cookie) {
-                setHideWatchedPref('1'); // Default to hiding watched videos
-                return '1';
-            }
-
-            return cookie.split('=')[1];
+        if (!cookie) {
+            setHideWatchedPref('1'); // Default to hiding watched videos
+            return '1';
         }
 
-        // Set Cookie
-        function setHideWatchedPref(value) {document.cookie = `hidewatchedvideos=${value}; path=/; domain=.youtube.com; max-age=604800`;}
+        return cookie.split('=')[1];
+    }
 
-        // Hide Watched Videos
-        function handleNewVideos() {
+    // Set Cookie
+    function setHideWatchedPref(value) {document.cookie = `hidewatchedvideos=${value}; path=/; domain=.youtube.com; max-age=604800`;}
+
+    // Hide Watched Videos
+    function handleNewVideos() {
+        if(window.location.href.indexOf("playlist") !== -1 || window.location.href.indexOf("history") !== -1) {return;}
+        else {
             const selectorMap = [
                 ".ytd-rich-grid-renderer",   // Subs page, Channels page, and Home page
                 ".ytd-item-section-renderer" // Recommended sidebar list
@@ -101,41 +101,41 @@ window.addEventListener("yt-page-data-updated", function(e) {
 
             $("#WatchedVideosNumber").text(hiddenCount + shownCount);
         }
-        setInterval(function() {handleNewVideos()},2500);
+    }
 
-        // Create Watched Videos Number Counter
-        waitForKeyElements ('#start.ytd-masthead', CreateHiddenVideosCounter, 0);
-        function CreateHiddenVideosCounter () {
-            getHideWatchedPref()
-            if (!document.querySelector("#WatchedVideosNumber")) {
-                var ra123 = $('<div/>').attr({type: "div",id: "WatchedVideosNumber",class: "WatchedVideosNumberlabel"});
-                $('#start.ytd-masthead').append(ra123);
-                $("#WatchedVideosNumber").text("0");
-            }
+    // Create Watched Videos Number Counter
+    waitForKeyElements('#start.ytd-masthead', CreateHiddenVideosCounter, 0);
+    function CreateHiddenVideosCounter () {
+        getHideWatchedPref()
+        if (!document.querySelector("#WatchedVideosNumber")) {
+            var ra123 = $('<div/>').attr({type: "div",id: "WatchedVideosNumber",class: "WatchedVideosNumberlabel"});
+            $('#start.ytd-masthead').append(ra123);
+            $("#WatchedVideosNumber").text("0");
         }
+    }
 
-		// Create Toggle Button
-        waitForKeyElements ('#WatchedVideosNumber', CreateToggleButton, 0);
-        function CreateToggleButton () {
-            var r2 = $('<input/>').attr({type: "button",id: "HideWatchedVideosButton",value: "Toggle Watched Videos",class: "WatchedVideoButton"});
-            $(r2).insertBefore('#WatchedVideosNumber');
-            document.getElementById("HideWatchedVideosButton").addEventListener("click", ToggleClickAction, false);
-            if(getHideWatchedPref() === '1') {$('.WatchedVideoButton').attr('value', 'Show Watched Videos').attr('style', 'width: 175px;');}
-            if(getHideWatchedPref() === '0') {$('.WatchedVideoButton').attr('value', 'Hide Watched Videos').attr('style', 'width: 168px;');}
+    // Create Toggle Button
+    waitForKeyElements('#WatchedVideosNumber', CreateToggleButton, 0);
+    function CreateToggleButton () {
+        var r2 = $('<input/>').attr({type: "button",id: "HideWatchedVideosButton",value: "Toggle Watched Videos",class: "WatchedVideoButton"});
+        $(r2).insertBefore('#WatchedVideosNumber');
+        document.getElementById("HideWatchedVideosButton").addEventListener("click", ToggleClickAction, false);
+        if(getHideWatchedPref() === '1') {$('.WatchedVideoButton').attr('value', 'Show Watched Videos').attr('style', 'width: 175px;');}
+        else if(getHideWatchedPref() === '0') {$('.WatchedVideoButton').attr('value', 'Hide Watched Videos').attr('style', 'width: 168px;');}
+    }
+    // Toggle Action
+    function ToggleClickAction() {
+        if(getHideWatchedPref() === '0') {
+            setHideWatchedPref('1');
+            $('.WatchedVideoButton').attr('value', 'Show Watched Videos').attr('style', 'width: 175px;');
         }
-		// Toggle Action
-		function ToggleClickAction() {
-            if(getHideWatchedPref() === '0') {
-				setHideWatchedPref('1');
-				$('.WatchedVideoButton').attr('value', 'Show Watched Videos').attr('style', 'width: 175px;');
-                handleNewVideos();
-                return
-            }
-            if(getHideWatchedPref() === '1') {
-				setHideWatchedPref('0');
-				$('.WatchedVideoButton').attr('value', 'Hide Watched Videos').attr('style', 'width: 168px;');
-                handleNewVideos();
-                return
-            }
+        else if(getHideWatchedPref() === '1') {
+            setHideWatchedPref('0');
+            $('.WatchedVideoButton').attr('value', 'Hide Watched Videos').attr('style', 'width: 168px;');
         }
-}});
+        handleNewVideos();
+    }
+
+    waitForKeyElements('div[id="progress"][style*="width: 100%"]', handleNewVideos, 0);
+    waitForKeyElements('div[class*="WatchedProgressBar"][style*="width: 100%"]', handleNewVideos, 0);
+});
