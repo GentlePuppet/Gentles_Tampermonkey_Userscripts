@@ -50,17 +50,6 @@ Are you tired of some youtube videos being way too quiet, even at 100% volume?
 
 <br><br>
 
-## [Install Userscript: Hide Blacklisted Videos](https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Youtube%20Better%20CSS%20Tweaks/Youtube%20Hide%20Blacklisted%20Videos.user.js)
-* Adds a toggle to hide/show blacklisted videos. 
-* Click the + button that lets you add text the filter list. (No regrex and isn't case sensative)
-* To blacklist channels add "by CHANNELNAME" to the filter. 
-* To remove filters hold shift and click on the + button.
-  
-![Off](https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/assets/43224790/827aadcf-3330-4319-b100-c0dd1bfe76db)
-![On](https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/assets/43224790/eb28d38f-f3f1-4ee7-b780-f769b078a10b)
-
-<br><br>
-
 ## [Install Userscript: Hide Watched Videos](https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Youtube%20Better%20CSS%20Tweaks/Hide%20Watched%20Videos.user.js)
 * Adds a toggle to hide/show watched videos.
   
