@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Youtube Gentle's Auto Gain
 // @author       GentlePuppet
-// @version      2.7.2
+// @version      2.7.3
 // @description  This script automatically boosts quiet YouTube videos or lowers loud videos by automatically adjusting audio gain with smoothing.
 // @author       Special Thanks to this old extension I found and adapted some of their javascript: https://github.com/Kelvin-Ng/youtube-volume-normalizer
 // @grant        GM_addStyle
@@ -52,6 +52,32 @@ GM_addStyle(`
     .toggle-switch input:checked + .slider:before {
         transform: translateX(22px);
     }
+    .boost-container {
+        display: inline-block;
+        -webkit-box-align: center;
+        -webkit-align-items: center;
+        align-items: center;
+        cursor: pointer;
+        min-width: 0;
+        line-height: var(--yt-delhi-pill-height, 48px);
+        padding: var(--yt-delhi-pill-top-height, 12px) 8px;
+    }
+    .boost-overlay {
+        background-color: transparent;
+        height: var(--yt-delhi-pill-height, 48px);
+        width: fit-content;
+        display: inline-block;
+        position: relative;
+        z-index: 999;
+        pointer-events: auto;
+        cursor: pointer;
+        text-shadow: rgb(0, 0, 0) -1px -1px 2px, rgb(0, 0, 0) 1px -1px 2px, rgb(0, 0, 0) -1px 1px 2px, rgb(0, 0, 0) 1px 1px 2px;
+        padding: 0px 8px;
+        border-radius: 28px;
+    }
+    .boost-overlay:hover {
+        background-color: var(--yt-spec-overlay-button-secondary,rgba(255,255,255,.1));
+    }
 `);
 
 
@@ -67,14 +93,14 @@ initOnWatchPage();
 
 function initOnWatchPage() {
     const debug = false
-					  
+
     // Create the config
     const config = {
         targetLoudnessDb: -3,         // Desired loudness level in dB (higher = louder)
         maxGain: 2,                   // Maximum gain multiplier allowed
         gainSmoothingTime: 0.5,       // Seconds for smoothing gain changes
         compressorEnabled: false,     // Choose whether to enable/disable the compressor (true/false)
-        ignoreDRC: false,             // Choose wheater to ignore youtube's DRC (Dynamic Range Compression)
+        ignoreDRC: false,             // Choose whether to ignore youtube's DRC (Dynamic Range Compression)
     };
 
     // Setup AudioContext and audio nodes
@@ -109,7 +135,7 @@ function initOnWatchPage() {
     // Wait for CSS selector
     function waitForSelector(selector) {
         if (debug) console.log("Waiting for Selector: " + selector)
-																   
+
         return new Promise(resolve => {
             const el = document.querySelector(selector);
             if (el) return resolve(el);
@@ -125,7 +151,7 @@ function initOnWatchPage() {
     // Wait for XPath
     function waitForXpath(xpath, context = document) {
         if (debug) console.log("Waiting for XPath: " + xpath)
-															 
+
         return new Promise(resolve => {
             const evalResult = () => document.evaluate(xpath, context, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
             const found = evalResult();
@@ -142,7 +168,7 @@ function initOnWatchPage() {
     // Opens Stats for Nerds panel, parses the content loudness dB value, then closes it again
     async function openStatsPanelAndGetDb() {
         if (debug) console.log("OpenStatsPanel")
-												
+
         const videoPlayer = await waitForSelector('#movie_player');
         videoPlayer.dispatchEvent(new MouseEvent('contextmenu', { bubbles: true }));
         const menu = await waitForSelector('.ytp-contextmenu');
@@ -157,7 +183,7 @@ function initOnWatchPage() {
         const text = loudnessSpan.innerText;
         const hasDRC = text.includes("DRC");
         if (hasDRC && !config.ignoreDRC) {
-												 
+
             closeButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
             panelContent.classList.remove('auto-gain');
             closeButton.classList.remove('auto-gain');
@@ -167,7 +193,7 @@ function initOnWatchPage() {
         const match = text.match(/content loudness\s*(-?\d+(\.\d+)?)\s*dB/i);
         let dB = 0;
         if (match) {
-											  
+
             dB = parseFloat(match[1]);
         }
         closeButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
@@ -180,7 +206,7 @@ function initOnWatchPage() {
     function sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
         if (debug) console.log("Sleeping: " + ms)
-												 
+
     }
 
     // Utility to prevent multiple events firing close together
@@ -212,7 +238,7 @@ function initOnWatchPage() {
     // --- Helper Functions ---
 
     if (!window.location.href.includes("watch?v=")) return;
-    if (window.hasRunGainScript) return; // Prevent duplicate runs
+    if (window.hasRunGainScript) {return;} // Prevent duplicate runs
     window.hasRunGainScript = true;
 
     loadConfigFromCookie();
@@ -222,7 +248,7 @@ function initOnWatchPage() {
     // Main logic to hook into the video and apply audio gain dynamically
     async function boostAudio() {
         if (debug) console.log("Begin boostAudio")
-												  
+
         let video = null;
         let currentSource = null;
         let currentVideo = null;
@@ -252,30 +278,30 @@ function initOnWatchPage() {
 
         // Create the audio Nodes
         function setupAudioGraph(video) {
+            // Reset gain
+            gainNode.gain.value = 1;
+
             // Disconnect existing source if any
             if (currentSource) {
                 currentSource.disconnect();
                 if (debug) console.log("Disconnected Source")
-															 
+
             }
 
             // Create new source
             const source = audioCtx.createMediaElementSource(video);
             currentSource = source;
 
-            // Reset gain
-            gainNode.gain.value = 1;
-
             // If the compressor is enabled create and connect it, otherwise just connect the gain to the audio
             if (config.compressorEnabled) {
                 source.connect(compressor);
                 compressor.connect(gainNode);
                 if (debug) console.log("Connected Compressor")
-															  
+
             } else {
                 source.connect(gainNode);
                 if (debug) console.log("Connected Gain")
-														
+
             }
 
             // Plug the gained audio back into the audio output
@@ -284,13 +310,16 @@ function initOnWatchPage() {
         setupAudioGraph(currentVideo)
 
         // Create the gain overlay
+        let container = document.querySelector('.boost-container');
         let overlay = document.querySelector('.boost-overlay');
         if (!overlay) {
+            container = document.createElement("div");
+            container.className = "boost-container";
             overlay = document.createElement("div");
             overlay.className = "boost-overlay";
-            overlay.style.cssText = `height:47px;width:fit-content;margin-left:8px;display:inline-block;text-shadow:-1px -1px 2px #000,1px -1px 2px #000,-1px 1px 2px #000,1px 1px 2px #000;z-index:999;pointer-events:auto;`;
-            document.querySelector('.ytp-time-contents')?.appendChild(overlay);
-													 
+            document.querySelector('.ytp-left-controls')?.appendChild(container);
+            document.querySelector('.boost-container')?.appendChild(overlay);
+
         }
         // Create text update function for the overlay
         overlay.setOverlayText = (function() {
@@ -305,23 +334,23 @@ function initOnWatchPage() {
         })();
 
         // Create the hidden config panel
-        const configBox = document.createElement("div"); configBox.style.cssText = `
-								   
-        position: absolute;
-        background: rgba(28, 28, 28, .9);
-        text-shadow: 0 0 2px rgba(0, 0, 0, .5);
-        transition: opacity .1s cubic-bezier(0,0,.2,1);
-        color: white;
-        padding: 10px;
-        border-radius: 6px;
-        z-index: 9999;
-        font-size: 13px;
-        display: none;
-        flex-direction:
-        column; gap: 8px;
-        max-width: 260px;`;
+        const configBox = document.createElement("div");
+        configBox.style.cssText = `
+                position: absolute;
+                background: rgba(28, 28, 28, .9);
+                text-shadow: 0 0 2px rgba(0, 0, 0, .5);
+                transition: opacity .1s cubic-bezier(0,0,.2,1);
+                color: white;
+                padding: 10px;
+                border-radius: 6px;
+                z-index: 9999;
+                font-size: 13px;
+                display: none;
+                flex-direction:
+                column; gap: 8px;
+                max-width: 260px;`;
         document.body.appendChild(configBox);
-													  
+
 
         const headerRow = document.createElement('div'); headerRow.style.display = 'flex'; headerRow.style.justifyContent = 'space-between'; headerRow.style.alignItems = 'center';
         const headerTitle = document.createElement('div'); headerTitle.textContent = 'Gain Settings'; headerTitle.style.fontWeight = 'bold';
@@ -462,9 +491,13 @@ function initOnWatchPage() {
 
         // This function gets the content loudness and applies adjusted gain in dB
         const debouncedUpdateGain = debounce(updateGainFromStats, 250);
-        async function updateGainFromStats() {
+        async function updateGainFromStats(resetgain = false) {
             if (debug) console.log("Begin updateGain")
-													  
+
+            if (resetgain) {
+                gainDisabled = false
+            }
+
             if (gainDisabled) {
                 overlay.setOverlayText("🔇 Gain Disabled");
                 return;
@@ -473,11 +506,11 @@ function initOnWatchPage() {
             // Reset the overlay text
             overlay.setOverlayText(`🔊 Gain: Loading...`);
             if (debug) console.log("Gain Loading")
-												  
+
 
             // Open the stats for nerds and get the content loudness dB level
             if (debug) console.log("Await DB")
-											  
+
             const dB = await openStatsPanelAndGetDb();
 
             // If the previous function returns null, then stop
@@ -505,7 +538,7 @@ function initOnWatchPage() {
             }
         }
         // Add an eventlister to the page so the final step is re-run everytime the page changes (new video loads) so the gain can be adjusted (for the new video)
-        window.addEventListener("yt-page-data-updated", () => setTimeout(updateGainFromStats, 500));
+        window.addEventListener("yt-page-data-updated", () => setTimeout(updateGainFromStats(true), 500));
 
         // Finally actually run the final step function
         updateGainFromStats();
