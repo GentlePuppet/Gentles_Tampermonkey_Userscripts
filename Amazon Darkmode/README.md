@@ -3,7 +3,7 @@
 # Gentle's Darkmode Amazon UserScript
 
 ## Description:
-This is a simple Userscript that makes amazon darkmoded. It can be a bit buggy here and there but I try to updaate it when needed. It works for the most part.
+This is a simple Userscript that makes amazon darkmoded. It can be a bit buggy here and there but I try to update it when needed. It works for the most part.
 
 <img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/193f69ee-cf16-498b-a16a-e8f8a0739962" />
 
