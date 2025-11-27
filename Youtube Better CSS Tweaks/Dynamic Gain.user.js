@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Youtube Gentle's Auto Gain
 // @author       GentlePuppet
-// @version      2.8.0
+// @version      2.8.1
 // @description  This script automatically boosts quiet YouTube videos or lowers loud videos by automatically adjusting audio gain with smoothing.
 // @author       Special Thanks to this old extension I found and adapted some of their javascript: https://github.com/Kelvin-Ng/youtube-volume-normalizer
 // @grant        GM_addStyle
@@ -11,8 +11,13 @@
 // @downloadURL  https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Youtube%20Better%20CSS%20Tweaks/Dynamic%20Gain.user.js
 // ==/UserScript==
 GM_addStyle(`
-    .auto-gain {
-        display: none;
+    .boost-close {
+        cursor: pointer;
+        margin-left: 10px;
+        user-select: none;
+        top: 4px;
+        right: 6px;
+        position: absolute;
     }
     .boost-switch {
         position: relative;
@@ -53,16 +58,19 @@ GM_addStyle(`
         transform: translateX(22px);
     }
     .disable-gain {
-        background: #444;
         color: white;
-        border: none;
         padding: 5px 10px;
-        border-radius: 4px;
+        border-radius: 5px;
+        opacity: 0.8
         cursor: pointer;
+        border: 1px outset #000
+    }
+    .disable-gain:hover {
+        opacity: 1 !important;
     }
     .boost-config {
         position: absolute;
-        background: rgba(28, 28, 28, .9);
+        background: rgba(28, 28, 28, 90%);
         text-shadow: 0 0 2px rgba(0, 0, 0, .5);
         transition: opacity .1s cubic-bezier(0,0,.2,1);
         color: white;
@@ -74,6 +82,7 @@ GM_addStyle(`
         flex-direction:
         column; gap: 8px;
         max-width: 260px;
+        border: 1px outset black;
     }
     .boost-container {
         display: inline-block;
@@ -340,7 +349,7 @@ function initOnWatchPage() {
 
         const headerRow = document.createElement('div'); headerRow.style.display = 'flex'; headerRow.style.justifyContent = 'space-between'; headerRow.style.alignItems = 'center';
         const headerTitle = document.createElement('div'); headerTitle.textContent = 'Gain Settings'; headerTitle.style.fontWeight = 'bold';
-        const closeButton = document.createElement('div'); closeButton.title = "Close settings and Update gain"; closeButton.textContent = '[✕]'; closeButton.style.cursor = 'pointer'; closeButton.style.marginLeft = '10px'; closeButton.style.userSelect = 'none'; closeButton.addEventListener('click', () => {configBox.style.display = 'none';});
+        const closeButton = document.createElement('div'); closeButton.className = "boost-close"; closeButton.title = "Close settings and Update gain"; closeButton.textContent = '[✕]'; closeButton.style.cursor = 'pointer'; closeButton.style.marginLeft = '10px'; closeButton.style.userSelect = 'none'; closeButton.addEventListener('click', () => {configBox.style.display = 'none';});
 
         headerRow.appendChild(headerTitle); headerRow.appendChild(closeButton); configBox.appendChild(headerRow);
 
@@ -389,6 +398,11 @@ function initOnWatchPage() {
                 input.value = config[key];
                 input.step = step;
                 input.style.width = "80px";
+                input.style.color = "#fff";
+                input.style.backgroundColor = "#333";
+                input.style.borderRadius = "5px";
+                input.style.border = "1px inset #000";
+                input.style.padding = "3px";
                 input.title = tooltip;
 
                 input.addEventListener('change', () => {
@@ -428,17 +442,23 @@ function initOnWatchPage() {
 
         // Toggle to Disable Gain for the current video
         const disableGainBtn = document.createElement('button');
+        disableGainBtn.className = "disable-gain";
         disableGainBtn.textContent = "Disable Gain (Current Video)";
-        disableGainBtn.className = "diable-gain";
+        disableGainBtn.style.backgroundColor = "#8b0000";
+
         disableGainBtn.addEventListener('click', () => {
             gainDisabled = !gainDisabled;
             if (gainDisabled) {
                 gainNode.gain.value = 1;
                 overlay.setOverlayText("🔇 Gain Disabled");
                 disableGainBtn.textContent = "Enable Gain (Current Video)";
+                disableGainBtn.style.backgroundColor = "#008b0c";
+                disableGainBtn.style.borderStyle = "inset";
             } else {
                 debouncedUpdateGain();
                 disableGainBtn.textContent = "Disable Gain (Current Video)";
+                disableGainBtn.style.backgroundColor = "#8b0000";
+                disableGainBtn.style.borderStyle = "outset";
             }
         });
         configBox.appendChild(disableGainBtn);
@@ -452,12 +472,13 @@ function initOnWatchPage() {
 
                 // Get the overlay position and dimensions
                 const rect = overlay.getBoundingClientRect();
+                const left = rect.left + (rect.width - configBox.offsetWidth) / 2
 
-                // Position the configBox above the overlay, horizontally aligned to the overlay's left edge
-                configBox.style.left = `${rect.left}px`;
+                // Position the configBox centered above the overlay
+                configBox.style.left = `${left}px`;
 
-                // Put the box just above the overlay with 8px spacing
-                configBox.style.top = `${window.scrollY + rect.top - configBox.offsetHeight - 8}px`;
+                // Put the box just above the overlay with some spacing
+                configBox.style.top = `${window.scrollY + rect.top - configBox.offsetHeight - 20}px`;
             } else {
                 // Hide the box
                 configBox.style.display = "none";
