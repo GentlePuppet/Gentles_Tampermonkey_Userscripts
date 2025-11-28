@@ -14,18 +14,20 @@ If you do have a userscript extension then clicking on any of the "Install Users
 <br><br>
 
 ## [Install Userscript: Dynamic Gain](https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/refs/heads/main/Youtube%20Better%20CSS%20Tweaks/Dynamic%20Gain.user.js)
-Are you tired of some youtube videos being way too quiet, even at 100% volume?
+Are you tired of some youtube videos being way too quiet or way too loud, seemingly completely randomly? Is Stable Volume not avaliable for the video you're currently watching?
 * This script automatically boosts quiet YouTube videos or lowers loud videos by getting the content loudness and adjusting the gain to match the target volume in the config.
-  - When a video loads it opens the "stats for nerds" panel for a second to collect the current content loudness for adjustment. (The panel is temporarily hidden when it is accessed so it doesn't flash everytime)
-  - Displays the adjusted gain next to the current time on the playback overlay.
-  - Includes an option to enable a compressor to avoid clipping. (Disabled by default in the config)
+  - Displays the adjusted gain next to the current time on the playback overlay. (Click the overlay to open/close the settings.)
+  - Includes an option to enable a compressor. (Disabled by default in the config. Enable to tweak the compressor settings.)
   - Includes an option to ignore youtube's Stable Volume (DRC) when avalible. (Disabled by default since it makes videos unexpectidly louder than wanted)
       - (Hover over options in the panel to view a description of each.)
   - Clicking the overlay opens and closes the config panel.
   - Closing the config panel updates the gain automatically.
 
-![image](https://github.com/user-attachments/assets/4050ac57-4a23-494d-9b80-61f3785966b9)
-![image](https://github.com/user-attachments/assets/434b55aa-98ba-45f1-b439-70120c5859ff)
+<img width="200" alt="image" src="https://github.com/user-attachments/assets/374a8e36-b121-42a1-8109-0e0f59079031" />
+<img width="200" alt="image" src="https://github.com/user-attachments/assets/58c47463-30aa-4f9a-bbe2-4787d675e8ce" />
+<img width="200" alt="image" src="https://github.com/user-attachments/assets/f28af8d5-0074-43ed-a290-6f822d458f1e" />
+<img width="200" alt="image" src="https://github.com/user-attachments/assets/6b49e1a5-7c3c-4e77-93ec-69d3483a9edb" />
+
 
 
 
