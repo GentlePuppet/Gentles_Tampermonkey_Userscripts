@@ -134,6 +134,11 @@ function initOnWatchPage() {
         gainSmoothingTime: 0.5,       // Seconds for smoothing gain changes
         compressorEnabled: false,     // Choose whether to enable/disable the compressor (true/false)
         ignoreDRC: false,             // Choose whether to ignore youtube's DRC (Dynamic Range Compression)
+        compressorThreshold: 0,       // Threshold where compression begins
+        compressorKnee: 0,            // Softness of transition into compression
+        compressorRatio: 20,          // Compression ratio. Larger = stronger compression
+        compressorAttack: 0.003,      // How quickly the compressor reacts
+        compressorRelease: 0.25,      // How quickly the compressor stops compressing
     };
 
     // Setup AudioContext and audio nodes
@@ -141,12 +146,13 @@ function initOnWatchPage() {
     const gainNode = audioCtx.createGain();
     const compressor = audioCtx.createDynamicsCompressor();
 
-    // Compressor settings
-    compressor.threshold.value = 0;
-    compressor.knee.value = 0;
-    compressor.ratio.value = 20;
-    compressor.attack.value = 0.003;
-    compressor.release.value = 0.25;
+    function applyCompressorConfig() {
+        compressor.threshold.value = config.compressorThreshold;
+        compressor.knee.value = config.compressorKnee;
+        compressor.ratio.value = config.compressorRatio;
+        compressor.attack.value = config.compressorAttack;
+        compressor.release.value = config.compressorRelease;
+    }
 
     // --- Helper Functions ---
     // --------------------------
@@ -302,6 +308,7 @@ function initOnWatchPage() {
             if (config.compressorEnabled) {
                 source.connect(compressor);
                 compressor.connect(gainNode);
+                applyCompressorConfig()
                 if (debug) console.log("Connected Compressor")
 
             } else {
@@ -346,6 +353,13 @@ function initOnWatchPage() {
         configBox.style.cssText = 'display: none;';
         document.body.appendChild(configBox);
 
+        // Hidden container for compressor tuning
+        const compressorSettingsBox = document.createElement("div");
+        compressorSettingsBox.style.display = "none";
+        compressorSettingsBox.style.marginLeft = "20px";
+        compressorSettingsBox.style.padding = "6px 0 0 0";
+        compressorSettingsBox.style.borderLeft = "1px solid #555";
+        compressorSettingsBox.style.paddingLeft = "10px";
 
         const headerRow = document.createElement('div'); headerRow.style.display = 'flex'; headerRow.style.justifyContent = 'space-between'; headerRow.style.alignItems = 'center';
         const headerTitle = document.createElement('div'); headerTitle.textContent = 'Gain Settings'; headerTitle.style.fontWeight = 'bold';
@@ -356,7 +370,7 @@ function initOnWatchPage() {
         closeButton.addEventListener("click", () => {configBox.style.display = "none"; debouncedUpdateGain()}); configBox.addEventListener("click", e => {e.stopPropagation();});
 
         // Utility: Create labeled input row
-        function createInput(labelText, key, type = 'number', step = 'any', tooltip = '') {
+        function createInput(labelText, key, type = 'number', step = 'any', tooltip = '', onChange = null) {
             const container = document.createElement('div');
             container.style.display = 'flex';
             container.style.alignItems = 'center';
@@ -383,6 +397,7 @@ function initOnWatchPage() {
 
                 input.addEventListener('change', () => {
                     config[key] = input.checked;
+                    if (onChange) onChange(input.checked);
                     saveConfigToCookie();
                     console.log(`Config updated: ${key} = ${input.checked}`);
                 });
@@ -391,6 +406,7 @@ function initOnWatchPage() {
                 toggleContainer.appendChild(slider);
                 container.appendChild(label);
                 container.appendChild(toggleContainer);
+
             } else {
                 // Regular number input
                 const input = document.createElement('input');
@@ -407,38 +423,58 @@ function initOnWatchPage() {
 
                 input.addEventListener('change', () => {
                     let value = parseFloat(input.value);
-                    if (isNaN(value)) {
-                        value = config[key];
-                        input.value = value;
-                        return;
+                    if (!isNaN(value)) {
+                        config[key] = value;
+                        if (onChange) onChange(value);
+                        saveConfigToCookie();
+                    } else {
+                        input.value = config[key];
                     }
-                    config[key] = value;
-                    saveConfigToCookie();
-                    console.log(`Config updated: ${key} = ${value}`);
                 });
 
                 container.appendChild(label);
                 container.appendChild(input);
             }
 
-            configBox.appendChild(container);
+            return container;
         }
 
         // Add input fields to the config box
-        createInput("Target Loudness (dB):", "targetLoudnessDb", 'number', 'any',
-                    "Target loudness level (in decibels) you'd like videos normalized to.");
+        configBox.appendChild(createInput("Target Loudness (dB):", "targetLoudnessDb", 'number', 'any',
+                                          "Target loudness level (in decibels) you'd like videos normalized to."))
 
-        createInput("Max Gain:", "maxGain", 'number', 'any',
-                    "Maximum allowed volume boost multiplier.\nPrevents very quiet videos from becoming excessively loud.");
+        configBox.appendChild(createInput("Max Gain:", "maxGain", 'number', 'any',
+                                          "Maximum allowed volume boost multiplier.\nPrevents very quiet videos from becoming excessively loud."))
 
-        createInput("Smoothing Time (s):", "gainSmoothingTime", 'number', 'any',
-                    "Time in seconds to smoothly transition gain changes.\nAvoids sudden volume jumps when adjusting the gain.");
+        configBox.appendChild(createInput("Smoothing Time (s):", "gainSmoothingTime", 'number', 'any',
+                                          "Time in seconds to smoothly transition gain changes.\nAvoids sudden volume jumps when adjusting the gain."))
 
-        createInput("Enable Compressor", "compressorEnabled", "checkbox", '',
-                    "Enable a dynamic range compressor to even out loud and soft parts.\nUseful for videos with inconsistent audio.");
+        configBox.appendChild(createInput("Ignore Stable Volume", "ignoreDRC", "checkbox", '',
+                                          "Ignore YouTube's built-in Dynamic Range Compression when avalible.\nIgnoring tends to make videos louder than expected when Stable Volume is enabled.\nRecommend just turning Stable Volume off instead of using this, but it's your choice."))
 
-        createInput("Ignore Stable Volume", "ignoreDRC", "checkbox", '',
-                    "Ignore YouTube's built-in Dynamic Range Compression when avalible.\nIgnoring tends to make videos louder than expected when Stable Volume is enabled.\nRecommend just turning Stable Volume off instead of using this, but it's your choice.");
+        configBox.appendChild(createInput("Enable Compressor", "compressorEnabled", "checkbox", '',
+                                          "Enable a dynamic range compressor to even out loud and soft parts.\nUseful for videos with inconsistent audio.\nEnable to tweak the compressor settings.",
+                                        () => {
+                                            // Enable the compressor settings box
+                                            compressorSettingsBox.style.display = config.compressorEnabled ? "block" : "none";
+
+                                            // Reposition the config box so it's not jutting out weirdly
+                                            const rect = overlay.getBoundingClientRect();
+                                            const left = rect.left + (rect.width - configBox.offsetWidth) / 2
+                                            configBox.style.left = `${left}px`;
+                                            configBox.style.top = `${window.scrollY + rect.top - configBox.offsetHeight - 20}px`;
+
+                                            // Enable and update the compressor
+                                            setupAudioGraph(currentVideo)
+                                        }));
+
+        configBox.appendChild(compressorSettingsBox);
+        compressorSettingsBox.appendChild(createInput("Threshold (dB):", "compressorThreshold", 'number', 'any', "Threshold where compression begins."),               () => applyCompressorConfig());
+        compressorSettingsBox.appendChild(createInput("Knee (dB):",      "compressorKnee",      'number', 'any', "Softness of transition into compression."),          () => applyCompressorConfig());
+        compressorSettingsBox.appendChild(createInput("Ratio:",          "compressorRatio",     'number', 'any', "Compression ratio. Larger = stronger compression."), () => applyCompressorConfig());
+        compressorSettingsBox.appendChild(createInput("Attack (s):",     "compressorAttack",    'number', 'any', "How quickly the compressor reacts."),                () => applyCompressorConfig());
+        compressorSettingsBox.appendChild(createInput("Release (s):",    "compressorRelease",   'number', 'any', "How quickly the compressor stops compressing."),     () => applyCompressorConfig());
+
 
         // Toggle to Disable Gain for the current video
         const disableGainBtn = document.createElement('button');
