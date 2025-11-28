@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Youtube Gentle's Auto Gain
 // @author       GentlePuppet
-// @version      2.8.2
+// @version      2.8.3
 // @description  This script automatically boosts quiet YouTube videos or lowers loud videos by automatically adjusting audio gain with smoothing.
 // @author       Special Thanks to this old extension I found and adapted some of their javascript: https://github.com/Kelvin-Ng/youtube-volume-normalizer
 // @grant        GM_addStyle
@@ -360,6 +360,7 @@ function initOnWatchPage() {
         compressorSettingsBox.style.padding = "6px 0 0 0";
         compressorSettingsBox.style.borderLeft = "1px solid #555";
         compressorSettingsBox.style.paddingLeft = "10px";
+        compressorSettingsBox.style.display = config.compressorEnabled ? "block" : "none";
 
         const headerRow = document.createElement('div'); headerRow.style.display = 'flex'; headerRow.style.justifyContent = 'space-between'; headerRow.style.alignItems = 'center';
         const headerTitle = document.createElement('div'); headerTitle.textContent = 'Gain Settings'; headerTitle.style.fontWeight = 'bold';
@@ -465,7 +466,7 @@ function initOnWatchPage() {
                                             configBox.style.top = `${window.scrollY + rect.top - configBox.offsetHeight - 20}px`;
 
                                             // Enable and update the compressor
-                                            setupAudioGraph(currentVideo)
+                                            applyCompressorConfig()
                                         }));
 
         configBox.appendChild(compressorSettingsBox);
