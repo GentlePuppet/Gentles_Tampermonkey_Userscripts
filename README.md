@@ -15,4 +15,7 @@ Browse through the folders and check out the readmes to see if you are intereste
 # [Steam Group Mass Kicker Tool](https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/tree/main/Steam%20Group%20Mass%20Kicker)
 
 
+# [Warframe PC Drops](https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/tree/main/Warframe%20PC%20Drops)
+
+
 # [Youtube Better CSS Tweaks](https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/tree/main/Youtube%20Better%20CSS%20Tweaks)
