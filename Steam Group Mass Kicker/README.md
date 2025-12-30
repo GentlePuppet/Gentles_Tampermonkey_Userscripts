@@ -15,3 +15,5 @@ As long as you have a userscript extension like Tampermonkey or Greasemonkey the
 ### Don't have a userscript extension?
 * [Get Tampermonkey for Chrome](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=en)
 * [Get Tampermonkey for Firefox](https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/)
+* [Get Tampermonkey for Opera](https://addons.opera.com/en/extensions/details/tampermonkey-beta/)
+* [Get Tampermonkey for Safari](https://apps.apple.com/us/app/tampermonkey/id1482490089?mt=12)
