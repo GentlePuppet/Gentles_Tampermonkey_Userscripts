@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Youtube Hide Blacklisted Videos
 // @author       GentlePuppet
-// @version      2.0.0
+// @version      2.0.5
 // @match        https://www.youtube.com/*
 // @icon         https://www.youtube.com/s/desktop/1eca3218/img/favicon_144.png
 // @require      https://code.jquery.com/jquery-3.5.1.min.js
@@ -14,14 +14,16 @@
 // @updateURL    https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Youtube%20Better%20CSS%20Tweaks/Youtube%20Hide%20Blacklisted%20Videos.user.js
 // @downloadURL  https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Youtube%20Better%20CSS%20Tweaks/Youtube%20Hide%20Blacklisted%20Videos.user.js
 // ==/UserScript==
+/* globals $, waitForKeyElements */
+
 // Blacklisted Toggle Button Stlye
 GM_addStyle(`
     .BlacklistedVideoButton {height: 30px;margin: auto;align-self: normal !important;color: var(--yt-spec-text-primary) !important;overflow: hidden !important;font-family: "Roboto","Arial",sans-serif !important;font-size: 1.4rem !important;line-height: 2rem !important;font-weight: 400 !important;background: #383838 !important;border: black 1px solid;cursor: pointer;text-shadow: 1px 1px 3px black;}
     .BlacklistedVideoButton:hover {background: #595959 !important;}
     .BlacklistedVideosNumberlabel {padding: 0px 5px 0px 5px;color: var(--yt-spec-text-primary) !important; background: #860510 !important; border: black 1px solid; height: 28px;margin: auto;align-self: normal; text-shadow: 1px 1px 3px black;font-family: "Roboto","Arial",sans-serif !important;font-size: 1.4rem !important; line-height: 28px !important;letter-spacing: var(--ytd-subheadline-link_-_letter-spacing) !important;}
-    .Blacklisted_Video_Shown {Opacity: 80%; background: #381b1b; border: 2px red solid; padding: 5px; }
+    .Blacklisted_Video_Shown {Opacity: 80%; background: #381b1b !important; border: 2px red solid !important; padding: 5px; }
     .Blacklisted_Video_Shown > div > ytd-thumbnail {Opacity: 40%; }
-    ytd-continuation-item-renderer {height: 0px !important;}
+    ytd-continuation-item-renderer:not(.ytd-comment-replies-renderer) {height: 0px !important;}
     paper-spinner.ytd-continuation-item-renderer {display: none !important; margin: 0px !important;}
     .ytp-spinner {display: none !important;}
     #blacklistfiltercheckbox {height:20px;width:20px;}
@@ -66,27 +68,34 @@ window.addEventListener("yt-page-data-updated", function(e) {
 
             const selectorMap = [
                 ".ytd-rich-grid-renderer",
-                ".ytd-item-section-renderer"
+                ".ytd-item-section-renderer",
+                "yt-lockup-view-model.ytd-watch-next-secondary-results-renderer"
             ];
 
             const hidePref = $.cookie('hideblacklistedvideos') === '1';
             let hiddenCount = 0;
             let shownCount = 0;
             function markBlacklisted(input) {
-                try {
-                    if (!input) return;
-                    $(input).each(function () {
-                        const videoElem = $(this).parents(selectorMap.join(',')).first();
-                        if (!videoElem.length) return;
+                $(input).each(function () {
+                    const video = $(this).parents(selectorMap.join(',')).first();
 
-                        const pageContainer = videoElem.closest('ytd-browse[page-subtype]');
-                        if (pageContainer.length && pageContainer.attr('hidden') !== undefined) return;
+                    // Find the page container that this video belongs to
+                    const pageContainer = video.closest('ytd-browse[page-subtype]');
 
-                        videoElem.addClass('Blacklisted_Video');
-                    });
-                } catch (e) {
-                    console.error('Error in markBlacklisted:', e);
-                }
+                    // Skip if the page container is hidden (not the active page)
+                    if (pageContainer.length && pageContainer.attr('hidden') !== undefined) {
+                        return;
+                    }
+
+                    // Skip the #contents container
+                    if (video.is('#contents') || video.is('ytd-shelf-renderer')) {
+                        return;
+                    }
+
+                    if (video.length > 0) {
+                        video.addClass('Blacklisted_Video');
+                    }
+                });
             }
 
             markBlacklisted(video);
@@ -132,7 +141,8 @@ window.addEventListener("yt-page-data-updated", function(e) {
                 } else {
                     // Video title filter
                     debugLog('Applying video title filter:', filter);
-                    waitForKeyElements(`.yt-lockup-metadata-view-model__heading-reset[title*='${filter}' i]`,Blacklist,0);
+                    waitForKeyElements(`.yt-lockup-metadata-view-model__heading-reset[title*='${filter}' i]`,Blacklist,0); // Recommened and Subs Page Videos
+                    waitForKeyElements(`#video-title-link[title*='${filter}' i]`,Blacklist,0);                             // Channel Page Videos
                 }
             } catch (e) {
                 console.error('Error applying blacklist filter:', filter, e);
