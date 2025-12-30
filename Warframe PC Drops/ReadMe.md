@@ -1,5 +1,5 @@
 # Gentle's Warframe PC Drops Cleaner Tables and Search
-A Tampermonkey Userscript that cleans up the tables, makes them collapsible, and adds a search bar.
+A Tampermonkey Userscript for https://www.warframe.com/droptables that cleans up the tables, makes them collapsible, and adds a search bar.
 
 When I update the script you'll get an auto update notification.
 
