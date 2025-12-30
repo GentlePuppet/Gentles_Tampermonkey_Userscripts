@@ -3,7 +3,7 @@ A Tampermonkey Userscript for https://www.warframe.com/droptables that cleans up
 
 When I update the script you'll get an auto update notification.
 
-![demo](https://github.com/user-attachments/assets/a3d3c92c-d870-4fa9-8396-d120fc27b6d3)
+![demo](https://github.com/user-attachments/assets/9b305b8b-c229-4106-ac2a-6e197dcf3752)
 
 
 As long as you have a userscript extension like Tampermonkey or Greasemonkey then clicking the link below will install the script for you.
