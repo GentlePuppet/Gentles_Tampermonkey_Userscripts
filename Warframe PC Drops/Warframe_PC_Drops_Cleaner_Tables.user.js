@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Warframe Drops - Cleaner Tables
-// @version      0.1
+// @version      0.2
 // @author       GentlePuppet, assisted by gpt
 // @description  Cleans up and adds a search filter to the Warframe Drops page.
 // @match        https://warframe-web-assets.nyc3.cdn.digitaloceanspaces.com/uploads/cms/hnfvc0o3jnfvc873njb03enrf56.html
@@ -9,102 +9,57 @@
 // @downloadURL  https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/refs/heads/main/Warframe%20PC%20Drops/Warframe_PC_Drops_Cleaner_Tables.user.js
 // ==/UserScript==
 GM_addStyle(`
-    body {
-        background: black;
-        color: #b3b3b3;
-    }
-
-    thead th[colspan] {
-        color: #ffffff !important;
-        background: #220e89 !important;
-    }
-
-    tr, td, th {
-        border: 1px solid #bbb2b2 !important;
-    }
-
-    th[colspan] {
-        color: #ffffff;
-        background: #085724;
-    }
-
-    a {
-        color: #34d8ff;
-    }
-    a:visited {
-        color: #00ff68;
-    }
+    body {background: black; color: #b3b3b3;}
+    thead th[colspan] {color: #ffffff !important; background: #220e89 !important;}
+    tr, td, th {border: 1px solid #bbb2b2 !important;}
+    th[colspan] {color: #ffffff; background: #085724;}
+    a {color: #34d8ff;}
+    a:visited {color: #00ff68;}
 `);
 
 (function () {
     const allGeneratedTables = [];
     const HIGHLIGHT_CLASS = "table-search-highlight";
 
-    function escapeRegex(str) {
-        return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    }
+    function escapeRegex(str) {return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");}
 
-    function clearHighlights(root) {
-        root.querySelectorAll("." + HIGHLIGHT_CLASS).forEach(span => {
-            span.replaceWith(span.textContent);
-        });
-    }
+    function clearHighlights(root) {root.querySelectorAll("." + HIGHLIGHT_CLASS).forEach(span => {span.replaceWith(span.textContent);});}
 
-    function highlightMatches(root, terms) {
-        if (!terms.length) return;
+    function highlightPhrase(root, phrase) {
+        if (!phrase) return;
 
-        // Clear previous highlights
-        root.querySelectorAll(".table-search-highlight").forEach(span => {
-            span.replaceWith(span.textContent);
-        });
-
-        // Prepare regex for substring match (case-insensitive)
-        const regex = new RegExp("(" + terms.map(escapeRegex).join("|") + ")", "gi");
-
-        // Traverse all text nodes
+        const regex = new RegExp(escapeRegex(phrase), "gi");
         const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
+        const nodes = [];
 
-        const textNodes = [];
         while (walker.nextNode()) {
-            textNodes.push(walker.currentNode);
+            nodes.push(walker.currentNode);
         }
 
-        textNodes.forEach(node => {
+        nodes.forEach(node => {
             const text = node.nodeValue;
             if (!regex.test(text)) return;
 
             const frag = document.createDocumentFragment();
             let lastIndex = 0;
 
-            text.replace(regex, (match, _p1, offset) => {
-                if (offset > lastIndex) {
-                    frag.appendChild(document.createTextNode(text.slice(lastIndex, offset)));
-                }
+            text.replace(regex, (match, offset) => {
+                frag.appendChild(document.createTextNode(text.slice(lastIndex, offset)));
 
                 const span = document.createElement("span");
-                span.className = "table-search-highlight";
+                span.className = HIGHLIGHT_CLASS;
                 span.textContent = match;
                 frag.appendChild(span);
 
                 lastIndex = offset + match.length;
             });
 
-            if (lastIndex < text.length) {
-                frag.appendChild(document.createTextNode(text.slice(lastIndex)));
-            }
-
+            frag.appendChild(document.createTextNode(text.slice(lastIndex)));
             node.replaceWith(frag);
         });
     }
 
-
-    function debounce(func, wait = 250) {
-        let timeout;
-        return (...args) => {
-            clearTimeout(timeout);
-            timeout = setTimeout(() => func.apply(this, args), wait);
-        };
-    }
+    function debounce(func, wait = 250) {let timeout; return (...args) => {clearTimeout(timeout); timeout = setTimeout(() => func.apply(this, args), wait);};}
 
     function createGlobalFilter() {
         if (document.getElementById("global-table-filter")) return;
@@ -121,26 +76,33 @@ GM_addStyle(`
         const searchText = input.value.trim().toLowerCase();
 
         input.addEventListener("input", debounce(() => {
-            const terms = input.value.toLowerCase().split(/\s+/).filter(Boolean);
+            const query = input.value
+            .toLowerCase()
+            .replace(/\s+/g, " ")
+            .trim();
 
             allGeneratedTables.forEach(table => {
                 clearHighlights(table);
 
-                if (!terms.length) {
+                if (!query) {
                     table.style.display = "";
                     return;
                 }
 
-                const text = table.textContent.toLowerCase();
-                const matches = terms.some(term => text.includes(term));
+                const tableText = table.textContent
+                .toLowerCase()
+                .replace(/\s+/g, " ");
+
+                const matches = tableText.includes(query);
 
                 table.style.display = matches ? "" : "none";
 
                 if (matches) {
-                    highlightMatches(table, terms);
+                    highlightPhrase(table, query);
                 }
             });
         }, 750));
+
 
         const target = document.getElementById("missionRewards");
         if (target) {
