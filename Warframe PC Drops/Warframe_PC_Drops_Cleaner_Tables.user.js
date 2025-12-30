@@ -1,9 +1,10 @@
 // ==UserScript==
 // @name         Warframe Drops - Cleaner Tables
-// @version      0.3.1
+// @version      0.3.2
 // @author       GentlePuppet, assisted by gpt
 // @description  Cleans up and adds a search filter to the Warframe Drops page.
 // @match        https://warframe-web-assets.nyc3.cdn.digitaloceanspaces.com/uploads/cms/hnfvc0o3jnfvc873njb03enrf56.html
+// @run-at		 document-start
 // @grant        GM_addStyle
 // @updateURL    https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/refs/heads/main/Warframe%20PC%20Drops/Warframe_PC_Drops_Cleaner_Tables.user.js
 // @downloadURL  https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/refs/heads/main/Warframe%20PC%20Drops/Warframe_PC_Drops_Cleaner_Tables.user.js
