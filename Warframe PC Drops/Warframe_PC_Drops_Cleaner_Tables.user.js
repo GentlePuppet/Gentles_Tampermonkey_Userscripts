@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Warframe Drops - Cleaner Tables
-// @version      0.3
+// @version      0.3.1
 // @author       GentlePuppet, assisted by gpt
 // @description  Cleans up and adds a search filter to the Warframe Drops page.
 // @match        https://warframe-web-assets.nyc3.cdn.digitaloceanspaces.com/uploads/cms/hnfvc0o3jnfvc873njb03enrf56.html
@@ -217,18 +217,9 @@ function createScrollButton() {
 }
 
 window.addEventListener("load", () => {
-    if ("requestIdleCallback" in window) {
-        requestIdleCallback(() => {
-            window.scrollTo({ top: 1200, behavior: "instant" });
-            createGlobalFilter();
-            splitAllTables();
-            updateSectionHeaders();
-            createScrollButton()
-        }, { timeout: 500 });
-    } else {
-        setTimeout(() => {
-            createGlobalFilter();
-            splitAllTables();
-        }, 0);
-    }
+    window.scrollTo({ top: 1200, behavior: "instant" });
+    createGlobalFilter();
+    splitAllTables();
+    updateSectionHeaders();
+    createScrollButton()
 });
