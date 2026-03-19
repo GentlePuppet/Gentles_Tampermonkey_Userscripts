@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Youtube Gentle's Auto Gain
 // @author       GentlePuppet
-// @version      3.0
+// @version      3.0.1
 // @description  This script automatically boosts quiet YouTube videos or lowers loud videos by automatically adjusting audio gain with smoothing.
 // @author       Special Thanks to this old extension I found and adapted some of their javascript: https://github.com/Kelvin-Ng/youtube-volume-normalizer
 // @grant        GM_addStyle
@@ -205,9 +205,6 @@ function debounce(fn, delay) {
     };
 }
 
-// This function gets the content loudness and applies adjusted gain in dB
-const debouncedUpdateGain = debounce(updateGainFromStats, 250);
-
 // Cookie utilities for saving/loading config settings
 function saveConfigToCookie() {
     document.cookie = `gainConfig=${encodeURIComponent(JSON.stringify(config))}; path=/; max-age=31536000`;
@@ -302,7 +299,7 @@ function createOverlay() {
 
     headerRow.appendChild(headerTitle); headerRow.appendChild(closeButton); configBox.appendChild(headerRow);
 
-    closeButton.addEventListener("click", () => {configBox.style.display = "none"; debouncedUpdateGain()}); configBox.addEventListener("click", e => {e.stopPropagation();});
+    closeButton.addEventListener("click", () => {configBox.style.display = "none"; debounce(updateGainFromStats, 250);}); configBox.addEventListener("click", e => {e.stopPropagation();});
 
     // Utility: Create labeled input row
     function createInput(labelText, key, type = 'number', step = 'any', tooltip = '', onChange = null) {
@@ -426,7 +423,7 @@ function createOverlay() {
             disableGainBtn.style.backgroundColor = "#008b0c";
             disableGainBtn.style.borderStyle = "inset";
         } else {
-            debouncedUpdateGain();
+            updateGainFromStats(false, true)
             disableGainBtn.textContent = "Disable Gain (Current Video)";
             disableGainBtn.style.backgroundColor = "#8b0000";
             disableGainBtn.style.borderStyle = "outset";
@@ -450,6 +447,17 @@ function createOverlay() {
 
             // Put the box just above the overlay with some spacing
             configBox.style.top = `${window.scrollY + rect.top - configBox.offsetHeight - 20}px`;
+
+            if (gainDisabled) {
+                overlay.setOverlayText("🔇 Gain Disabled");
+                disableGainBtn.textContent = "Enable Gain (Current Video)";
+                disableGainBtn.style.backgroundColor = "#008b0c";
+                disableGainBtn.style.borderStyle = "inset";
+            } else {
+                disableGainBtn.textContent = "Disable Gain (Current Video)";
+                disableGainBtn.style.backgroundColor = "#8b0000";
+                disableGainBtn.style.borderStyle = "outset";
+            }
         } else {
             // Hide the box
             configBox.style.display = "none";
