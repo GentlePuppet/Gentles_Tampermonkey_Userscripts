@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Youtube Hide Blacklisted Videos
 // @author       GentlePuppet
-// @version      2.0.5
+// @version      2.0.6
 // @match        https://www.youtube.com/*
 // @icon         https://www.youtube.com/s/desktop/1eca3218/img/favicon_144.png
 // @require      https://code.jquery.com/jquery-3.5.1.min.js
@@ -141,8 +141,8 @@ window.addEventListener("yt-page-data-updated", function(e) {
                 } else {
                     // Video title filter
                     debugLog('Applying video title filter:', filter);
-                    waitForKeyElements(`.yt-lockup-metadata-view-model__heading-reset[title*='${filter}' i]`,Blacklist,0); // Recommened and Subs Page Videos
-                    waitForKeyElements(`#video-title-link[title*='${filter}' i]`,Blacklist,0);                             // Channel Page Videos
+                    waitForKeyElements(`.ytLockupMetadataViewModelHeadingReset[title*='${filter}' i]`,Blacklist,0); // Recommened and Subs Page Videos
+                    waitForKeyElements(`#video-title[title*='${filter}' i]`,Blacklist,0);                             // Channel Page Videos
                 }
             } catch (e) {
                 console.error('Error applying blacklist filter:', filter, e);
