@@ -1,13 +1,12 @@
 // ==UserScript==
 // @name         Youtube Hide Blacklisted Videos
 // @author       GentlePuppet
-// @version      2.0.6
+// @version      2.0.7
 // @match        https://www.youtube.com/*
 // @icon         https://www.youtube.com/s/desktop/1eca3218/img/favicon_144.png
 // @require      https://code.jquery.com/jquery-3.5.1.min.js
 // @require      https://gist.github.com/raw/2625891/waitForKeyElements.js
 // @require      https://raw.githubusercontent.com/carhartl/jquery-cookie/v1.4.1/jquery.cookie.js
-// @require      https://github.com/pieroxy/lz-string/raw/master/libs/lz-string.min.js
 // @require      http://github.com/bartaz/sandbox.js/raw/master/jquery.highlight.js
 // @grant        GM_addStyle
 // @run-at       document-start
@@ -18,9 +17,9 @@
 
 // Blacklisted Toggle Button Stlye
 GM_addStyle(`
-    .BlacklistedVideoButton {height: 30px;margin: auto;align-self: normal !important;color: var(--yt-spec-text-primary) !important;overflow: hidden !important;font-family: "Roboto","Arial",sans-serif !important;font-size: 1.4rem !important;line-height: 2rem !important;font-weight: 400 !important;background: #383838 !important;border: black 1px solid;cursor: pointer;text-shadow: 1px 1px 3px black;}
+    .BlacklistedVideoButton {height: 30px;margin: auto;align-self: normal !important;color: white !important;overflow: hidden !important;font-family: "Roboto","Arial",sans-serif !important;font-size: 1.4rem !important;line-height: 2rem !important;font-weight: 400 !important;background: #383838 !important;border: black 1px solid;cursor: pointer;text-shadow: 1px 1px 3px black;}
     .BlacklistedVideoButton:hover {background: #595959 !important;}
-    .BlacklistedVideosNumberlabel {padding: 0px 5px 0px 5px;color: var(--yt-spec-text-primary) !important; background: #860510 !important; border: black 1px solid; height: 28px;margin: auto;align-self: normal; text-shadow: 1px 1px 3px black;font-family: "Roboto","Arial",sans-serif !important;font-size: 1.4rem !important; line-height: 28px !important;letter-spacing: var(--ytd-subheadline-link_-_letter-spacing) !important;}
+    .BlacklistedVideosNumberlabel {padding: 0px 5px 0px 5px;color: white !important; background: #860510 !important; border: black 1px solid; height: 28px;margin: auto;align-self: normal; text-shadow: 1px 1px 3px black;font-family: "Roboto","Arial",sans-serif !important;font-size: 1.4rem !important; line-height: 28px !important;letter-spacing: var(--ytd-subheadline-link_-_letter-spacing) !important;}
     .Blacklisted_Video_Shown {Opacity: 80%; background: #381b1b !important; border: 2px red solid !important; padding: 5px; }
     .Blacklisted_Video_Shown > div > ytd-thumbnail {Opacity: 40%; }
     ytd-continuation-item-renderer:not(.ytd-comment-replies-renderer) {height: 0px !important;}
@@ -28,9 +27,8 @@ GM_addStyle(`
     .ytp-spinner {display: none !important;}
     #blacklistfiltercheckbox {height:20px;width:20px;}
     #blacklistfilterlabel {width:auto;padding: 0px 5px 0px 0px;}
-    .NewFiltersButton {align-self: normal !important; color: var(--yt-spec-text-primary) !important; overflow: hidden !important; font-size: var(--ytd-subheadline-link_-_font-size) !important; font-weight: var(--ytd-subheadline-link_-_font-weight) !important; line-height: var(--ytd-subheadline-link_-_line-height) !important; letter-spacing: var(--ytd-subheadline-link_-_letter-spacing) !important; background: #383838 !important; border: black 1px solid; cursor: pointer; text-shadow: 1px 1px 3px black;} .BlacklistedVideoButton:hover {background: #595959 !important;}
+    .NewFiltersButton {align-self: normal !important; color: white !important; overflow: hidden !important; font-size: var(--ytd-subheadline-link_-_font-size) !important; font-weight: var(--ytd-subheadline-link_-_font-weight) !important; line-height: var(--ytd-subheadline-link_-_line-height) !important; letter-spacing: var(--ytd-subheadline-link_-_letter-spacing) !important; background: #383838 !important; border: black 1px solid; cursor: pointer; text-shadow: 1px 1px 3px black;} .BlacklistedVideoButton:hover {background: #595959 !important;}
     .blacklistedtext{color: #ff472a;}
-    #video-title:hover{overflow: visible !important;max-height: fit-content !important;display: block !important;}
     #parent-bcboxes {position: fixed;inset: 0;background: rgba(0, 0, 0, 0.8);display: flex;align-items: center;justify-content: center;z-index: 5000000;}
     #bcboxes-wrapper {display: inline-flex;flex-direction: column;align-items: center;max-width: 90vw;}
     #bcboxes {display: inline-flex;flex-wrap: wrap;gap: 12px;width: fit-content;max-width: 80vw;max-height: 60vh;overflow: auto;padding: 16px 18px;font-size: 18px;background: var(--yt-spec-brand-background-primary);border: 2px solid var(--yt-spec-10-percent-layer2);color: white;border-radius: 10px;box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);}
@@ -137,12 +135,13 @@ window.addEventListener("yt-page-data-updated", function(e) {
                     // Channel filter
                     const channelName = filter.slice(3).trim();
                     debugLog('Applying channel filter:', channelName);
-                    waitForKeyElements(".yt-lockup-metadata-view-model__metadata a.yt-core-attributed-string__link",function(jNode) {if (jNode.text().trim().toLowerCase() === channelName.toLowerCase()) {Blacklist(jNode);}},0);
+                    waitForKeyElements(".ytContentMetadataViewModelMetadataText",function(jNode) {if (jNode.text().trim().toLowerCase() === channelName.toLowerCase()) {Blacklist(jNode);}},0);
                 } else {
                     // Video title filter
                     debugLog('Applying video title filter:', filter);
-                    waitForKeyElements(`.ytLockupMetadataViewModelHeadingReset[title*='${filter}' i]`,Blacklist,0); // Recommened and Subs Page Videos
-                    waitForKeyElements(`#video-title[title*='${filter}' i]`,Blacklist,0);                             // Channel Page Videos
+                    waitForKeyElements(`.ytLockupMetadataViewModelHeadingReset[title*='${filter}' i]`,Blacklist,0); // Subs Page Videos
+                    waitForKeyElements(`.ytLockupMetadataViewModelTitle[title*='${filter}' i]`,Blacklist,0); // Recommened Page Videos
+                    waitForKeyElements(`#video-title[title*='${filter}' i]`,Blacklist,0);                    // Channel Page Videos
                 }
             } catch (e) {
                 console.error('Error applying blacklist filter:', filter, e);
