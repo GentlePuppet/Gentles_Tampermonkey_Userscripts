@@ -1,18 +1,22 @@
 // ==UserScript==
 // @name         Youtube Highlight Videos
-// @version      2.0.0
+// @version      2.0.1
 // @match        https://www.youtube.com/*
 // @icon         https://www.youtube.com/s/desktop/1eca3218/img/favicon_144.png
 // @require      https://code.jquery.com/jquery-3.7.1.min.js
 // @require      https://gist.github.com/raw/2625891/waitForKeyElements.js
 // @require      http://github.com/bartaz/sandbox.js/raw/master/jquery.highlight.js
-// @grant        GM_addStyle
+// @run-at       document-start
+// @updateURL    https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/refs/heads/main/Youtube%20Better%20CSS%20Tweaks/Highlight%20Videos.user.js
+// @downloadURL  https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/refs/heads/main/Youtube%20Better%20CSS%20Tweaks/Highlight%20Videos.user.js
 // ==/UserScript==
+/* globals $, waitForKeyElements */
+
 // CSS
-GM_addStyle(`
+const style = () => {const stylesheet = `
     #favoritesfiltercheckbox {height:20px;width:20px;}
     #favoritesfilterlabel {width:auto;padding: 0px 5px 0px 0px;}
-    .Favorite_Video_Type { border:2px #27ff00 solid;background:#192b0d;padding:5px;}
+    .Favorite_Video_Type { border:2px #27ff00 solid !important;background:#192b0d !important;padding:5px;}
     .FavoriteVideoButton:hover {background: #56ff00 !important;}
     .favoritetext{color: #59d40c;}
     .ytSearchboxComponentInputBox {margin-left: 0px !important; border-radius: 0px 0 0 0px !important;}
@@ -23,12 +27,15 @@ GM_addStyle(`
     #fcboxes{display:inline-flex;flex-wrap:wrap;gap:12px;width:fit-content;max-width:80vw;max-height:60vh;overflow:auto;padding:16px 18px;font-size:18px;background:var(--yt-spec-brand-background-primary);border:2px solid var(--yt-spec-10-percent-layer2);color:white;border-radius:10px;box-shadow:0 6px 24px rgba(0,0,0,.35);}
     #fcboxes2{display:flex; gap:10px;margin-top:14px; justify-content:center;}
     .filter-item{display:inline-flex; align-items:center; gap:6px;background:#222; padding:6px 10px; border-radius:6px;white-space:nowrap;}
-`);
+`;
+const styleTag = document.createElement('style'); styleTag.id = "Gentles-Highlight-Videos-CSS"; styleTag.textContent = stylesheet; document.body.insertAdjacentElement('afterend', styleTag);
+}
+style()
 
 // Cookie Functions
 function getCookie(name) {return document.cookie.split('; ').find(row => row.startsWith(name + '='))?.split('=')[1] || null;}
 function setCookie(name, value) {const expires = new Date(Date.now() + 31536000000).toUTCString(); document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/; domain=.youtube.com;`;}
-function getFavorites() {const val = getCookie('FavoriteVideos'); return val ? decodeURIComponent(val).split(',').map(v => v.trim().toLowerCase()) : [];}
+function getFavorites() {const val = getCookie('FavoriteVideos'); return val ? decodeURIComponent(val).split(',').map(v => v.trim()) : [];}
 function saveFavorites(favorites) {setCookie('FavoriteVideos', favorites.join(','));}
 
 // Main Logic
@@ -48,20 +55,19 @@ window.addEventListener("yt-page-data-updated", () => {
         if (filter.startsWith('by ')) {
             // Channel filter
             const channelName = filter.slice(3).trim();
-            waitForKeyElements(`yt-formatted-string[title*='${channelName}' i]`, HighlightChannel, 0);
+            waitForKeyElements(`.ytContentMetadataViewModelMetadataText:contains('${channelName}')`, (e) => {HighlightVideo(e)}, 0);
         } else {
             // Video title filter
-            waitForKeyElements(`#video-title-link[title*='${filter}' i]`, HighlightVideo, 0);
+            waitForKeyElements(`.ytLockupMetadataViewModelTitle[title*='${filter}' i]`, HighlightVideo(), 0);
         }
     });
-    function HighlightVideo(e) {e.closest("ytd-grid-video-renderer, ytd-rich-item-renderer")?.attr("class", "Favorite_Video_Type");}
-    function HighlightChannel(e) {e.closest("ytd-grid-video-renderer, ytd-rich-item-renderer")?.attr("class", "Favorite_Video_Type");}
+    function HighlightVideo(e) {$(e).closest(".ytd-rich-grid-renderer, .ytd-item-section-renderer")?.addClass("Favorite_Video_Type");}
 
     // Periodically highlight matching text inside video titles
     setInterval(() => {$('.Favorite_Video_Type #video-title').highlight(favorites, { className: 'favoritetext' })}, 2500);
 
     // Add "+ Favorite" button to YouTube search bar
-    waitForKeyElements ('.ytSearchboxComponentInputBox', CreateAddFavoriteButton, 0);
+    waitForKeyElements('.ytSearchboxComponentInputBox', CreateAddFavoriteButton, 0);
     function CreateAddFavoriteButton (e) {
         var AddFavoriteCheck = document.querySelector("#AddFavorite");
         if (!AddFavoriteCheck) {
@@ -74,10 +80,10 @@ window.addEventListener("yt-page-data-updated", () => {
 
     // Add New Favorite
     function addNewFavorite() {
-        const input = prompt('Enter Text You Want Add To Your Favorites (Not Case Sensitive)\nShift+Click the Button to Display/Remove Filters\nTo highlight channels do "by channelname"\nYou can add multiple filters separated by commas.\nExample: minecraft, by vanoss, speed run');
+        const input = prompt('Enter Text You Want Add To Your Favorites (Case Sensitive)\nShift+Click the Button to Display/Remove Filters\nTo highlight channels do "by channelname"\nYou can add multiple filters separated by commas.\nExample: minecraft, by vanoss, speed run');
         if (!input) return;
 
-        const newFilters = input.split(',').map(f => f.trim().toLowerCase()).filter(f => f.length > 0);
+        const newFilters = input.split(',').map(f => f.trim()).filter(f => f.length > 0);
 
         if (!newFilters.length) return;
 
@@ -108,7 +114,7 @@ window.addEventListener("yt-page-data-updated", () => {
         $('<button/>', { id: "applyfiltersbutton", class: "NewHighlightsButton", text: "Keep Checked Filters & Reload Page" })
             .appendTo(btnBox)
             .on('click', () => {
-            const newFavs = $(".favoritesfiltercheckbox:checked").map((_, el) => el.value.toLowerCase()).get();
+            const newFavs = $(".favoritesfiltercheckbox:checked").map((_, el) => el.value).get();
             saveFavorites(newFavs);
             container.remove();
             location.reload();
