@@ -1,16 +1,18 @@
 // ==UserScript==
 // @name         Youtube Gentle's Auto Gain
 // @author       GentlePuppet
-// @version      3.0.1
+// @version      3.0.2
 // @description  This script automatically boosts quiet YouTube videos or lowers loud videos by automatically adjusting audio gain with smoothing.
 // @author       Special Thanks to this old extension I found and adapted some of their javascript: https://github.com/Kelvin-Ng/youtube-volume-normalizer
-// @grant        GM_addStyle
 // @include      https://www.youtube.com/*
 // @icon         https://www.youtube.com/s/desktop/1eca3218/img/favicon_144.png
+// @run-at       document-start
 // @updateURL    https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Youtube%20Better%20CSS%20Tweaks/Dynamic%20Gain.user.js
 // @downloadURL  https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Youtube%20Better%20CSS%20Tweaks/Dynamic%20Gain.user.js
 // ==/UserScript==
-GM_addStyle(`
+
+// CSS
+const style = () => {const stylesheet = `
     .boost-close {
         cursor: pointer;
         margin-left: 10px;
@@ -111,7 +113,10 @@ GM_addStyle(`
     .boost-overlay:hover {
         background-color: var(--yt-spec-overlay-button-secondary,rgba(255,255,255,.1));
     }
-`)
+`;
+const styleTag = document.createElement('style'); styleTag.id = "Gentles-Auto-Gain-CSS"; styleTag.textContent = stylesheet; document.body.insertAdjacentElement('afterend', styleTag);
+}
+style()
 
 const debug = false
 
