@@ -1,26 +1,33 @@
 // ==UserScript==
 // @name         Youtube Gentle's Youtube Video Progress Trackers
-// @version      1.7
+// @version      1.7.1
 // @author       GentlePuppet
 // @description  Adds video progression displays
 // @match        https://www.youtube.com/*
 // @icon         https://www.youtube.com/s/desktop/1eca3218/img/favicon_144.png
 // @require      https://code.jquery.com/jquery-3.7.1.min.js
 // @run-at       document-start
-// @grant        GM_addStyle
 // @updateURL    https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Youtube%20Better%20CSS%20Tweaks/Video%20Progress%20Trackers.user.js
 // @downloadURL  https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Youtube%20Better%20CSS%20Tweaks/Video%20Progress%20Trackers.user.js
 // ==/UserScript==
-GM_addStyle(`
+/* globals $ */
+
+// CSS
+const style = () => {const stylesheet = `
     #container.ytd-player:has(.ytp-fullscreen) > .DummyContainerProgress {margin-top:-7px !important;}
     #container.ytd-player:not(.ytp-fullscreen) > .DummyContainerProgress {margin-top: 0px;}
     .DummyContainerProgress {width: 100%; height: 3px; outline: none; padding-top: 2px;}
-    .DummyPlayProgress {width: 100%; height: 3px; position: absolute; left: 0px; transform-origin: 0 0; z-index: 3; background-color: #f00;}
+    .DummyPlayProgress {width: 100%; height: 3px; position: absolute; left: 0px; transform-origin: 0 0; z-index: 3; background-color: #df6eed;}
     .DummyLoadProgress {width: 100%; height: 3px; position: absolute; left: 0px; transform-origin: 0 0; z-index: 2; background: rgba(255,255,255,0.4);}
     .DummyBackgroundProgress {width: 100%; height: 3px; position: absolute; left: 0px; transform-origin: 0 0; z-index: 1; background: rgba(90,90,90,0.4);}
     .VTLC {display: block; min-width: fit-content; overflow: hidden; font-weight: 500; color: #f1f1f1; font-size: 14px; line-height: 36px; background-color: var(--yt-spec-badge-chip-background); padding: 0px 10px; border-radius: 2px; margin-left: 8px;}
-`);
+`;
+const styleTag = document.createElement('style'); styleTag.id = "Gentles-Progress-Trackers-CSS"; styleTag.textContent = stylesheet; document.body.insertAdjacentElement('afterend', styleTag);
+}
+style()
 
+// Red Player Color: f00
+// Gentle's Purple Player Color: df6eed
 window.addEventListener("yt-page-data-updated", function(e) {
     if(window.location.href.indexOf("watch") !==-1 ) {
         // Mini Progress Bar
@@ -121,23 +128,3 @@ window.addEventListener("yt-page-data-updated", function(e) {
         requestAnimationFrame(createTime)
     }
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
