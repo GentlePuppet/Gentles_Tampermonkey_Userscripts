@@ -1,14 +1,13 @@
 // ==UserScript==
 // @name         Youtube Hide Blacklisted Videos
 // @author       GentlePuppet
-// @version      2.0.7
+// @version      2.0.8
 // @match        https://www.youtube.com/*
 // @icon         https://www.youtube.com/s/desktop/1eca3218/img/favicon_144.png
 // @require      https://code.jquery.com/jquery-3.5.1.min.js
 // @require      https://gist.github.com/raw/2625891/waitForKeyElements.js
 // @require      https://raw.githubusercontent.com/carhartl/jquery-cookie/v1.4.1/jquery.cookie.js
 // @require      http://github.com/bartaz/sandbox.js/raw/master/jquery.highlight.js
-// @grant        GM_addStyle
 // @run-at       document-start
 // @updateURL    https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Youtube%20Better%20CSS%20Tweaks/Youtube%20Hide%20Blacklisted%20Videos.user.js
 // @downloadURL  https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Youtube%20Better%20CSS%20Tweaks/Youtube%20Hide%20Blacklisted%20Videos.user.js
@@ -16,7 +15,7 @@
 /* globals $, waitForKeyElements */
 
 // Blacklisted Toggle Button Stlye
-GM_addStyle(`
+const style = () => {const stylesheet = `
     .BlacklistedVideoButton {height: 30px;margin: auto;align-self: normal !important;color: white !important;overflow: hidden !important;font-family: "Roboto","Arial",sans-serif !important;font-size: 1.4rem !important;line-height: 2rem !important;font-weight: 400 !important;background: #383838 !important;border: black 1px solid;cursor: pointer;text-shadow: 1px 1px 3px black;}
     .BlacklistedVideoButton:hover {background: #595959 !important;}
     .BlacklistedVideosNumberlabel {padding: 0px 5px 0px 5px;color: white !important; background: #860510 !important; border: black 1px solid; height: 28px;margin: auto;align-self: normal; text-shadow: 1px 1px 3px black;font-family: "Roboto","Arial",sans-serif !important;font-size: 1.4rem !important; line-height: 28px !important;letter-spacing: var(--ytd-subheadline-link_-_letter-spacing) !important;}
@@ -34,7 +33,10 @@ GM_addStyle(`
     #bcboxes {display: inline-flex;flex-wrap: wrap;gap: 12px;width: fit-content;max-width: 80vw;max-height: 60vh;overflow: auto;padding: 16px 18px;font-size: 18px;background: var(--yt-spec-brand-background-primary);border: 2px solid var(--yt-spec-10-percent-layer2);color: white;border-radius: 10px;box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);}
     #bcboxes2 {display: flex;gap: 10px;margin-top: 14px;justify-content: center;}
     .filter-item {display: inline-flex;align-items: center;gap: 6px;background: #222;padding: 6px 10px;border-radius: 6px;white-space: nowrap;}
-`);
+`;
+const styleTag = document.createElement('style'); styleTag.id = "Gentles-Blastlist-Videos-CSS"; styleTag.textContent = stylesheet; document.body.insertAdjacentElement('afterend', styleTag);
+}
+style()
 const DEBUG = false; // Set to false to disable debug logs
 function debugLog(...args) {if (DEBUG) console.log('[DEBUG]', ...args);}
 
