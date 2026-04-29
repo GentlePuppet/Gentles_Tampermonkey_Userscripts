@@ -1,31 +1,35 @@
 // ==UserScript==
 // @name         Youtube Hide Watched Videos
 // @author       GentlePuppet
-// @version      2.0.2
+// @version      2.0.3
 // @match        https://www.youtube.com/*
 // @icon         https://www.youtube.com/s/desktop/1eca3218/img/favicon_144.png
 // @require      https://code.jquery.com/jquery-3.7.1.min.js
 // @require      https://gist.github.com/raw/2625891/waitForKeyElements.js
-// @grant        GM_addStyle
+// @run-at       document-start
 // @updateURL    https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Youtube%20Hide%20Watched%20Videos/Youtube%20Hide%20Watched%20Videos.user.js
 // @downloadURL  https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Youtube%20Hide%20Watched%20Videos/Youtube%20Hide%20Watched%20Videos.user.js
 // ==/UserScript==
+/* globals $, waitForKeyElements */
 
-// Watched Video Show/Hide Button Stylings and Dim Watched Videos
-GM_addStyle(`
-    .WatchedVideoButton {height: 30px;margin: auto;align-self: normal !important;color: var(--yt-spec-text-primary) !important;overflow: hidden !important;font-family: "Roboto","Arial",sans-serif !important;font-size: 1.4rem !important;line-height: 2rem !important;font-weight: 400 !important;background: #383838 !important;border: black 1px solid;cursor: pointer;text-shadow: 1px 1px 3px black;}
+// CSS
+const style = () => {const stylesheet = `
+    .WatchedVideoButton {height: 30px;margin: auto;align-self: normal !important;color: white !important;overflow: hidden !important;font-family: "Roboto","Arial",sans-serif !important;font-size: 1.4rem !important;line-height: 2rem !important;font-weight: 400 !important;background: #383838 !important;border: black 1px solid;cursor: pointer;text-shadow: 1px 1px 3px black;}
     .WatchedVideoButton:hover {background: #595959 !important;}
-    .WatchedVideosNumberlabel {padding: 0px 5px 0px 5px;color: var(--yt-spec-text-primary) !important; background: #720586 !important; border: black 1px solid; height: 28px;margin: auto;align-self: normal; text-shadow: 1px 1px 3px black;font-family: "Roboto","Arial",sans-serif !important;font-size: 1.4rem !important; line-height: 28px !important;letter-spacing: var(--ytd-subheadline-link_-_letter-spacing) !important;}
-    .Watched_Video_Shown {Opacity: 80%; background: #271b38; border: 2px #004eff solid; padding: 5px; }
+    .WatchedVideosNumberlabel {padding: 0px 5px 0px 5px;color: white !important; background: #720586 !important; border: black 1px solid; height: 28px;margin: auto;align-self: normal; text-shadow: 1px 1px 3px black;font-family: "Roboto","Arial",sans-serif !important;font-size: 1.4rem !important; line-height: 28px !important;letter-spacing: var(--ytd-subheadline-link_-_letter-spacing) !important;}
+    .Watched_Video_Shown {Opacity: 80%; background: #271b38 !important; border: 2px #004eff solid !important; padding: 5px; }
     .Watched_Video_Shown > div > ytd-thumbnail {Opacity: 40%; }
-    .Watched_Video_Hidden {Opacity: 80%; background: #271b38; border: 2px #004eff solid; padding: 5px; }
+    .Watched_Video_Hidden {Opacity: 80%; background: #271b38 !important; border: 2px #004eff solid !important; padding: 5px; }
     .Watched_Video_Hidden > div > ytd-thumbnail {Opacity: 40%; }
     ytd-continuation-item-renderer:not(.ytd-comment-replies-renderer) {height: 0px !important;}
     paper-spinner.ytd-continuation-item-renderer {display: none !important; margin: 0px !important;}
     .ytp-spinner {display: none !important;}
     #columns.ytd-watch-flexy {overflow: hidden !important;}
     ytd-rich-item-renderer {background: #00000000; border: 2px #00000000 solid; padding: 5px;}
-`);
+`;
+const styleTag = document.createElement('style'); styleTag.id = "Gentles-Watched-Videos-CSS"; styleTag.textContent = stylesheet; document.body.insertAdjacentElement('afterend', styleTag);
+}
+style()
 
 // Core Functions
 function setHideWatchedPref(value) {document.cookie = `hidewatchedvideos=${value}; path=/; domain=.youtube.com; max-age=604800`;}
@@ -44,7 +48,7 @@ function handleNewVideo() {
     if(window.location.href.indexOf("playlist") !== -1 || window.location.href.indexOf("history") !== -1) {return;}
     else {
         const selectorMap = [
-            ".ytd-rich-grid-renderer",   // Subs page, Channels page, and Home page
+            ".ytd-rich-grid-renderer",    // Subs page, Channels page, and Home page
             ".ytd-item-section-renderer", // Recommended sidebar list
             "yt-lockup-view-model.ytd-watch-next-secondary-results-renderer" // New recommended sidebar list
         ];
@@ -78,7 +82,7 @@ function handleNewVideo() {
         }
 
         // Mark watched videos using both types of progress bars
-        markWatched('div[id="OverlayProgressBar"][style*="width: 100%"]');
+        markWatched('div[id*="progress"][style*="width: 100%"]');
         markWatched('div[class*="WatchedProgressBar"][style*="width: 100%"]');
 
         // Hide or show based on current toggle state
