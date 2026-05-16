@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Youtube Gentle's Auto Gain
 // @author       GentlePuppet
-// @version      3.0.2
+// @version      3.0.3
 // @description  This script automatically boosts quiet YouTube videos or lowers loud videos by automatically adjusting audio gain with smoothing.
 // @author       Special Thanks to this old extension I found and adapted some of their javascript: https://github.com/Kelvin-Ng/youtube-volume-normalizer
 // @include      https://www.youtube.com/*
@@ -138,6 +138,7 @@ const gainNode = audioCtx.createGain();
 const compressor = audioCtx.createDynamicsCompressor();
 
 let video = null;
+let ytdapp = null;
 let currentSource = null;
 let currentVideo = null;
 let gainDisabled = false;
@@ -170,7 +171,9 @@ async function fastLoudnessRead() {
     if (!stats) return null;
 
     const vol = stats.volume ?? "";
-    const match = vol.match(/content loudness\s*(-?\d+(?:\.\d+)?)\s*dB/i);
+    const match = vol.match(
+        /(?:content loudness\s*|cont\.?)(-?\d+(?:\.\d+)?)\s*dB/i
+    );
 
     if (!match) return null;
 
@@ -188,13 +191,10 @@ async function fastLoudnessRead() {
 }
 
 // Wait for the video to exist before continuing
-function getVideo() {
-    return document.querySelector("#movie_player video");
-}
-async function waitForPlayer() {
-    if (debug) console.log("AutoGain: Wait for video")
+async function waitForElement(selector) {
+    if (debug) console.log("AutoGain: Wait for '" + selector + "'")
     for (let i = 0; i < 40; i++) { // ~1 second max
-        const v = getVideo();
+        const v = document.querySelector(selector)
         if (v) return v;
         await new Promise(r => setTimeout(r, 25));
     }
@@ -282,11 +282,11 @@ function createOverlay() {
     })();
 
     // Create the hidden config panel
+    if (debug) console.log("AutoGain: Begin configbox (4)")
     let configBox = document.createElement("div");
     configBox.className = "boost-config";
     configBox.style.cssText = 'display: none;';
-    // document.body.appendChild(configBox);
-    document.querySelector('ytd-app')?.appendChild(configBox);
+    document.body.appendChild(configBox);
 
 
     // Hidden container for compressor tuning
@@ -476,10 +476,10 @@ function createOverlay() {
 
 // Main logic to hook into the video and apply audio gain dynamically
 async function boostAudio() {
-    if (debug) console.log("AutoGain: Begin boostAudio (4)")
+    if (debug) console.log("AutoGain: Begin boostAudio")
 
     // A short break to check for the video element
-    video = await waitForPlayer();
+    video = await waitForElement('#movie_player video');
 
     video.addEventListener("loadeddata", () => updateGainFromStats(true));
     video.addEventListener("canplay", () => updateGainFromStats(true));
@@ -498,7 +498,7 @@ async function boostAudio() {
 
 // Create the audio Nodes
 async function setupAudioGraph(video) {
-    if (debug) console.log("AutoGain: Begin setupAudioGraph (5)")
+    if (debug) console.log("AutoGain: Begin setupAudioGraph (6)")
     // Reset gain
     gainNode.gain.value = 1;
 
