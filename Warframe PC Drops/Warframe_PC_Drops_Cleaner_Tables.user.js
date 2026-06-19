@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Warframe Drops - Cleaner Tables
-// @version      0.3.3
+// @version      0.3.4
 // @author       GentlePuppet, assisted by gpt
 // @description  Cleans up and adds a search filter to the Warframe Drops page.
 // @match        https://warframe-web-assets.nyc3.cdn.digitaloceanspaces.com/uploads/cms/hnfvc0o3jnfvc873njb03enrf56.html
@@ -10,21 +10,139 @@
 // @downloadURL  https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/refs/heads/main/Warframe%20PC%20Drops/Warframe_PC_Drops_Cleaner_Tables.user.js
 // ==/UserScript==
 GM_addStyle(`
-    body::before {background-image: url(https://i.imgur.com/V4Qp5Ck.jpg); transform: rotate(90deg); content: ""; position: fixed; top: 0; left: 0; z-index: -1; width: 210vh; height: 210vh;}
-    body {background: transparent; color: #b3b3b3; padding-bottom: 500px}
-    h3 {color: white; text-shadow: 2px 3px 2px black; text-decoration: underline; font-size: xx-large; margin: 0px 0px 10px 0px;}
-    #tableContainer {display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; align-items: start;}
-    table {border: 0; border-collapse: collapse; margin-bottom: 5pt;}
-    thead th[colspan] {color: #ffffff !important; background: #220e89 !important;}
-    tr, td, th {border: 1px solid #bbb2b2 !important; background: black; font-weight: bold; text-align: center; padding: 3pt;}
-    td:first-child{text-align: right;}
-    td:last-child{text-align: left;}
-    th[colspan] {color: #ffffff; background: #085724;}
-    a {color: #34d8ff;}
-    a:visited {color: #00ff68;}
-    .table-search-highlight {background: yellow; color: black; padding: 0 2px;}
-    #global-table-filter {display: block; margin: 12px 0px; padding: 6px 8px; width: 100%;}
-    #scrolltotop {position: fixed; bottom: 20px; right: 40px; width: 60px; height: 60px; background: rgb(255 0 0); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: rgba(0, 0, 0, 0.3) 0px 2px 6px; font-size: 44px; z-index: 9999;}
+:root {
+  --bg: #0b0f14;
+  --panel: rgba(0, 0, 0, 0.65);
+  --text: #c9d1d9;
+  --muted: #8b949e;
+  --accent: #4cc9f0;
+  --accent2: #2ea043;
+  --border: rgba(255, 255, 255, 0.12);
+}
+
+.table-search-highlight {
+  background: var(--accent);
+  color: #000;
+  padding: 0 3px;
+  border-radius: 3px;
+}
+
+body {
+  margin: 0;
+  padding-bottom: 500px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: url("https://i.imgur.com/V4Qp5Ck.jpg") center / cover no-repeat;
+  opacity: 0.18;
+  transform: none;
+  z-index: -1;
+}
+
+h3 {
+  color: #fff;
+  font-size: 2rem;
+  margin: 0 0 12px;
+  text-decoration: none;
+  border-left: 4px solid var(--accent);
+  padding-left: 10px;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.6);
+}
+
+#tableContainer {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  align-items: start;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--panel);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+}
+
+thead th[colspan] {
+  background: #1b1f3a;
+  color: #fff;
+  padding: 8px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+td, th {
+  border: 1px solid var(--border);
+  padding: 6px 8px;
+  text-align: center;
+  font-weight: 500;
+}
+
+td:first-child {
+  text-align: left;
+  color: var(--muted);
+}
+
+td:first-child{
+  text-align: right;
+}
+
+td:last-child{
+  text-align: left;
+}
+
+th[colspan] {
+  color: #ffffff;
+  background: #085724;
+}
+
+a {color: #34d8ff;}
+a:visited {color: #00ff68;}
+
+#global-table-filter {
+  position: sticky;
+  top: 20px;
+  width: 80%;
+  padding: 10px;
+  margin: 12px 10%;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: rgba(0, 0, 0, 0.9);
+  color: var(--text);
+  font-size: 30px;
+  text-align: center;
+  z-index: 1000;
+}
+
+#scrolltotop {
+  position: fixed;
+  bottom: 20px;
+  right: 40px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: rgb(255 0 0);
+  color: white;
+  font-size: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+  transition: transform 0.2s ease;
+}
+
+#scrolltotop:hover {
+  transform: scale(1.1);
+}
 `);
 
 const allGeneratedTables = [];
