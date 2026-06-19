@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Warframe Drops - Cleaner Tables
-// @version      0.3.2
+// @version      0.3.3
 // @author       GentlePuppet, assisted by gpt
 // @description  Cleans up and adds a search filter to the Warframe Drops page.
 // @match        https://warframe-web-assets.nyc3.cdn.digitaloceanspaces.com/uploads/cms/hnfvc0o3jnfvc873njb03enrf56.html
@@ -32,7 +32,7 @@ const HIGHLIGHT_CLASS = "table-search-highlight";
 
 function escapeRegex(str) {return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");}
 
-function clearHighlights(root) {root.querySelectorAll("." + HIGHLIGHT_CLASS).forEach(span => {span.replaceWith(span.textContent);});}
+function clearHighlights(root) {root.querySelectorAll("." + HIGHLIGHT_CLASS).forEach(span => {span.replaceWith(span.textContent);});root.normalize();}
 
 function highlightPhrase(root, phrase) {
     if (!phrase) return;
