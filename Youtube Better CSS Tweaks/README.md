@@ -30,6 +30,13 @@ Are you tired of some youtube videos being way too quiet or way too loud, seemin
 
 
 
+<br><br>
+
+## [Install Userscript: Youtube to ytdown](https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/refs/heads/main/Youtube%20Better%20CSS%20Tweaks/YouTube_to_ytdown.user.js)
+* This script just creates a button that redirects to ytdown.com and auto inputs the url for you.
+  - The old download script I used stopped working, so I just make a simple one that uses a website that works.
+<img width="400" alt="image" src="https://github.com/user-attachments/assets/855cb8b7-e5f4-4b00-9288-705220170cea" />
+
 
 
 <br><br>
