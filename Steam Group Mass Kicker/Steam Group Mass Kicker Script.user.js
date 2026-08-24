@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Steam Group Mass Kicker Script
-// @version      8.2
+// @version      8.3
 // @author       GentlePuppet
 // @description	 Mass Kick Users From Steam Yer Group
 // @match        https://steamcommunity.com/groups/*
@@ -20,6 +20,9 @@
 // @updateURL    https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Steam%20Group%20Mass%20Kicker/Steam%20Group%20Mass%20Kicker%20Script.user.js
 // @downloadURL  https://github.com/GentlePuppet/Gentles_Tampermonkey_Userscripts/raw/main/Steam%20Group%20Mass%20Kicker/Steam%20Group%20Mass%20Kicker%20Script.user.js
 // ==/UserScript==
+/* eslint-disable no-lone-blocks, no-multi-spaces */
+/* globals $, waitForKeyElements, GM_config*/
+
 
 //--------------------------
 //-- Customizable Settings
@@ -59,7 +62,8 @@ const textChecks = [
     "content creator and tf2 lover",
     "Glad to see you! Content creator and tf2 lover",
     "✦ 𝒉𝒂𝒗𝒆 𝒂 𝒈𝒓𝒆𝒂𝒕 𝒅𝒂𝒚 ✦",
-    "Welcome to my profile. Add me to friends. Let's play together."
+    "Welcome to my profile. Add me to friends. Let's play together.",
+    "𝖂𝖊𝖑𝖈𝖔𝖒𝖊 𝖙𝖔 𝖒𝖞 𝖘𝖙𝖊𝖆𝖒 𝖕𝖗𝖔𝖋𝖎𝖑𝖊"
 ];
 
 
@@ -68,7 +72,7 @@ const textChecks = [
 //---------------------------
 GM_addStyle(`
 /* Quick Search Filter Box */
-    #FilterQuickBox {position: fixed;top: 20%;width: 300px;background: #1b2838;color: #fff;border: 2px solid #3e6787;z-index: 99999;font-size: 12px;padding: 5px;opacity: 0.8;transition: transform 0.2s ease-in-out, opacity 0.2s;transform: translateX(-315px);}
+    #FilterQuickBox {position: fixed;top: 10%;width: 300px;background: #1b2838;color: #fff;border: 2px solid #3e6787;z-index: 99999;font-size: 12px;padding: 5px;opacity: 0.8;transition: transform 0.2s ease-in-out, opacity 0.2s;transform: translateX(-315px);}
     #FilterQuickBox:hover {transform: translateX(0);opacity: 1;}
     #FilterQuickBoxDesc {font-size: 11px;color: #ccc;margin-bottom: 5px;line-height: 1.3;text-align: center;padding: 3px;background: #080f18;}
     .filterLink {display: block;padding: 3px;color: #66c0f4;text-decoration: none;word-wrap: break-word;}
@@ -311,11 +315,11 @@ function createArrays() {
 
 //-------------------------------------------------------
 //-- Creates the checkboxes to select users for kicking
-//-------------------------------------------------------
+														 
 waitForKeyElements('.group_admin_header', CreateCheckboxes, 0);
 function CreateCheckboxes() {
     $('.profilelink').each(function(index) {
-        var block = $(this).parents('.member_block').find('img[onclick*=ManageMembers_Kick]').attr('onclick')
+        var block = $(this).parents('.member_block').find('img[onclick*="ManageMembers_Kick"]').attr('onclick')
         if (block == undefined) {return};
         var ID = block.replace("ManageMembers_Kick( '", '').replace(/', '.*' \);/, "");
         $(this).attr('href', 'https://steamcommunity.com/profiles/' + ID)
@@ -328,7 +332,7 @@ function CreateCheckboxes() {
 
     var verifybox = $('<input/>').attr({type: "button", id: "VerifyUser", value: "Open Kick Menu"});
     $('.search_controls').after(verifybox);
-    document.getElementById("VerifyUser").addEventListener("click", GetCheckedBoxes, false);
+    document.getElementById("VerifyUser")?.addEventListener("click", GetCheckedBoxes, false);
 
     var checkallboxs = $('<input/>').attr({type: "checkbox",id: "CheckAllBox",style: "margin-left: 5px"});
     $(verifybox).after(checkallboxs);
