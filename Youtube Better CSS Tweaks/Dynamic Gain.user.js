@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Youtube Gentle's Auto Gain
 // @author       GentlePuppet
-// @version      4.0.0
+// @version      4.0.1
 // @description  This script automatically boosts quiet YouTube videos or lowers loud videos by automatically adjusting audio gain with smoothing.
 // @author       Special Thanks to this old extension I found and adapted some of their javascript: https://github.com/Kelvin-Ng/youtube-volume-normalizer
 // @include      https://www.youtube.com/*
@@ -606,7 +606,7 @@ async function attemptSongCheck() {
 
     if (debug) {console.log("AutoGain: Song detected"); console.log(`AutoGain: Song check [${matches} matches] ${matchDetails.length ? matchDetails.join(', ') : 'No matches'}`);}
 
-    if (matches >= 2) {
+    if (matches >= 3) {
         gainDisabled = false
         gainNode.gain.value = 1;
     }
