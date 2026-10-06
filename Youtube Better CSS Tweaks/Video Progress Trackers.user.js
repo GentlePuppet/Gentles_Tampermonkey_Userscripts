@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Youtube Gentle's Youtube Video Progress Trackers
-// @version      1.7.2
+// @version      1.7.3
 // @author       GentlePuppet
 // @description  Adds video progression displays
 // @match        https://www.youtube.com/*
@@ -48,6 +48,16 @@ window.addEventListener("yt-page-data-updated", function(e) {
         }
         requestAnimationFrame(createdummytimer)
         function UpdateMiniBar() {
+            function setBarWidth() {
+                const container = document.querySelector(".DummyContainerProgress");
+                const videoparent = document.querySelector(".html5-video-player");
+                const video = document.querySelector(".video-stream.html5-main-video");
+                if (!container || !videoparent || !video) {return}
+                const dummyleft =(videoparent.getBoundingClientRect().width - video.getBoundingClientRect().width) / 2;
+                const videoWidth = video.getBoundingClientRect().width;
+                container.style.setProperty('--player-width', videoWidth + "px");
+                container.style.left = Math.ceil(dummyleft) + "px";
+            }
             function timeup() {
                 var container = document.querySelector(".DummyContainerProgress")
                 if (!container) {return}
@@ -55,11 +65,7 @@ window.addEventListener("yt-page-data-updated", function(e) {
                 if (!dummy) {return}
                 var videoparent = document.querySelector('.html5-video-player');
                 var video = document.querySelector(".video-stream.html5-main-video")
-                let dummyleft = (videoparent.getBoundingClientRect().width - video.getBoundingClientRect().width) / 2;
                 dummy.style.transform = "scaleX("+(video.currentTime/video.duration)+")"
-                let videoWidth = video.getBoundingClientRect().width
-                container.style.setProperty('--player-width', videoWidth + "px");
-                container.style.left = Math.ceil(dummyleft)+"px"
             }
             function progup() {
                 var dummy = document.querySelector(".DummyLoadProgress")
@@ -72,21 +78,23 @@ window.addEventListener("yt-page-data-updated", function(e) {
                 let dummyleft = (videoparent.getBoundingClientRect().width - video.getBoundingClientRect().width) / 2;
                 dummy.style.transform = "scaleX("+buffer+")"
             }
-            const player = document.querySelector(".html5-video-player")
-            const video = document.querySelector(".video-stream.html5-main-video")
             function CreateProgressEvent() {
+                let player = document.querySelector(".html5-video-player")
+                let video = document.querySelector(".video-stream.html5-main-video")
                 if (!video || !player) {
-                    requestAnimationFrame(CreateProgressEvent)
+                    requestAnimationFrame(CreateProgressEvent);
                 }
                 else if (!player.classList.contains("progress-event")) {
-                    video.addEventListener("timeupdate", timeup)
-                    video.addEventListener("progress", progup)
+                    video.addEventListener("timeupdate", timeup);
+                    video.addEventListener("progress", progup);
                     player.classList.add("progress-event");
-                } else {
+                }
+                else {
                     $('.DummyPlayProgress').attr({style: "transform: scaleX(0);"});
                     $('.DummyLoadProgress').attr({style: "transform: scaleX(0);"});
                 }
             }
+            requestAnimationFrame(setBarWidth)
             requestAnimationFrame(CreateProgressEvent)
         }
         requestAnimationFrame(UpdateMiniBar)
