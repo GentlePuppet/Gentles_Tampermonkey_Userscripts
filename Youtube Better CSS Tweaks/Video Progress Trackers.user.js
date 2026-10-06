@@ -17,7 +17,7 @@ const style = () => {const stylesheet = `
     #container.ytd-player:has(.ytp-fullscreen) > .DummyContainerProgress {margin-top:-7px !important;}
     #container.ytd-player:not(.ytp-fullscreen) > .DummyContainerProgress {margin-top: 0px;}
     .DummyContainerProgress {width: var(--player-width); height: 3px; position: absolute; left: 0px; padding-top: 2px;}
-    .DummyPlayProgress {width: var(--player-width); height: 3px; position: absolute; left: 0px; transform-origin: 0 0; z-index: 3; background-color: #df6eed;}
+    .DummyPlayProgress {width: var(--player-width); height: 3px; position: absolute; left: 0px; transform-origin: 0 0; z-index: 3; background-color: #f03;}
     .DummyLoadProgress {width: var(--player-width); height: 3px; position: absolute; left: 0px; transform-origin: 0 0; z-index: 2; background: rgba(255,255,255,0.4);}
     .DummyBackgroundProgress {width: var(--player-width); height: 3px; position: absolute; left: 0px; transform-origin: 0 0; z-index: 1; background: rgba(90,90,90,0.4);}
     .VTLC {display: block; min-width: fit-content; overflow: hidden; font-weight: 500; color: #f1f1f1; font-size: 14px; line-height: 36px; background-color: var(--yt-spec-badge-chip-background); padding: 0px 10px; border-radius: 2px; margin-left: 8px;}
