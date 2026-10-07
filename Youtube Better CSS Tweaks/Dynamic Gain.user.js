@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Youtube Gentle's Auto Gain
 // @author       GentlePuppet
-// @version      4.0.1
+// @version      4.0.2
 // @description  This script automatically boosts quiet YouTube videos or lowers loud videos by automatically adjusting audio gain with smoothing.
 // @author       Special Thanks to this old extension I found and adapted some of their javascript: https://github.com/Kelvin-Ng/youtube-volume-normalizer
 // @include      https://www.youtube.com/*
@@ -235,7 +235,7 @@ function loadConfigFromCookie() {
 let gainUpdateTimeout;
 function debounceGainUpdate(a = 0) {
     clearTimeout(gainUpdateTimeout);
-    gainUpdateTimeout = setTimeout(() => {updateGainFromStats(true, null, null, a)}, 5000);
+    gainUpdateTimeout = setTimeout(() => {updateGainFromStats(true, null, null, a)}, 1000);
 }
 
 //==================================================
@@ -570,41 +570,41 @@ async function setupAudioGraph(video) {
 // Experimental Song Check Function
 async function attemptSongCheck() {
     if (debug) console.log("AutoGain: Checking for Song")
-    const details = document.getElementById('movie_player')?.getPlayerResponse()?.videoDetails;
-    const title = (details.title || '').toLowerCase();
-    const description = (details.shortDescription || '').toLowerCase();
-    const keywords = details.keywords || [];
+    let details = document.getElementById('movie_player')?.getPlayerResponse()?.videoDetails;
+    let title = (details.title || '').toLowerCase();
+    let description = (details.shortDescription || '').toLowerCase();
+    let keywords = details.keywords || [];
 
     let matches = 0;
     let matchDetails = [];
 
-    // Check description.
-    if (debug) console.log("AutoGain Songcheck: Checking Description")
-    const descriptionTerms = ['vocals', 'soundcloud', 'spotify', 'song', 'music'];
-    const descriptionMatches = descriptionTerms.filter(term => description.includes(term));
-    if (descriptionMatches.length > 0) {
-        matches += descriptionMatches.length;
-        descriptionMatches.forEach(term => {matchDetails.push(`Description: "${term}"`)});
-    }
-
     // Check title.
-    if (debug) console.log("AutoGain Songcheck: Checking Title")
+    if (debug) console.log("AutoGain Songcheck: Checking Title:\n" + title)
     const titleTerms = ['song', 'music'];
-    const titleMatches = titleTerms.filter(term => title.includes(term));
+    let titleMatches = titleTerms.filter(term => title.includes(term));
     if (titleMatches.length > 0) {
         matches += titleMatches.length;
         titleMatches.forEach(term => {matchDetails.push(`Title: "${term}"`)});
     }
 
+    // Check description.
+    if (debug) console.log("AutoGain Songcheck: Checking Description:\n" + description);
+    const descriptionTerms = ['vocals', 'soundcloud', 'spotify', 'song', 'music'];
+    let descriptionMatches = descriptionTerms.filter(term => {const regex = new RegExp(`\\b${term}\\b`, 'i'); return regex.test(description);});
+    if (descriptionMatches.length > 0) {
+        matches += descriptionMatches.length;
+        descriptionMatches.forEach(term => {matchDetails.push(`Description: "${term}"`)});
+    }
+
     // Check keywords.
-    if (debug) console.log("AutoGain Songcheck: Checking Keywords")
-    const keywordMatches = keywords.filter(keyword =>keyword.toLowerCase().includes('song') || keyword.toLowerCase().includes('music'));
+    if (debug) console.log("AutoGain Songcheck: Checking Keywords:\n" + keywords)
+    let keywordMatches = keywords.filter(keyword =>keyword.toLowerCase().includes('song') || keyword.toLowerCase().includes('music'));
     if (keywordMatches.length > 0) {
         matches += keywordMatches.length;
         keywordMatches.forEach(keyword => {matchDetails.push(`Keyword: "${keyword}"`)});
     }
 
-    if (debug) {console.log("AutoGain: Song detected"); console.log(`AutoGain: Song check [${matches} matches] ${matchDetails.length ? matchDetails.join(', ') : 'No matches'}`);}
+    console.log(`%cAutoGain: Song check [${matches} matches]\n%c${matchDetails.length ? matchDetails.join(', ') : 'No Matches'}`, "color: red", "color: lightblue");
 
     if (matches >= 3) {
         gainDisabled = false
