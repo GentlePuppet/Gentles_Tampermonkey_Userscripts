@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Youtube Gentle's Auto Gain
 // @author       GentlePuppet
-// @version      4.0.2
+// @version      4.0.3
 // @description  This script automatically boosts quiet YouTube videos or lowers loud videos by automatically adjusting audio gain with smoothing.
 // @author       Special Thanks to this old extension I found and adapted some of their javascript: https://github.com/Kelvin-Ng/youtube-volume-normalizer
 // @include      https://www.youtube.com/*
@@ -165,7 +165,7 @@ function applyCompressorConfig() {
 
 // Get the volume from the stats for nerds
 async function fastLoudnessRead() {
-    if (debug) console.log("AutoGain: OpenStatsPanel")
+    if (debug) console.log("🔊 AutoGain: OpenStatsPanel")
     const player = document.querySelector("#movie_player");
 
     if (!player || typeof player.getStatsForNerds !== "function") {
@@ -190,14 +190,14 @@ async function fastLoudnessRead() {
         gainNode.gain.value = 1;
         return null;
     }
-    if (debug) console.log("AutoGain: Return DB: " + dB)
+    if (debug) console.log("🔊 AutoGain: Return DB: " + dB)
 
     return dB;
 }
 
 // Wait for the video to exist before continuing
 async function waitForElement(selector) {
-    if (debug) console.log("AutoGain: Wait for '" + selector + "'")
+    if (debug) console.log("🔊 AutoGain: Wait for '" + selector + "'")
     for (let i = 0; i < 40; i++) { // ~1 second max
         const v = document.querySelector(selector)
         if (v) return v;
@@ -220,7 +220,7 @@ function saveConfigToCookie() {
     document.cookie = `gainConfig=${encodeURIComponent(JSON.stringify(config))}; path=/; max-age=31536000`;
 }
 function loadConfigFromCookie() {
-    if (debug) console.log("AutoGain: Load config from cookie (2)")
+    if (debug) console.log("🔊 AutoGain: Load config from cookie (2)")
     const match = document.cookie.match(/(?:^|; )gainConfig=([^;]*)/);
     if (match) {
         try {
@@ -252,7 +252,7 @@ async function initOnWatchPage() {
     if (!location.pathname.startsWith("/watch")) return;
 
     if (window.hasRunGainScript) {return;} // Prevent duplicate runs
-    if (debug) console.log("AutoGain: Begin Init (1)")
+    if (debug) console.log("🔊 AutoGain: Begin Init (1)")
     window.hasRunGainScript = true;
 
     loadConfigFromCookie();
@@ -269,7 +269,7 @@ function createOverlay() {
     let container = document.querySelector('.boost-container');
     let overlay = document.querySelector('.boost-overlay');
 
-    if (debug) console.log("AutoGain: Begin createOverlay (3)")
+    if (debug) console.log("🔊 AutoGain: Begin createOverlay (3)")
     if (!overlay) {
         if (container) container.remove()
         container = document.createElement("div");
@@ -293,7 +293,7 @@ function createOverlay() {
     })();
 
     // Create the hidden config panel
-    if (debug) console.log("AutoGain: Begin configbox (4)")
+    if (debug) console.log("🔊 AutoGain: Begin configbox (4)")
     let configBox = document.createElement("div");
     configBox.className = "boost-config";
     configBox.style.cssText = 'display: none;';
@@ -514,7 +514,7 @@ function createOverlay() {
 
 // Main logic to hook into the video and apply audio gain dynamically
 async function boostAudio() {
-    if (debug) console.log("AutoGain: Begin boostAudio")
+    if (debug) console.log("🔊 AutoGain: Begin boostAudio")
 
     // A short break to check for the video element
     video = await waitForElement('#movie_player video');
@@ -536,14 +536,14 @@ async function boostAudio() {
 
 // Create the audio Nodes
 async function setupAudioGraph(video) {
-    if (debug) console.log("AutoGain: Begin setupAudioGraph (6)")
+    if (debug) console.log("🔊 AutoGain: Begin setupAudioGraph (6)")
     // Reset gain
     gainNode.gain.value = 1;
 
     // Disconnect existing source if any
     if (currentSource) {
         currentSource.disconnect();
-        if (debug) console.log("AutoGain: Disconnected Source")
+        if (debug) console.log("🔊 AutoGain: Disconnected Source")
 
     }
 
@@ -556,11 +556,11 @@ async function setupAudioGraph(video) {
         source.connect(compressor);
         compressor.connect(gainNode);
         applyCompressorConfig()
-        if (debug) console.log("AutoGain: Connected Compressor")
+        if (debug) console.log("🔊 AutoGain: Connected Compressor")
 
     } else {
         source.connect(gainNode);
-        if (debug) console.log("AutoGain: Connected Gain")
+        if (debug) console.log("🔊 AutoGain: Connected Gain")
     }
 
     // Plug the gained audio back into the audio output
@@ -569,7 +569,7 @@ async function setupAudioGraph(video) {
 
 // Experimental Song Check Function
 async function attemptSongCheck() {
-    if (debug) console.log("AutoGain: Checking for Song")
+    if (debug) console.log("🔊 AutoGain: Checking for Song")
     let details = document.getElementById('movie_player')?.getPlayerResponse()?.videoDetails;
     let title = (details.title || '').toLowerCase();
     let description = (details.shortDescription || '').toLowerCase();
@@ -579,32 +579,32 @@ async function attemptSongCheck() {
     let matchDetails = [];
 
     // Check title.
-    if (debug) console.log("AutoGain Songcheck: Checking Title:\n" + title)
-    const titleTerms = ['song', 'music'];
+    if (debug) console.log("🔊 AutoGain Songcheck: Checking Title:\n" + title)
+    const titleTerms = ['song', 'music', 'rap'];
     let titleMatches = titleTerms.filter(term => title.includes(term));
     if (titleMatches.length > 0) {
         matches += titleMatches.length;
-        titleMatches.forEach(term => {matchDetails.push(`Title: "${term}"`)});
+        titleMatches.forEach(term => {matchDetails.push(`T: "${term}"`)});
     }
 
     // Check description.
-    if (debug) console.log("AutoGain Songcheck: Checking Description:\n" + description);
-    const descriptionTerms = ['vocals', 'soundcloud', 'spotify', 'song', 'music'];
+    if (debug) console.log("🔊 AutoGain Songcheck: Checking Description:\n" + description);
+    const descriptionTerms = ['vocals', 'soundcloud', 'spotify', 'song', 'music', 'rap', 'instrumental'];
     let descriptionMatches = descriptionTerms.filter(term => {const regex = new RegExp(`\\b${term}\\b`, 'i'); return regex.test(description);});
     if (descriptionMatches.length > 0) {
         matches += descriptionMatches.length;
-        descriptionMatches.forEach(term => {matchDetails.push(`Description: "${term}"`)});
+        descriptionMatches.forEach(term => {matchDetails.push(`D: "${term}"`)});
     }
 
     // Check keywords.
-    if (debug) console.log("AutoGain Songcheck: Checking Keywords:\n" + keywords)
+    if (debug) console.log("🔊 AutoGain Songcheck: Checking Keywords:\n" + keywords)
     let keywordMatches = keywords.filter(keyword =>keyword.toLowerCase().includes('song') || keyword.toLowerCase().includes('music'));
     if (keywordMatches.length > 0) {
         matches += keywordMatches.length;
-        keywordMatches.forEach(keyword => {matchDetails.push(`Keyword: "${keyword}"`)});
+        keywordMatches.forEach(keyword => {matchDetails.push(`K: "${keyword}"`)});
     }
 
-    console.log(`%cAutoGain: Song check [${matches} matches]\n%c${matchDetails.length ? matchDetails.join(', ') : 'No Matches'}`, "color: red", "color: lightblue");
+    console.log("%c🔊 AutoGain: Song check for: " + details.videoId + ` %c[${matches} matches]\n    ${matchDetails.length ? matchDetails.join(', ') : ''}`, "font-weight: bold; color: lightgreen; font-size: 14px;", "color: lightblue; font-size: 12px;");
 
     if (matches >= 3) {
         gainDisabled = false
@@ -616,14 +616,14 @@ async function attemptSongCheck() {
 
 // Updates the gain
 async function updateGainFromStats(resetgain = false, smoothing = false, skipsongcheck = false, caller = null) {
-    if (debug) console.log("AutoGain: Begin updateGain", {resetgain, smoothing, skipsongcheck, caller})
+    if (debug) console.log("🔊 AutoGain: Begin updateGain", {resetgain, smoothing, skipsongcheck, caller})
 
     let container = document.querySelector('.boost-container');
     let overlay = document.querySelector('.boost-overlay');
 
     if (resetgain) {gainDisabled = false}
     if (skipsongcheck) {checkMusic = false; musicDetected = false} else {checkMusic = true}
-    if (debug) console.log("AutoGain:", {gainDisabled, checkMusic})
+    if (debug) console.log("🔊 AutoGain:", {gainDisabled, checkMusic})
 
     if (checkMusic && config.attemptsongCheck && await attemptSongCheck()) {
         musicDetected = true
@@ -638,14 +638,14 @@ async function updateGainFromStats(resetgain = false, smoothing = false, skipson
 
     // Reset the overlay text
     overlay.setOverlayText(`🔊 Gain: Loading...`);
-    if (debug) console.log("AutoGain: Gain Loading")
+    if (debug) console.log("🔊 AutoGain: Gain Loading")
 
     // Open the stats for nerds and get the content loudness dB level
-    if (debug) console.log("AutoGain: Await DB")
+    if (debug) console.log("🔊 AutoGain: Await DB")
 
     // Get DB level from Stats For Nerds
     const dB = await fastLoudnessRead();
-    if (debug) console.log("AutoGain: Got dB: " + dB)
+    if (debug) console.log("🔊 AutoGain: Got dB: " + dB)
     //const dB = await openStatsPanelAndGetDb();
 
     // If the previous function returns null, then stop
@@ -657,7 +657,7 @@ async function updateGainFromStats(resetgain = false, smoothing = false, skipson
     // Do the adjustment math
     let gainTarget = Math.pow(10, (config.targetLoudnessDb - dB) / 20);
     gainTarget = Math.min(gainTarget, config.maxGain);
-    if (debug) console.log("AutoGain: Target Gain: " + gainTarget)
+    if (debug) console.log("🔊 AutoGain: Target Gain: " + gainTarget)
 
     // Apply the new adjusted gain smoothly over time
     if (smoothing) {
@@ -669,7 +669,7 @@ async function updateGainFromStats(resetgain = false, smoothing = false, skipson
     // Check if the adjusted gain to show if gain is being increased or decreased
     const gainDiffDb = config.targetLoudnessDb - dB;
     const sign = gainDiffDb > 0 ? '+' : '';
-    if (debug) console.log("AutoGain: Gain " + sign)
+    if (debug) console.log("🔊 AutoGain: Gain " + sign)
 
     // Update the overlay text with the adjusted gain
     if (dB != config.targetLoudnessDb) {
